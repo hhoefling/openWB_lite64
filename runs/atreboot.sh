@@ -340,6 +340,7 @@ fi
 		sudo a2enmod ssl
 		sudo a2dissite default-ssl
 		sudo a2ensite 001-openwb_ssl
+		sudo make-ssl-cert generate-default-snakeoil --force-overwrite
 		restartService=1
 	fi
 	# set upload limit in php
