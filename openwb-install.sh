@@ -232,9 +232,13 @@ sudo service mosquitto start
 if [ ! -f /etc/mosquitto/conf.d/openwb.conf ]; then
 	echo "updating mosquitto config file"
 	sudo cp /var/www/html/openWB/runs/files/mosquitto.conf /etc/mosquitto/conf.d/openwb.conf
+	ls -l /etc/mosquitto/conf.d/openwb.conf
+	sudo sed -i "s/^socket_domain ipv4/# socket_domain ipv4/g" /etc/mosquitto/conf.d/openwb.conf
 	if (( debver <= 9 )) ; then
-		sudo sed -i "s/^socket_domain ipv4/# socket_domain ipv4/g" openwb.conf
+		sudo sed -i "s/^socket_domain ipv4/# socket_domain ipv4/g" /etc/mosquitto/conf.d/openwb.conf
+		echo "modifiy mosquitto openwb.conf for Stretch"
 	fi
+	ls -l /etc/mosquitto/conf.d/openwb.conf
 	sudo cp "/etc/ssl/certs/ssl-cert-snakeoil.pem" "/etc/mosquitto/certs/openwb.pem"
 	sudo cp "/etc/ssl/private/ssl-cert-snakeoil.key" "/etc/mosquitto/certs/openwb.key"
 	sudo chgrp mosquitto "/etc/mosquitto/certs/openwb.key"
