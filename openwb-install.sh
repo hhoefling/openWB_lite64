@@ -64,6 +64,11 @@ else
 	apt-get -q -y install python3-pip python3-rpi.gpio
 fi
 
+echo "Install appache2"
+apt-get -q -y install apache2 php php-gd php-curl php-xml php-json libapache2-mod-php
+systemctl restart apache2
+echo "done"
+
 if (( isPC == 0 )) ; then
   if (( hasLCD > 0 )) ; then
     echo "install chrome browser..."
@@ -146,10 +151,11 @@ if [ ! -d /var/www/html/openWB/web ]; then
 	chmod 0777 openWB
 	sudo -u pi git clone --branch master ${openwbgiturl} openWB
 	chown -R pi:pi openWB 
-   	sudo -u pi git config --global --add safe.directory /var/www/html/openWB
+	sudo -u pi git config --global --add safe.directory /var/www/html/openWB
 	sudo -u pi git config --global credential.helper store
-    sudo -u pi git fetch origin
-    sudo -u pi git reset --hard origin/master  
+	cd openWB
+	sudo -u pi git fetch origin
+	sudo -u pi git reset --hard origin/master  
 	echo "... git cloned"
 	cd /var/www/html/openWB
 	sudo cp -p runs/files/openwb.conf.default openwb.conf
@@ -158,14 +164,6 @@ if [ ! -d /var/www/html/openWB/web ]; then
 else
 	echo "...ok"
 fi
-
-echo "Install appache2"
-apt-get -q -y install apache2 php php-gd php-curl php-xml php-json libapache2-mod-php
-a2enmod ssl
-a2enmod proxy_wstunnel
-make-ssl-cert generate-default-snakeoil --force-overwrite
-systemctl restart apache2
-echo "done"
 
 
 if ! grep -Fq "bootmodus=" /var/www/html/openWB/openwb.conf
