@@ -1,5 +1,5 @@
 <?php
-	switch ( $wizzarddoneold ) {
+	switch ( $owbconf['wizzarddone'] ) {
 		case 0: // start of wizzard
 			echo "<!-- wizzard -- start -->";
 			include($_SERVER['DOCUMENT_ROOT'] . '/openWB/web/settings/wizzardstart.html');

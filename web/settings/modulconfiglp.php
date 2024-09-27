@@ -1,5 +1,5 @@
 <?php
-function  getdateurl($dir,$file)
+function  xgetdateurl($dir,$file)
 	{
  			$fn=sprintf('%s/%s', $dir,$file);
 			$ftime=filemtime("./$file");
@@ -43,7 +43,7 @@ function  getdateurl($dir,$file)
 		<script src="js/jquery-3.6.0.min.js"></script>
 		<script src="js/bootstrap-4.4.1/bootstrap.bundle.min.js"></script>
 		<!-- load helper functions -->
-		<script src = "<?php echo getdateurl('settings','helperFunctions.js');?>"></script>
+		<script src = "<?php echo xgetdateurl('settings','helperFunctions.js');?>"></script>
 		
 	</head>
 
