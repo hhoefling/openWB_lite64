@@ -1,7 +1,7 @@
 #!/bin/bash
 
 USER=${USER:-`id -un`}
-[ "$USER" != "pi" ] && exec sudo -u pi "$0" -- "$@"
+[ "$USER" != "pi" ] && exec sudo^ -u pi "$0" -- "$@"
 
 # called from cron as user  pi
 # called from update.sh as pi
@@ -136,9 +136,9 @@ sudo chmod 777 smarthome.conf
 sudo chmod 777 ramdisk
 sudo chmod 777 ramdisk/
 sudo chmod 777 runs/files/*
-sudo chmod -R +x modules/*
-sudo chmod -R +x runs/*
-sudo chmod    +x *.sh
+sudo chmod -R a+x modules/*
+sudo chmod -R a+x runs/*
+sudo chmod    a+x *.sh
 
 
 # die schreiben in ihr verzeichniss
