@@ -25,6 +25,8 @@ fi
 cd $OPENWBBASEDIR || exit 1
 source "./helperFunctions.sh"
 
+read debvers </etc/debian_version
+debver=${debvers%.*}
 
 
 function log()
@@ -477,9 +479,13 @@ if [ ! -f /etc/mosquitto/mosquitto.conf ]; then
 fi
 
 # check for mosquitto configuration
-if [ ! -f /etc/mosquitto/conf.d/openwb.conf ] || ! sudo grep -Fq "persistent_client_expiration" /etc/mosquitto/mosquitto.conf; then
+if [ ! -f /etc/mosquitto/conf.d/openwb.conf ] || ! sudo grep -Fq "persistent_client_expiration" /etc/mosquitto/conf.d/openwb.conf ; then
 	openwbDebugLog "MAIN" 2  "updating mosquitto config file"
 	sudo cp /var/www/html/openWB/runs/files/mosquitto.conf /etc/mosquitto/conf.d/openwb.conf
+	if (( debver <= 9 )) ; then
+		sudo sed -i "s/^socket_domain ipv4/# socket_domain ipv4/g" /etc/mosquitto/conf.d/openwb.conf
+		openwbDebugLog "MAIN" 2  "modifiy mosquitto openwb.conf for Stretch"
+	fi
 	if [[ ! -f "/etc/mosquitto/certs/openwb.key" ]]; then
 		openwbDebugLog "MAIN" 2  "updating mosquitto certificates"
 		sudo cp "/etc/ssl/certs/ssl-cert-snakeoil.pem" "/etc/mosquitto/certs/openwb.pem"
