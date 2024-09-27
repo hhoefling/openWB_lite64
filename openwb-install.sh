@@ -7,11 +7,16 @@ if (( $(id -u) != 0 )); then
         exit 1
 fi
 if uname -a | grep -q x86_64 ; then isPC=1; else isPC=0; fi;
+if uname -a | grep -q 5.15 ; then isBullseye=1; else isBullseye=0; fi;
+read debvers </etc/debian_version
+debver=${debvers%.*}
+
 OPENWBBASEDIR=/var/www/html/openWB
 export openwbgiturl="https://github.com/hhoefling/openWB_lite64.git"
 # export openwbgiturl="http://www.hhoefling.local:3000/gitea/openwb67.git"
-echo "installing openWB from $openwbgiturl into \"${OPENWBBASEDIR}\""
+echo "installing openWB from $openwbgiturl into \"${OPENWBBASEDIR}\" on Debian $debver"
 echo "isPC:$isPC"
+echo "Debian:$debver ($debvers)"
 
 if (( isPC == 0 )) ; then
   if which tvservice >/dev/null 2>&1  && sudo tvservice -s | grep -qF "[LCD], 800x480 @ 60.00Hz" ; then
@@ -22,35 +27,40 @@ if (( isPC == 0 )) ; then
     hasLCD=0
   fi
 fi
+if (( debver <= 9 )) ; then
+  echo "Instzalling on Stretch"
+elif (( debver == 10 )) ; then
+  echo "Instzalling on Buster"
+elif (( debver == 11 )) ; then
+  echo "Instzalling on Bullseye"
+else
+  echo "Unbekannte Debian version. Installation abgebrochen"
+fi
+
 
 echo "install required packages..."
-# check for outdated sources.list (Stretch only)
-if grep -q -e "^deb http://raspbian.raspberrypi.org/raspbian/ stretch" /etc/apt/sources.list; then
-	echo "sources.list outdated! upgrading..."
-	sudo sed -i "s/^deb http:\/\/raspbian.raspberrypi.org\/raspbian\/ stretch/deb http:\/\/legacy.raspbian.org\/raspbian\/ stretch/g" /etc/apt/sources.list
-else
-	echo "sources.list already updated"
+if (( debver <= 9 )) ; then
+    # check for outdated sources.list (Stretch only)
+    if grep -q -e "^deb http://raspbian.raspberrypi.org/raspbian/ stretch" /etc/apt/sources.list; then
+	   echo "sources.list outdated! upgrading..."
+	   sudo sed -i "s/^deb http:\/\/raspbian.raspberrypi.org\/raspbian\/ stretch/deb http:\/\/legacy.raspbian.org\/raspbian\/ stretch/g" /etc/apt/sources.list
+    else
+	   echo "sources.list already updated"
+    fi
 fi
-	
+
 apt-get update
 dpkg -l >/home/pi/firstdpkg.txt
-apt-get -q -y install libapache2-mod-php jq raspberrypi-kernel-headers i2c-tools task-spooler git mosquitto mosquitto-clients socat sshpass
+apt-get -q -y install  jq raspberrypi-kernel-headers i2c-tools task-spooler git vim at bc
+apt-get -q -y mosquitto mosquitto-clients socat sshpass
 # bullseye hat kein python-pip mehr, daher einzeln da sonst abbruch
 apt-get -q -y install python-pip
 apt-get -q -y install python3-pip
-apt-get -q -y install vim at bc apache2 php php-gd php-curl php-xml php-json git
-
-if uname -a | grep -q 5.15 ; then isBullseye=1; else isBullseye=0; fi;
-
-if (( isPC == 0 )) ; then
-  if (( isBullseye == 0 )) ; then
+if (( debver < 11 )) ; then
     # Buster/Stretch
 	apt-get -q -y install python-pip python-rpi.gpioa
-  else
-	# bullseye
-	apt-get -q -y install python3-pip python3-rpi.gpio
-  fi
 else
+	# bullseye
 	apt-get -q -y install python3-pip python3-rpi.gpio
 fi
 
@@ -148,6 +158,15 @@ if [ ! -d /var/www/html/openWB/web ]; then
 else
 	echo "...ok"
 fi
+
+echo "Install appache2"
+apt-get -q -y install apache2 php php-gd php-curl php-xml php-json libapache2-mod-php
+a2enmod ssl
+a2enmod proxy_wstunnel
+make-ssl-cert generate-default-snakeoil --force-overwrite
+systemctl restart apache2
+echo "done"
+
 
 if ! grep -Fq "bootmodus=" /var/www/html/openWB/openwb.conf
 then
