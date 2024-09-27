@@ -51,7 +51,12 @@ fi
 
 apt-get update
 dpkg -l >/home/pi/firstdpkg.txt
-apt-get -q -y install  jq raspberrypi-kernel-headers i2c-tools task-spooler git vim at bc
+if (( isPC == 0 )) ; then
+    apt-get -q -y install raspberrypi-kernel-headers 
+else
+    apt-get -q -y install linux-kernel-headers 
+fi
+apt-get -q -y install  jq i2c-tools task-spooler git vim at bc
 apt-get -q -y mosquitto mosquitto-clients socat sshpass
 # bullseye hat kein python-pip mehr, daher einzeln da sonst abbruch
 apt-get -q -y install python-pip
