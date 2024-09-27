@@ -138,8 +138,8 @@ header( 'Refresh:600;' );
 		<!-- load Chart.js library -->
 
 		<script src="js/Chart.bundle.min.js"></script>
-		<script src="js/hammerjs@2.0.8"></script>
-		<script src="js/chartjs-plugin-zoom@0.7.4"></script>
+		<script src="js/hammerjs@2.0.8.js"></script>
+		<script src="js/chartjs-plugin-zoom@0.7.4.js"></script>
 
 
 		<!-- load Bootstrap-Datepicker library -->

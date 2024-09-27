@@ -163,8 +163,8 @@
 		<!-- load Chart.js library -->
 
 		<script src="js/Chart.bundle.min.js"></script>
-		<script src="js/hammerjs@2.0.8"></script>
-		<script src="js/chartjs-plugin-zoom@0.7.4"></script>
+		<script src="js/hammerjs@2.0.8.js"></script>
+		<script src="js/chartjs-plugin-zoom@0.7.4.js"></script>
 
 		<!-- load mqtt library -->
 		<script src = "js/mqttws31.js" ></script>
