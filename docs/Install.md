@@ -1,13 +1,13 @@
 
 ## Installation in einer VM auf Debian 9.13 (Stretch) mit Kernel  4.9.0-13-amd64.  Installiert aus 2019-04-11-rpd-x86-stretch.iso
 
-Setup läuft mit Warnings durch. Alles mit GPIO wird fehler aus,
+Setup läuft mit Warnings durch. Alles mit GPIO wirft Fehler aus,
 GUI und Regelkreis laufen aber.
 
 ## Installation in einer VM auf Debian 10.7 (Buster) mit Kernel  4.19.0-13-amd64  Installiert aus 2021-01-11-raspios-buster-i386.iso
 
 
-Setup läuft mit Warnings durch. Alles mit GPIO wird fehler aus,
+Setup läuft mit Warnings durch. Alles mit GPIO wirft Fehler aus,
 GUI und Regelkreis laufen aber.
 
 ## Installation auf einer Pi3B+/Pi4B+ ##
