@@ -1,19 +1,14 @@
 
-## Installation in einer VM auf Debian 9.13 (Stretch) mit Kernel  4.9.0-13-amd64
+## Installation in einer VM auf Debian 9.13 (Stretch) mit Kernel  4.9.0-13-amd64.  Installiert aus 2019-04-11-rpd-x86-stretch.iso
 
-Aktuell probleme mit der alten Bash 4.4.12.
-openwb-install.sh, atreboot.sh, und helperFunctions.sh müssen angepasst werden.
+Setup läuft mit Warnings durch. Alles mit GPIO wirft Fehler aus,
+GUI und Regelkreis laufen aber.
 
-In mosquitto.conf muss "socket_domain ipv4" raus. Kennt der alte Mosuqitto nicht.
+## Installation in einer VM auf Debian 10.7 (Buster) mit Kernel  4.19.0-13-amd64  Installiert aus 2021-01-11-raspios-buster-i386.iso
 
- .... nicht weiter verfolgt.
 
-## Installation in einer VM auf Debian 10.7 (Buster) mit Kernel  4.19.0-13-amd64
-
-Installiert via "2021-01-11-raspios-buster-i386.iso"
-
-Hat moch Python2 als default aber schon bash>5
-
+Setup läuft mit Warnings durch. Alles mit GPIO wirft Fehler aus,
+GUI und Regelkreis laufen aber.
 
 ## Installation auf einer Pi3B+/Pi4B+ ##
  ( auf einem alten Pi 1/2 -> siehe weiter unten )
