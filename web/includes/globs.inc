@@ -247,6 +247,20 @@ function xdecrypt8($data, $key)
  return $val;
 }
     
+function is_intranet() 
+{
+  $serverIP = explode('.',$_SERVER['SERVER_ADDR']);
+  $localIP  = explode('.',$_SERVER['REMOTE_ADDR']);
+  if ( $serverIP[0] != $localIP[0]) )
+    return false;
+  if ( $serverIP[0] == '127' ||  $serverIP[0] == '10' ) 
+     return true;
+  if ( $serverIP[0] == '172'  &&   $serverIP[1] == '16') 
+     return true;
+  if ( $serverIP[0] == '192'  &&   $serverIP[1] == '168') 
+     return true;
+  return false;
+}
 
 
 if($dbdeb>6) out("Cookies: " . print_r($_COOKIE,true) );
