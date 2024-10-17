@@ -14,6 +14,11 @@ function services_log()
  (( runmain==1 )) && echo "SERVICE: $*"
 }
 
+function stat_log()
+{
+ (( runmain==1 )) && echo "STATE: $*"
+}
+
 
 declare -F openwbDebugLog &>/dev/null || {
     source "$OPENWBBASEDIR/loadconfig.sh"
@@ -40,6 +45,8 @@ needIsss=0          # 0,1,2
 isss_mode=""
 isss_32=32
 ISSS=isss.py
+
+mqtt2mhi=${mqtt2mhi:-0}
 
 function checkIfIsssIsNeeded()  # -> none or cmd to start
 {
@@ -87,7 +94,7 @@ function rse_cron5() # $1=eneabled
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/rse.py' | head -1)
- services_log "isrun:$isrun"
+ services_log "rse isrun:[$isrun]"
  if (( $1 == 1 )) ; then
     services_log "rse enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -130,7 +137,7 @@ function rse_start()
 {
   if ! pgrep -f '^python.*/rse.py' > /dev/null ; then
    services_log "startup rse";
-   openwbDebugLog "MAIN" 0 "SERVICE: startup rse"
+   openwbDebugLog "MAIN" 2 "SERVICE: startup rse"
    sudo -u pi bash -c "python3 runs/rse.py >>\"$LOGFILE\" 2>&1 & "
   else
     services_log "rse allready running"
@@ -141,7 +148,7 @@ function rse_stop()
    if pgrep -f '^python.*/rse.py' > /dev/null ; then
       sudo pkill -f "^python.*/rse.py"
       services_log  "kill rse daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill rse daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill rse daemon"
    else
       services_log "rse daemon is actually not running "
    fi
@@ -151,15 +158,15 @@ function rse_status() # $1=eneabled
  if (( $1 == 1  )) ; then
     if pgrep -f '^python.*/rse.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/rse.py')
-       printf -v msg '%-16s [%s]' "rse" "$line"
+       printf -v msg '%-12s runs [%s]' "rse" "$line"
     else
-      printf -v msg '%-16s daemon shut run, but dont' "rse"
+      printf -v msg '%-12s daemon shut run, but dont' "rse"
     fi  
  else
-      printf -v msg '%-16s disabled' "rse"
+      printf -v msg '%-12s disabled' "rse"
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 ########## Tasker #####################################
@@ -168,6 +175,7 @@ function tasker_cron5() # $1=eneabled
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^tsp' | head -1)
+ services_log "tasker isrun:[$isrun]"
  if (( $1 == 1  && isss == 0  )) ; then
     services_log "tasker is enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -212,7 +220,7 @@ function tasker_start()
 {
   if ! pgrep -f '^tsp' > /dev/null ; then
     services_log "startup tasker";
-    openwbDebugLog "MAIN" 0 "SERVICE: tasker_start startup tasker"
+    openwbDebugLog "MAIN" 2 "SERVICE: tasker_start startup tasker"
     export TS_MAXFINISHED=10
     export TS_SAVELIST=/var/www/html/openWB/runs/tasker/tsp.dump
     # export  TS_ENV='pwd;set;mount'.
@@ -230,7 +238,7 @@ function tasker_stop()
       # export  TS_ENV='pwd;set;mount'.
       sudo -u pi tsp -K
       services_log  "kill tasker daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: tasker_stop kill tasker daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: tasker_stop kill tasker daemon"
    else
       services_log "tasker daemon is actually not running "
    fi
@@ -240,15 +248,15 @@ function tasker_status() # $1=eneabled
  if (( $1 == 1  && isss == 0  )) ; then
     if pgrep -f '^tsp' > /dev/null ; then
        line=$(pgrep -fa '^tsp')
-       printf -v msg '%-16s [%s]' "tasker" "$line"
+       printf -v msg '%-12s runs [%s]' "tasker" "$line"
     else
-      printf -v msg '%-16s daemon shut run, but dont' "tasker" 
+      printf -v msg '%-12s daemon shut run, but dont' "tasker" 
     fi  
  else
-      printf -v msg '%-16s disabled or issss mode aktive' "tasker" 
+      printf -v msg '%-12s disabled or issss mode aktive' "tasker" 
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 #################################################################
@@ -258,7 +266,7 @@ function rfid1_cron5() # $1=eneabled
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/readrfid.py' | head -1)
- services_log "isrun:$isrun"
+ services_log "rfid1 isrun:[$isrun]"
  if (( $1 >= 1  )) ; then
     services_log "rfid1 enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -331,7 +339,7 @@ function rfid1_stop()
    if pgrep -f '^python.*/readrfid.py' > /dev/null ; then
       sudo pkill -f "^python.*/readrfid.py"
       services_log  "kill rfid1 daemons"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill rfid1 daemons"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill rfid1 daemons"
    else
       services_log "rfid1 daemon is actually not running "
    fi
@@ -341,15 +349,15 @@ function rfid1_status() # $1=eneabled
  if (( $1 >= 1 )) ; then
     if pgrep -f '^python.*/readrfid.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/readrfid.py')
-       printf -v msg '%-16s [%s]' "rfid1" "$line"
+       printf -v msg '%-12s runs [%s]' "rfid1" "$line"
     else
-       printf -v msg '%-16s daemon shut run, but dont' "rfid1"
+       printf -v msg '%-12s daemon shut run, but dont' "rfid1"
     fi  
  else
-    printf -v msg '%-16s disabled' "rfid1"
+    printf -v msg '%-12s disabled' "rfid1"
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 #################################################################
@@ -358,7 +366,7 @@ function rfid2_cron5() # $1=eneabled
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/rfid.py'  | head -1)
- services_log "isrun:$isrun"
+ services_log "rfid2 isrun:[$isrun]"
  if (( $1 == 2 )) ; then
     services_log "rfid2 enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -412,7 +420,7 @@ function rfid2_stop()
    if pgrep -f '^python.*/rfid.py' > /dev/null ; then
       sudo pkill -f "^python.*/rfid.py"
       services_log  "kill rfid2 daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill rfid2 daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill rfid2 daemon"
    else
       services_log "rfid2 daemon is actually not running "
    fi
@@ -422,15 +430,15 @@ function rfid2_status() # $1=eneabled
  if (( $1 == 2  )) ; then
     if pgrep -f '^python.*/rfid.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/rfid.py')
-       printf -v msg '%-16s [%s]' "rfid1" "$line"
+       printf -v msg '%-12s runs [%s]' "rfid1" "$line"
     else
-      printf -v msg '%-16s daemon shut run, but dont' "rfid2"
+      printf -v msg '%-12s daemon shut run, but dont' "rfid2"
     fi  
  else
-    printf -v msg '%-16s disabled' "rfid2"
+    printf -v msg '%-12s disabled' "rfid2"
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 #################################################################
@@ -440,7 +448,7 @@ function modbus_cron5() # $1=eneabled
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/modbusserver.py' | head -1)
- services_log "isrun:$isrun"
+ services_log "modbus isrun:[$isrun]"
  if (( $1 == 1 )) ; then
     services_log "modbusserver enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -483,7 +491,7 @@ function modbus_start()
 {
   if ! pgrep -f '^python.*/modbusserver.py' > /dev/null ; then
    services_log "startup modbusserver";
-   openwbDebugLog "MAIN" 0 "SERVICE: startup modbusserver"
+   openwbDebugLog "MAIN" 2 "SERVICE: startup modbusserver"
    #sudo bash -c "python3 \"$OPENWBBASEDIR/runs/modbusserver/modbusserver.py\" >>\"$LOGFILE\" 2>&1 & "
    # nicht als PI, bind socket<1024   
    sudo bash -c "python3 runs/modbusserver/modbusserver.py >>\"$LOGFILE\" 2>&1 & "
@@ -496,7 +504,7 @@ function modbus_stop()
    if pgrep -f '^python.*/modbusserver.py' > /dev/null ; then
       sudo pkill -f "^python.*/modbusserver.py"
       services_log  "kill modbusserver daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill modbusserver daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill modbusserver daemon"
    else
       services_log "modbusserver daemon is actually not running "
    fi
@@ -506,15 +514,15 @@ function modbus_status() # $1=eneabled
  if (( $1 == 1  )) ; then
     if pgrep -f '^python.*/modbusserver.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/modbusserver.py')
-       printf -v msg '%-16s [%s]' "modbus" "$line"
+       printf -v msg '%-12s runs [%s]' "modbus" "$line"
     else
-       printf -v msg '%-16s daemon shut run, but dont' "modbus"
+       printf -v msg '%-12s daemon shut run, but dont' "modbus"
     fi  
  else
-    printf -v msg '%-16s disabled or isss is running' "modbus"
+    printf -v msg '%-12s disabled or isss is running' "modbus"
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 
@@ -525,7 +533,7 @@ function button_cron5() # $1=eneabled
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/ladetaster.py' | head -1)
- services_log "isrun:$isrun"
+ services_log "buttons isrun:[$isrun]"
  if (( $1 == 1  )) ; then
     services_log "button enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -568,7 +576,7 @@ function button_start()
 {
   if ! pgrep -f '^python.*/ladetaster.py' > /dev/null ; then
    services_log "startup button";
-   openwbDebugLog "MAIN" 0 "SERVICE: startup button"
+   openwbDebugLog "MAIN" 2 "SERVICE: startup button"
    sudo -u pi bash -c "python3 runs/ladetaster.py >>\"$LOGFILE\" 2>&1 & "
   else
     services_log "button allready running"
@@ -579,7 +587,7 @@ function button_stop()
    if pgrep -f '^python.*/ladetaster.py' > /dev/null ; then
       sudo pkill -f "^python.*/ladetaster.py"
       services_log  "kill button daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill button daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill button daemon"
    else
       services_log "button daemon is actually not running "
    fi
@@ -589,15 +597,15 @@ function button_status() # $1=eneabled
  if (( $1 == 1  )) ; then
     if pgrep -f '^python.*/ladetaster.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/ladetaster.py')
-       printf -v msg '%-16s [%s]' "button" "$line"
+       printf -v msg '%-12s runs [%s]' "button" "$line"
     else
-      printf -v msg '%-16s daemon shut run, but dont' "button"
+      printf -v msg '%-12s daemon shut run, but dont' "button"
     fi  
  else
-    printf -v msg '%-16s disabled' "button"
+    printf -v msg '%-12s disabled' "button"
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 #################################################################
@@ -606,7 +614,7 @@ function mqtt2mhi_cron5() # $1=eneabled
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/mqtt2mhi.py' | head -1)
- services_log "isrun:$isrun"
+ services_log "mqtt2mhi isrun:[$isrun]"
  if (( $1 == 1  )) ; then
     services_log "mqtt2mhi enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -649,9 +657,12 @@ function mqtt2mhi_start()
 {
   if ! pgrep -f '^python.*/mqtt2mhi.py' > /dev/null ; then
    services_log "startup mqtt2mhi";
-   openwbDebugLog "MAIN" 0 "SERVICE: startup mqtt2mhi"
+   openwbDebugLog "MAIN" 2 "SERVICE: startup mqtt2mhi"
 #   sudo -u pi bash -c "python3 runs/mqtt2mhi/mqtt2mhi.py >>\"$LOGFILE\" 2>&1 & "
    sudo -u pi bash -c "python3 runs/mqtt2mhi/mqtt2mhi.py >/dev/null 2>&1 & "
+   openwbDebugLog "MAIN" 2 "SERVICE: startup tailer for mqtt2mhi"
+   sudo bash -c "echo \"$timestamp Starting tail\" >>/var/log/mqttstats.log"
+   sudo bash -c "tail -f ramdisk/mqtt2mhi.log  | grep STAT >>/var/log/mqttstats.log 2>&1 &"
    mqtt2mhi_status 1
   else
     services_log "mqtt2mhi allready running"
@@ -662,7 +673,11 @@ function mqtt2mhi_stop()
    if pgrep -f '^python.*/mqtt2mhi.py' > /dev/null ; then
       sudo pkill -f "^python.*/mqtt2mhi.py"
       services_log  "kill mqtt2mhi daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill mqtt2mhi daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill mqtt2mhi daemon"
+      sudo pkill -f "^tail -f ramdisk/mqtt2mhi.log*"
+      sudo bash -c "echo \"$timestamp Stopped tail\" >>/var/log/mqttstats.log"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill tailer"
+      
    else
       services_log "mqtt2mhi daemon is actually not running "
    fi
@@ -672,15 +687,15 @@ function mqtt2mhi_status() # $1=eneabled
  if (( $1 == 1  )) ; then
     if pgrep -f '^python.*/mqtt2mhi.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/mqtt2mhi.py')
-       printf -v msg '%-16s [%s]' "mqtt2mhi" "$line"
+       printf -v msg '%-12s runs [%s]' "mqtt2mhi" "$line"
     else
-      printf -v msg '%-16s daemon shut run, but dont' "mqtt2mhi"
+      printf -v msg '%-12s daemon shut run, but dont' "mqtt2mhi"
     fi  
  else
-    printf -v msg '%-16s disabled' "mqtt2mhi"
+    printf -v msg '%-12s disabled' "mqtt2mhi"
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 
@@ -690,7 +705,7 @@ function isss_cron5() # $needIsss $isss_mode  $isss_32
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f "^python.*/$ISSS"| head -1)
- services_log "isrun:$isrun"
+ services_log "isss isrun:[$isrun]"
  if (( $1 >= 1)) ; then
     # sollte starten, check korrekt mode and resttart if mode changed
     isss_start $1 $2 $3
@@ -745,7 +760,7 @@ function isss_start() # $needIsss $isss_mode  $isss_32
   if ! pgrep -f "^python.*/$ISSS" > /dev/null ; then
    # nothing runs
    services_log "startup $ISSS [$isss] [$2] [$3]";
-   openwbDebugLog "MAIN" 0 "SERVICE: startup $ISSS [$isss] [$2] [$3] "
+   openwbDebugLog "MAIN" 2 "SERVICE: startup $ISSS [$isss] [$2] [$3] "
    sudo -u pi bash -c "python3 runs/$ISSS $isss $2 $3 >>\"$LFILE\" 2>&1 & "
    line=$(pgrep -fa "^python.*/$ISSS")
    services_log "now $ISSS $line"
@@ -761,7 +776,7 @@ function isss_stop() # $1 $2 $3
    if pgrep -f "^python.*/$ISSS" > /dev/null ; then
       sudo pkill -f "^python.*/$ISSS"
       services_log  "kill $ISSS daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill $ISSS daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill $ISSS daemon"
    else
       services_log "$ISSS daemon is actually not running "
    fi
@@ -772,32 +787,32 @@ function isss_status() # $needIsss $isss_mode  $isss_32
     if pgrep -f "^python.*/$ISSS" > /dev/null ; then
        # any running
        line=$(pgrep -fa "^python.*/$ISSS")
-       printf -v msg '%-16s [%s]' "isss" "$line"
+       printf -v msg '%-12s runs [%s]' "isss" "$line"
        services_log "$msg"
-       openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+       openwbDebugLog "MAIN" 2 "SERVICE: $msg"
        if pgrep -f "^python.*/$ISSS.*$isss.*$2.*$3" > /dev/null ; then
-          printf -v msg '%-16s runs wth correkt mode [%s] [%s] [%s]' "isss" "$line" $isss $2 $3
-          services_log "$msg"
-          openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+          printf -v msg '%-12s runs wth correkt mode [%s] [%s] [%s]' "isss" "$line" $isss $2 $3
+          stat_log "$msg"
+          openwbDebugLog "MAIN" 2 "SERVICE: $msg"
        else
-          printf -v msg '%-16s runs but not with [%s] [%s] [%s]' "isss" "$line" $isss $2 $3
-          services_log "$msg"
-          openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+          printf -v msg '%-12s runs but not with [%s] [%s] [%s]' "isss" "$line" $isss $2 $3
+          stat_log "$msg"
+          openwbDebugLog "MAIN" 2 "SERVICE: $msg"
        fi
     else
-      printf -v msg '%-16s shut run, but dont [%s] [%s]' "isss" "$line" $2 $3
-      services_log "$msg"
-      openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+      printf -v msg '%-12s shut run, but dont [%s] [%s]' "isss" "$line" $2 $3
+      stat_log "$msg"
+      openwbDebugLog "MAIN" 0 "STATE: $msg"
     fi  
  else
     if pgrep -f '^python.*/$ISSS' > /dev/null ; then
-       printf -v msg '%-16s disabled but running' "isss" 
-       services_log "$msg"
-       openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+       printf -v msg '%-12s disabled but running' "isss" 
+       stat_log "$msg"
+       openwbDebugLog "MAIN" 0 "STATE: $msg"
     else
-       printf -v msg '%-16s disabled and not running' "isss" 
-       services_log "$msg"
-       openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+       printf -v msg '%-12s disabled' "isss" 
+       stat_log "$msg"
+       openwbDebugLog "MAIN" 0 "STATE: $msg"
     fi    
  fi
 }
@@ -808,7 +823,7 @@ function smarthome_cron5()
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/smarthomehandler.py' | head -1  )
- services_log "isrun:$isrun"
+ services_log "smarthome isrun:[$isrun]"
  if (( $1 == 1  && isss == 0  )) ; then
     services_log "smarthomehandler enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -857,7 +872,7 @@ function smarthome_start()
 
   if ! pgrep -f '^python.*/smarthomehandler.py' > /dev/null ; then
    services_log "startup smarthome";
-   openwbDebugLog "MAIN" 0 "SERVICE: startup smarthomehandler"
+   openwbDebugLog "MAIN" 2 "SERVICE: startup smarthomehandler"
    sudo -u pi bash -c "python3 runs/smarthomehandler.py >>\"$LFILE\" 2>&1 & "
   else
     services_log "smarthomehandler allready running"
@@ -868,7 +883,7 @@ function smarthome_stop()
    if pgrep -f '^python.*/smarthomehandler.py' > /dev/null ; then
       sudo pkill -f "^python.*/smarthomehandler.py"
       services_log  "kill smarthomehandler daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill smarthomehandler daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill smarthomehandler daemon"
    else
       services_log "smarthomehandler daemon is actually not running "
    fi
@@ -878,15 +893,15 @@ function smarthome_status() # $1=eneabled
  if (( $1 == 1  && isss == 0  )) ; then
     if pgrep -f '^python.*/smarthomehandler.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/smarthomehandler.py')
-       printf -v msg '%-16s [%s]' "smarthome" "$line"
+       printf -v msg '%-12s runs [%s]' "smarthome" "$line"
     else
-       printf -v msg '%-16s daemon shut run, but dont' "smarthome"
+       printf -v msg '%-12s daemon shut run, but dont' "smarthome"
     fi
  else
-    printf -v msg '%-16s disabled or isss is running' "smarthome"
+    printf -v msg '%-12s disabled or isss is running' "smarthome"
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 
@@ -896,7 +911,7 @@ function smartmq_cron5()
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/smarthomemq.py' | head -1)
- services_log "isrun:$isrun"
+ services_log "smartmq isrun:[$isrun]"
  if (( $1 == 1  && isss == 0  )) ; then
     services_log "smartmq enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -945,7 +960,7 @@ function smartmq_start()
 
   if ! pgrep -f '^python.*/smarthomemq.py' > /dev/null ; then
    services_log "startup smartmq";
-   openwbDebugLog "MAIN" 0 "SERVICE: startup smartmq"
+   openwbDebugLog "MAIN" 2 "SERVICE: startup smartmq"
    sudo -u pi bash -c "runs/smarthomemq.sh $LFILE"
   else
     services_log "smartmq allready running"
@@ -956,7 +971,7 @@ function smartmq_stop()
    if pgrep -f '^python.*/smarthomemq.py' > /dev/null ; then
       sudo pkill -f "^python.*/smarthomemq.py"
       services_log  "kill smartmq daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill smartmq daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill smartmq daemon"
    else
       services_log "smartmq daemon is actually not running "
    fi
@@ -966,15 +981,15 @@ function smartmq_status() # $1=eneabled
  if (( $1 == 1  && isss == 0  )) ; then
     if pgrep -f '^python.*/smarthomemq.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/smarthomemq.py')
-       printf -v msg '%-16s [%s]' "smarthomemq" "$line"
+       printf -v msg '%-12s runs [%s]' "smarthomemq" "$line"
     else
-       printf -v msg '%-16s daemon shut run, but dont' "smarthomemq"
+       printf -v msg '%-12s daemon shut run, but dont' "smarthomemq"
     fi  
  else
-    printf -v msg '%-16s disabled or isss is running' "smarthomemq"
+    printf -v msg '%-12s disabled or isss is running' "smarthomemq"
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 
@@ -985,7 +1000,7 @@ function mqttsub_cron5()
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/mqttsub.py' | head -1 )
- services_log "isrun:$isrun"
+ services_log "mqttsub isrun:[$isrun]"
 
     if (( ${isrun:-0} == 0 )) ; then
       mqttsub_start
@@ -1015,7 +1030,7 @@ function mqttsub_start()
 {
   if ! pgrep -f '^python.*/mqttsub.py' > /dev/null ; then
    services_log "startup mqttsub";
-   openwbDebugLog "MAIN" 0 "SERVICE: startup mqttsub"
+   openwbDebugLog "MAIN" 2 "SERVICE: startup mqttsub"
    sudo -u pi bash -c "python3 runs/mqttsub.py >>\"$LOGFILE\" 2>&1 & "
   else
     services_log "mqttsub allready running"
@@ -1026,7 +1041,7 @@ function mqttsub_stop()
    if pgrep -f '^python.*/mqttsub.py' > /dev/null ; then
       sudo pkill -f "^python.*/mqttsub.py"
       services_log  "kill mqttsub daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: kill mqttsub daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill mqttsub daemon"
    else
       services_log "mqttsub daemon is actually not running "
    fi
@@ -1035,12 +1050,12 @@ function mqttsub_status()
 {
     if pgrep -f '^python.*/mqttsub.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/mqttsub.py')
-       printf -v msg '%-16s [%s]' "mqttsub" "$line"
+       printf -v msg '%-12s runs [%s]' "mqttsub" "$line"
     else
-       printf -v msg '%-16s daemon shut run, but dont' "mqttsub" 
+       printf -v msg '%-12s daemon shut run, but dont' "mqttsub" 
     fi  
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 ########## sysdaem  as PI #####################################
@@ -1049,7 +1064,7 @@ function sysdaem_cron5() # $1=eneabled
  # if enabed  start if not running
  # if disabled kill if running
  isrun=$(pgrep -f 'runs/sysdaem.sh' | head -1)
- services_log "isrun:$isrun"
+ services_log "sysdaem isrun:[$isrun]"
  if (( $1 == 1)) ; then
     services_log "sysdaem enabled"
     if (( ${isrun:-0} == 0 )) ; then
@@ -1071,18 +1086,18 @@ function sysdaem_reboot() # $1=eneabled
  # kill if running
  # start if enabled
  isrun=$(pgrep -f 'runs/sysdaem.sh' |head -1)
- openwbDebugLog "MAIN" 0 "SERVICE: sysdaem_reboot isrun:[$isrun] soll:[$1]"
+ openwbDebugLog "MAIN" 2 "SERVICE: sysdaem_reboot isrun:[$isrun] soll:[$1]"
  
  if (( ${isrun:-0} != 0 )) ; then
     sysdaem_stop
  else
    services_log "sysdaem not running"
  fi
- openwbDebugLog "MAIN" 0 "SERVICE: sysdaem_reboot soll:[$1]"
+ openwbDebugLog "MAIN" 2 "SERVICE: sysdaem_reboot soll:[$1]"
  if (( $1 == 1)) ; then
     services_log "sysdaem enabled"
     isrun=$(pgrep -f 'runs/sysdaem.sh' |head -1)
-    openwbDebugLog "MAIN" 0 "SERVICE: sysdaem_reboot isrun:[$isrun] soll:[$1]"
+    openwbDebugLog "MAIN" 2 "SERVICE: sysdaem_reboot isrun:[$isrun] soll:[$1]"
     if (( ${isrun:-0} == 0 )) ; then
       sysdaem_start
     else
@@ -1096,10 +1111,10 @@ function sysdaem_start()
 {
   if ! pgrep -f 'runs/sysdaem.sh' > /dev/null ; then
    services_log "startup sysdaem";
-   openwbDebugLog "MAIN" 0 "SERVICE: sysdaem_start startup sysdaem"
+   openwbDebugLog "MAIN" 2 "SERVICE: sysdaem_start startup sysdaem"
    sudo -u pi bash -c "runs/sysdaem.sh $1 >>\"$LOGFILE\" 2>&1 & "
   else
-    openwbDebugLog "MAIN" 0 "SERVICE: sysdaem_start allready run"
+    openwbDebugLog "MAIN" 2 "SERVICE: sysdaem_start allready run"
     services_log "sysdaem_start sysdaem allready running"
   fi
 }
@@ -1108,7 +1123,7 @@ function sysdaem_stop()
    if pgrep -f 'runs/sysdaem.sh' > /dev/null ; then
       sudo pkill -f "runs/sysdaem.sh";
       services_log  "kill sysdaem daemon"
-      openwbDebugLog "MAIN" 0 "SERVICE: sysdaem_stop kill sysdaem daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: sysdaem_stop kill sysdaem daemon"
       if pgrep -f 'runs/sysdaem.sh' > /dev/null ; then
           sudo pkill -f "runs/sysdaem.sh";
       fi
@@ -1121,15 +1136,15 @@ function sysdaem_status() # $1=eneabled
  if (( $1 == 1)) ; then
     if pgrep -f 'runs/sysdaem.sh' > /dev/null ; then
        line=$(pgrep -fa 'runs/sysdaem.sh')
-       printf -v msg '%-16s [%s]' "sysdaem" "$line"
+       printf -v msg '%-12s runs [%s]' "sysdaem" "$line"
     else
-       printf -v msg '%-16s daemon shut run, but dont' "sysdaem"
+       printf -v msg '%-12s daemon shut run, but dont' "sysdaem"
     fi  
  else
-    printf -v msg '%-16s disabled' "sysdaem"
+    printf -v msg '%-12s disabled' "sysdaem"
  fi
- services_log "$msg"
- openwbDebugLog "MAIN" 0 "SERVICE: $msg"
+ stat_log "$msg"
+ openwbDebugLog "MAIN" 0 "STATE: $msg"
 }
 
 
@@ -1139,6 +1154,7 @@ function selectstatus()
  read smartmq </var/www/html/openWB/ramdisk/smartmq
  if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
  openwbDebugLog "MAIN" 2 "****ANF Status for openWB.Services $1 smartmq:$smartmq smarthome:$smarthome ***********"
+ [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_status $needIsss $isss_mode  $isss_32   
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_status  $rseenabled
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_status  $rfidakt
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid2_status  $rfidakt
@@ -1147,7 +1163,6 @@ function selectstatus()
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_status  $mqtt2mhi
  [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smarthome_status $smarthome
  [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_status $smartmq  
- [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_status $needIsss $isss_mode  $isss_32   
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_status 1 
  [[ "$1" == "all" || "$1" == "tasker" ]]  &&  tasker_status $taskerenabled
  [[ "$1" == "all" || "$1" == "sysdaem" ]]  &&  sysdaem_status 1
@@ -1160,6 +1175,7 @@ function selectstart()
  read smartmq </var/www/html/openWB/ramdisk/smartmq
  if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
  openwbDebugLog "MAIN" 2 "****ANF start for openWB.Services $1 smartmq:$smartmq smarthome:$smarthome ***********"
+ [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_cron5 $needIsss $isss_mode  $isss_32
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_cron5  $rseenabled
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_cron5 $rfidakt
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid2_cron5 $rfidakt
@@ -1169,7 +1185,6 @@ function selectstart()
  [[ "$1" == "all" || "$1" == "button" ]]  &&  button_cron5 $ladetaster
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_cron5  $mqtt2mhi
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_cron5 1 
- [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_cron5 $needIsss $isss_mode  $isss_32
  [[ "$1" == "all" || "$1" == "tasker" ]]  &&  tasker_cron5 $taskerenabled
  [[ "$1" == "all" || "$1" == "sysdaem" ]]  &&  sysdaem_cron5 1
 
@@ -1180,6 +1195,7 @@ function selectstop()
  read smartmq</var/www/html/openWB/ramdisk/smartmq
  if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
  #services_log "****ANF Stop for openWB.Services $1 ***********"
+ [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_stop  
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_stop $rseenabled  
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_stop $rfidakt
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid2_stop $rfidakt
@@ -1189,7 +1205,6 @@ function selectstop()
  [[ "$1" == "all" || "$1" == "button" ]]  &&  button_stop  $ladetaster
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_stop  $mqtt2mhi
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_stop 1 
- [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_stop  
  [[ "$1" == "all" || "$1" == "tasker" ]]  &&  tasker_stop $taskerenabled
  [[ "$1" == "all" || "$1" == "sysdaem" ]]  &&  sysdaem_stop 1
 
@@ -1200,6 +1215,7 @@ function selectcron5()
  read smartmq</var/www/html/openWB/ramdisk/smartmq
  if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
  #services_log "****ANF cron5 for openWB.Services $1 ***********"
+ [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_cron5  $needIsss $isss_mode  $isss_32
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_cron5  $rseenabled
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_cron5 $rfidakt
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid2_cron5 $rfidakt
@@ -1209,7 +1225,6 @@ function selectcron5()
  [[ "$1" == "all" || "$1" == "button" ]]  &&  button_cron5  $ladetaster
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_cron5  $mqtt2mhi
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_cron5 1 
- [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_cron5  $needIsss $isss_mode  $isss_32
  [[ "$1" == "all" || "$1" == "tasker" ]]  &&  tasker_cron5 $taskerenabled
  [[ "$1" == "all" || "$1" == "sysdaem" ]]  &&  sysdaem_cron5 1
 }
@@ -1219,6 +1234,7 @@ function selectreboot()
  read smartmq</var/www/html/openWB/ramdisk/smartmq
  if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
  #services_log "****ANF reboot for openWB.Services $1 ***********"
+ [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_reboot  $needIsss $isss_mode  $isss_32
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_reboot $rseenabled  
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_reboot $rfidakt
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid2_reboot $rfidakt
@@ -1228,7 +1244,6 @@ function selectreboot()
  [[ "$1" == "all" || "$1" == "button" ]]  &&  button_reboot  $ladetaster
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_reboot $mqtt2mhi
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_reboot 1 
- [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_reboot  $needIsss $isss_mode  $isss_32
  [[ "$1" == "all" || "$1" == "tasker" ]]  &&  tasker_reboot $taskerenabled
  [[ "$1" == "all" || "$1" == "sysdaem" ]]  &&  sysdaem_reboot 1
 }
@@ -1269,7 +1284,7 @@ function service_main() # cmd what
         		selectstart $what
         		;;
     *)
-    			echo "Usage: ${BASH_SOURCE[0]} {start|stop|restart|status [all|rse|rfid|modbus|smarthome|buttons|mqtt2mhi|tasker|isss|mqttsub|sysdaem]}"
+    			echo "Usage: ${BASH_SOURCE[0]} {cron5|start|stop|restart|status [all|rse|rfid|modbus|smarthome|buttons|mqtt2mhi|tasker|isss|mqttsub|sysdaem]}"
         		;;
  esac
 }

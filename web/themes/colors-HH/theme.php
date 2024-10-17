@@ -25,7 +25,7 @@ function makedebugreihe()
 					<div class="card-header bg-secondary collapsed" data-toggle="collapse" data-target="#debugOne">
 						<a class="card-title">Debug </a>
 					</div>
-					<div id="debugOne" class="card-body collapse" data-parent="#accordion">
+					<div id="debugOne" class="card-body collapse" data-parent="#accordion" style="background-color: white" >
 						<pre id="debugdiv" style="font-size:0.7rem;">
 
 END;
@@ -126,16 +126,15 @@ END;
 		content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<meta name="apple-mobile-web-app-title" content="openWB">
+	<meta name="apple-mobile-web-app-title" content="openWB-PWA">
 	<meta name="apple-mobile-web-app-status-bar-style" content="default">
 	<link rel="apple-touch-startup-image" href="/openWB/web/img/favicons/splash1125x2436w.png" />
 	<link rel="apple-touch-startup-image"
 		media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
 		href="img/favicons/splash1125x2436w.png">
-	<meta name="apple-mobile-web-app-title" content="openWB">
 
-	<meta name="description" content="openWB">
-	<meta name="keywords" content="openWB">
+	<meta name="description" content="openWB-d">
+	<meta name="keywords" content="openWB-k">
 	<meta name="author" content="Michael Ortenstein">
 	<link rel="apple-touch-icon" sizes="72x72" href="img/favicons/apple-icon-72x72.png">
 	<link rel="apple-touch-icon" sizes="76x76" href="img/favicons/apple-icon-76x76.png">
@@ -153,6 +152,7 @@ END;
 	<link rel="apple-touch-icon" sizes="57x57" href="img/favicons/apple-touch-icon-57x57.png">
 	<link rel="apple-touch-icon" sizes="60x60" href="img/favicons/apple-touch-icon-60x60.png">
 	<link rel="manifest" href="manifest.json">
+	<link rel="manifest" href="./manifest.json">
 	<link rel="shortcut icon" href="img/favicons/favicon.ico">
 	<!-- link rel="apple-touch-startup-image" href="img/loader.gif"> -->
 	<meta name="msapplication-config" content="img/favicons/browserconfig.xml">
@@ -210,8 +210,7 @@ END;
 				}
 				if (c.indexOf(name) == 0) {
 					val=c.substring(name.length, c.length);
-					console.log('theme.php getCookie '+cname); 
-					console.log(val); 
+					console.log('theme.php getCookie '+cname+'='+val); 
 					return val;
 				}
 			}
@@ -249,7 +248,6 @@ END;
 		} else console.log('Cookie js.debugmode not set'); 
 		console.log('js window.debugmode' + window.debugmode)
 
-
 	</script>
 	<script src="<?php echo xgeturl('js/d3.v6.min.js');?>"></script>
 	<script src="<?php echo xgeturl('powerdata.js');?>"></script>
@@ -261,8 +259,9 @@ END;
 	<script src="<?php echo xgeturl('batteryList.js');?>"></script>
 	<script src="<?php echo Xgeturl('pricechart.js');?>"></script>
 
-
 <?php
+
+	// out('owbconf' . print_r($owbconf,true)); 				
 
  //$iscloud=true;
 
@@ -329,7 +328,7 @@ END;
 	<div id="altclicker" class="container-fluid">
 
 
-<!-- Kopfzeile -->
+		<!-- Kopfzeile -->
 		<div class="row py-1 verySmallTextSize" style="color: var(--color-fg)">
 			<div id="date" class="col-2 text-left" style="padding-right: 5px; padding-left: 5px;" >
 				&nbsp;
@@ -358,8 +357,8 @@ END;
 		<!-- Kopfzeile Ende -->
 
 
-<!-- Obere reihe mit drei elementen -->
 		<div class="row py-0">
+			<!-- Obere reihe mit drei elementen -->
 			<!-- Aktuelle Leistung (powermeter) -->
 			<div class="rounded shadow wb-widget col-md p-2 m-1">
 				<div class="container-fluid">
@@ -435,8 +434,8 @@ END;
 			</div>
 		</div>
 
-<!-- zweite reihe  -->
-	 <div class="row py-0 px-0">
+		<!-- zweite reihe  -->
+		<div class="row py-0 px-0">
 			<!-- Ladepunkte (chargePointList) -->
 			<div class="rounded shadow wb-widget col-md p-2 m-1 ">
 				<h3 class="mt-0"><span class="fas fa-charging-station" style="color: var(--color-charging)">&nbsp;</span>Ladepunkte
@@ -451,20 +450,21 @@ END;
 			</div>
 
 			<!-- Speicher (batteryList) -->
-			<div class="rounded shadow wb-widget col-md p-2 m-1" id="batteryWidget">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-10 px-0">
-							<h3><span class="fas fa-car-battery" style="color: var(--color-battery)">&nbsp;</span>Speicher
-							<small><small id="BatSupportTxt"> notext </small></small></h3>
-						</div>
-						<?php makebatmenu(); ?>
-						<div class="wb-subwidget pb-2 " style="width:100%;">
-							<div id="batteryStatus"></div>
-						</div>
-					</div>			
+	<div class="rounded shadow wb-widget col-md p-2 m-1" id="batteryWidget">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-10 px-0">
+					<h3><span class="fas fa-car-battery" style="color: var(--color-battery)">&nbsp;</span>Speicher
+					<small><small id="BatSupportTxt"> notext </small></small></h3>
 				</div>
-			</div>
+				<?php makebatmenu(); ?>
+				<div class="wb-subwidget pb-2 " style="width:100%;">
+					<div id="batteryStatus"></div>
+				</div>
+				
+			</div>			
+		</div>
+	</div>
 
 			<!-- Smart Home (smartHomeList) -->
 			<div class="rounded shadow wb-widget col-md p-2 m-1" id="smartHomeWidget">
@@ -490,14 +490,14 @@ END;
 
 						<div class="row vaRow m-0 p-0">
 							<div class="col-2 m-0 p-0">
-								<button type="button" class="btn btn-secondary priceLess"><i class="far fa-minus-square"></i></button>
+								<button type="button" class="btn btn-secondary priceLess"><i class="fa fa-minus-square"></i></button>
 							</div>
 							<div class="col-8">
 								<input type="range" class="form-control-range maxPriceInput" id="maxPrice" min="-15" max="55"
 									step="0.1" value="0" data-initialized="0">
 							</div>
 							<div class="col-2 m-0 p-0 text-right">
-								<button type="button" class="btn btn-secondary priceMore"><i class="far fa-plus-square"></i></button>
+								<button type="button" class="btn btn-secondary priceMore"><i class="fa fa-plus-square"></i></button>
 							</div>
 						</div>
 						<div class="form-row vaRow p-0 m-0">
@@ -702,17 +702,7 @@ END;
 						</div>
 					</form>
 				</div> 	<!-- Ladepunkt Konfig -->
-		</div> 
-<!-- zweite reihe  -->
-	 <div class="row py-0 px-0">
-			<!-- Ladepunkte (chargePointList) -->
-			<div class="rounded shadow wb-widget col-md p-2 m-1 ">
-				<h3 class="mt-0"><span class="fas fa-charging-station" style="color: var(--color-charging)">&nbsp;</span>Logging</h3>
-				<div class="pb-2 xwb-subwidget">
-					<div id="log"></div>
-				</div>
-			</div>
-	</div> 
+		</div> 	<!-- zweite reihe  -->
 
 	</div> <!-- main page  -->
 
@@ -825,20 +815,6 @@ END;
 	<!-- some scripts -->
 	<script>
 
-(function () {
-    var old = console.log;
-    var logger = document.getElementById('log');
-    console.xlog = function (message) {
-        if (typeof message == 'object') {
-            logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
-        } else {
-            logger.innerHTML +=  message + '<br />';
-        }
-		old(message);
-    }
-})();
-
-
 		// load navbar, be careful: it loads asynchronous
 		$.get(
 			{ url: "themes/navbar.html", cache: false },
@@ -881,9 +857,6 @@ END;
  
 
 
-
-
-
 		var timeOfLastMqttMessage = 0;  // holds timestamp of last received message
 		var landingpageShown = false;  // holds flag for landing page being shown
 
@@ -894,13 +867,10 @@ END;
 			$(parent).find('.form-row[data-option]').not('[data-option*=' + option + ']').hide();  // hide all other option elements
 		}
 
-		function processPreloader(mqttTopic) 
-		{
+		function processPreloader(mqttTopic) {
 			// sets flag for topic received in topic-array
 			// and updates the preloader progress bar
-			if (!landingpageShown) 
-			{
-			
+			if (!landingpageShown) {
 				var countTopicsReceived = 0;
 				for (var index = 0; index < topicsToSubscribe.length; index++) {
 					if (topicsToSubscribe[index][0] == mqttTopic && topicsToSubscribe[index][1] == 0) {
@@ -911,16 +881,6 @@ END;
 						countTopicsReceived++;
 					}
 				};
-				
-	var d = new Date();
-	let h = (d.getHours());
-	let m = (d.getMinutes());
-	let s = (d.getSeconds());
-	let ms =(d.getMilliseconds());
-	let time = h + ":" + m + ":" + s + ":" + ms;	
-
-				
-				console.log( time + ' Preloader:'+ mqttTopic + ' '+countTopicsReceived);
 				// countTopicsToBeReceived holds all topics flagged 1 and not only those for preloader
 				countTopicsReceived = countTopicsReceived - countTopicsNotForPreloader;
 				var countTopicsToBeReceived = topicsToSubscribe.length - countTopicsNotForPreloader;
@@ -984,7 +944,6 @@ END;
 
 			console.log('------------ $(document).ready  all scripts sheduled (but not loaded) -----' )
 			wbdata.init();
-
 			powerGraph.init();
 			powerMeter.init();
 			yieldMeter.init();

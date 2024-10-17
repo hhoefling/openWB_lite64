@@ -1,439 +1,410 @@
 #!/bin/bash
 # Ramdisk mit initialen Werten befüllen nach Neustart, UP atreboot.sh
+# source from atreboot.sh
+
+ri='^-?[0-9]+$'
+rf='^-?[0-9\.]+$'
+
+
+##########################################################
+initrdmqtt_i()  # ramname,  topic default 
+{
+	if [[ -e ramdisk/$1 ]] ; then
+		# openwbDebugLog "MAIN" 0 "initrdmqtt ramdisk/$1 allready exists"
+		:
+	else
+		if [[ ! -z $2 ]]; then # oder -n 
+			val=$(mosquitto_sub -W 1 -C 1 -t openWB/$2)
+			# openwbDebugLog "MAIN" 0 "initrdmqtt read openWB/$1 from mosquito: [$val]"
+			if ! [[ $val =~ $ri ]] ; then
+				val=$3
+				openwbDebugLog "MAIN" 0 "initrdmqtt set $1 and $2 to deFault [$val]"
+				mosquitto_pub -t openWB/$2 -r -m "$val"
+			else
+				openwbDebugLog "MAIN" 0 "initrdmqtt set $1 from $2 to [$val]"
+			fi
+		else
+			val=$3
+			openwbDebugLog "MAIN" 0 "initrdmqtt set $1 to deFault [$val]"
+		fi
+		echo $val > ramdisk/$1
+	fi
+}
+
 
 initRamdisk(){
-	RamdiskPath="/var/www/html/openWB/ramdisk"
-	openwbDebugLog "MAIN" 2  "Initializing Ramdisk $RamdiskPath"
+	cd=`pwd`
+	openwbDebugLog "MAIN" 2  "INRD Initializing Ramdisk cd:($cd)"
+	cd /var/www/html/openWB
+	RamdiskPath="ramdisk"
 
 	# Logfiles erstellen
-	if [[ ! -L $RamdiskPath/openWB.log ]]; then
-		sudo rm -f $RamdiskPath/openWB.log
-		ln -s /var/log/openWB.log $RamdiskPath/openWB.log
+	if [[ ! -L ramdisk/openWB.log ]]; then
+		sudo rm -f ramdisk/openWB.log
+		ln -s /var/log/openWB.log ramdisk/openWB.log
 	fi
 	# Errfiles erstellen
-	if [[ ! -L $RamdiskPath/openwb.error.log ]]; then
-		sudo rm -f $RamdiskPath/openwb.error.log
-		ln -s /var/log/openwb.error.log $RamdiskPath/openwb.error.log
+	if [[ ! -L ramdisk/openwb.error.log ]]; then
+		sudo rm -f ramdisk/openwb.error.log
+		ln -s /var/log/openwb.error.log ramdisk/openwb.error.log
 	fi
-	echo "**** REBOOT ****" >> $RamdiskPath/mqtt.log
-	echo "**** REBOOT ****" >> $RamdiskPath/ladestatus.log
-	echo "**** REBOOT ****" >> $RamdiskPath/soc.log
-	echo "**** REBOOT ****" >> $RamdiskPath/rfid.log
-	echo "**** REBOOT ****" >> $RamdiskPath/nurpv.log
-	echo "**** REBOOT ****" >> $RamdiskPath/cleanup.log
-	echo "**** REBOOT ****" >> $RamdiskPath/smarthome.log
-	echo "**** REBOOT ****" >> $RamdiskPath/isss.log
-	echo "**** REBOOT ****" >> $RamdiskPath/event.log
+	echo "**** REBOOT ****" >> ramdisk/mqtt.log
+	echo "**** REBOOT ****" >> ramdisk/ladestatus.log
+	echo "**** REBOOT ****" >> ramdisk/soc.log
+	echo "**** REBOOT ****" >> ramdisk/rfid.log
+	echo "**** REBOOT ****" >> ramdisk/nurpv.log
+	echo "**** REBOOT ****" >> ramdisk/cleanup.log
+	echo "**** REBOOT ****" >> ramdisk/smarthome.log
+	echo "**** REBOOT ****" >> ramdisk/isss.log
+	echo "**** REBOOT ****" >> ramdisk/event.log
+	echo "**** REBOOT ****" >> ramdisk/dbg.log
+	echo "**** REBOOT ****" >> ramdisk/etprovider.log
+	echo "**** REBOOT ****" >> ramdisk/openwb.error.log
+	echo "**** REBOOT ****" >> ramdisk/mqtt2mhi.log
 
-	echo "$bootmodus" > $RamdiskPath/lademodus
-	echo "" >$RamdiskPath/LadereglerTxt
-	echo "" >$RamdiskPath/BatSupportTxt
+	if [ ! -d ramdisk/sm ] ; then
+   		mkdir ramdisk/sm
+   		sudo chown pi:pi ramdisk/sm
+   		sudo chmod 0777  ramdisk/sm
+   		openwbDebugLog "MAIN" 2 "INRD Create ramdisk/sm for smarthome "
+    fi
+
+
+
+	echo "$bootmodus" > ramdisk/lademodus
+	echo "" >ramdisk/LadereglerTxt
+	echo "" >ramdisk/BatSupportTxt
 
 	# Ladepunkte
 	# Variablen noch nicht einheitlich benannt, daher individuelle Zeilen
-	echo 0 > $RamdiskPath/errcounterextopenwb
-	echo 0 > $RamdiskPath/pluggedin
-	echo "nicht angefragt" > $RamdiskPath/evsedintestlp1
-	echo "nicht angefragt" > $RamdiskPath/evsedintestlp2
-	echo "nicht angefragt" > $RamdiskPath/evsedintestlp3
-    echo 0 > $RamdiskPath/restzeitlp1
-    echo 0 > $RamdiskPath/restzeitlp2
-    echo 0 > $RamdiskPath/restzeitlp3
-	echo 0 > $RamdiskPath/restzeitlp1m         # NC
-	echo 0 > $RamdiskPath/restzeitlp2m         # NC
-	echo 0 > $RamdiskPath/restzeitlp3m         # NC
-	echo 0 > $RamdiskPath/aktgeladen
-	echo 0 > $RamdiskPath/aktgeladens1
-	echo 0 > $RamdiskPath/aktgeladens2
-	echo 0 > $RamdiskPath/chargestat
-	echo 0 > $RamdiskPath/chargestats1
-	echo 0 > $RamdiskPath/chargestatlp3
-	echo 0 > $RamdiskPath/ladestatus
-	echo 0 > $RamdiskPath/ladestatuss1
-	echo 0 > $RamdiskPath/ladestatuss2
-	echo 0 > $RamdiskPath/ladestart
-	echo 0 > $RamdiskPath/ladestarts1
-	echo 0 > $RamdiskPath/ladestarts2
-	echo 0 > $RamdiskPath/gelrlp1
-	echo 0 > $RamdiskPath/gelrlp2
-	echo 0 > $RamdiskPath/gelrlp3
-	echo 0 > $RamdiskPath/ladungaktivlp1
-	echo 0 > $RamdiskPath/ladungaktivlp2
-	echo 0 > $RamdiskPath/ladungaktivlp3
-	echo 0 > $RamdiskPath/lla1
-	echo 0 > $RamdiskPath/llas11
-	echo 0 > $RamdiskPath/llas21
-	echo 0 > $RamdiskPath/lla2
-	echo 0 > $RamdiskPath/llas12
-	echo 0 > $RamdiskPath/llas22
-	echo 0 > $RamdiskPath/lla3
-	echo 0 > $RamdiskPath/llas13
-	echo 0 > $RamdiskPath/llas23
-	echo 0 > $RamdiskPath/llkwh
-	echo 0 > $RamdiskPath/llkwhs1
-	echo 0 > $RamdiskPath/llkwhs2
-	echo 0 > $RamdiskPath/llsoll
-	echo 0 > $RamdiskPath/llsolls1
-	echo 0 > $RamdiskPath/llsolls2
-	echo 0 > $RamdiskPath/llv1
-	echo 0 > $RamdiskPath/llvs11
-	echo 0 > $RamdiskPath/llvs21
-	echo 0 > $RamdiskPath/llv2
-	echo 0 > $RamdiskPath/llvs12
-	echo 0 > $RamdiskPath/llvs22
-	echo 0 > $RamdiskPath/llv3
-	echo 0 > $RamdiskPath/llvs13
-	echo 0 > $RamdiskPath/llvs23
-	echo 0 > $RamdiskPath/pluggedtimer1
-	echo 0 > $RamdiskPath/pluggedladungbishergeladen
-	echo 0 > $RamdiskPath/pluggedladungbishergeladenlp2
-	echo 0 > $RamdiskPath/pluggedladungbishergeladenlp3
-	echo 0 > $RamdiskPath/plugstat
-	echo 0 > $RamdiskPath/plugstats1
-	echo 0 > $RamdiskPath/plugstatlp3
-	echo 0 > $RamdiskPath/llaltnv
-	echo 0 > $RamdiskPath/llhz
-	echo 0 > $RamdiskPath/llkombiniert
-	echo 0 > $RamdiskPath/llkwhges
-	echo 0 > $RamdiskPath/llpf1
-	echo 0 > $RamdiskPath/llpf2
-	echo 0 > $RamdiskPath/llpf3
-	echo 0 > $RamdiskPath/llaktuell
-	echo 0 > $RamdiskPath/llaktuells1
-	echo 0 > $RamdiskPath/llaktuells2
-	echo 0 > $RamdiskPath/nachtladen2state
-	echo 0 > $RamdiskPath/nachtladen2states1
-	echo 0 > $RamdiskPath/nachtladenstate
-	echo 0 > $RamdiskPath/nachtladenstates1
-#	echo 0 > $RamdiskPath/pluggedtimer1
-#	echo 0 > $RamdiskPath/pluggedtimer2
-#	echo 0 > $RamdiskPath/pluggedtimerlp3
-	echo 0 > $RamdiskPath/progevsedinlp1
-	echo 0 > $RamdiskPath/progevsedinlp12000
-	echo 0 > $RamdiskPath/progevsedinlp12007
-	echo 0 > $RamdiskPath/progevsedinlp2
-	echo 0 > $RamdiskPath/progevsedinlp22000
-	echo 0 > $RamdiskPath/progevsedinlp22007
-	echo 0 > $RamdiskPath/cpulp1counter
-	echo 0 > $RamdiskPath/soc
-	echo 0 > $RamdiskPath/soc1
-	echo 0 > $RamdiskPath/soc1KM
-	echo 0 > $RamdiskPath/soc2KM
-	echo 0 > $RamdiskPath/soc3KM
-	echo 0 > $RamdiskPath/soc1Range
-    echo 0 > $RamdiskPath/soc2Range
-    echo 0 > $RamdiskPath/socvorhanden
-	echo 0 > $RamdiskPath/soc1vorhanden
-	echo 0 > $RamdiskPath/tmpsoc
-	echo 0 > $RamdiskPath/tmpsoc1
-	echo 0 > $RamdiskPath/zielladenkorrektura
-	echo 0 > $RamdiskPath/ladungdurchziel
-	echo 20000 > $RamdiskPath/soctimer
-	echo 20000 > $RamdiskPath/soctimer1
-	echo 28 > $RamdiskPath/evsemodbustimer
-	touch $RamdiskPath/llog1
-	touch $RamdiskPath/llogs1
-	touch $RamdiskPath/llogs2
+	echo 0 > ramdisk/errcounterextopenwb
+	echo 0 > ramdisk/pluggedin
+	echo "nicht angefragt" > ramdisk/evsedintestlp1
+	echo "nicht angefragt" > ramdisk/evsedintestlp2
+	echo "nicht angefragt" > ramdisk/evsedintestlp3
+    echo 0 > ramdisk/restzeitlp1
+    echo 0 > ramdisk/restzeitlp2
+    echo 0 > ramdisk/restzeitlp3
+	echo 0 > ramdisk/restzeitlp1m         # NC
+	echo 0 > ramdisk/restzeitlp2m         # NC
+	echo 0 > ramdisk/restzeitlp3m         # NC
+	echo 0 > ramdisk/aktgeladen
+	echo 0 > ramdisk/aktgeladens1
+	echo 0 > ramdisk/aktgeladens2
+	echo 0 > ramdisk/chargestat
+	echo 0 > ramdisk/chargestats1
+	echo 0 > ramdisk/chargestatlp3
+	echo 0 > ramdisk/ladestatus
+	echo 0 > ramdisk/ladestatuss1
+	echo 0 > ramdisk/ladestatuss2
+:	echo 0 > ramdisk/ladestart
+	echo 0 > ramdisk/ladestarts1
+	echo 0 > ramdisk/ladestarts2
+	echo 0 > ramdisk/gelrlp1
+	echo 0 > ramdisk/gelrlp2
+	echo 0 > ramdisk/gelrlp3
+	echo 0 > ramdisk/ladungaktivlp1
+	echo 0 > ramdisk/ladungaktivlp2
+	echo 0 > ramdisk/ladungaktivlp3
+	echo 0 > ramdisk/lla1
+	echo 0 > ramdisk/llas11
+	echo 0 > ramdisk/llas21
+	echo 0 > ramdisk/lla2
+	echo 0 > ramdisk/llas12
+	echo 0 > ramdisk/llas22
+	echo 0 > ramdisk/lla3
+	echo 0 > ramdisk/llas13
+	echo 0 > ramdisk/llas23
+	echo 0 > ramdisk/llkwh
+	echo 0 > ramdisk/llkwhs1
+	echo 0 > ramdisk/llkwhs2
+	echo 0 > ramdisk/llsoll
+	echo 0 > ramdisk/llsolls1
+	echo 0 > ramdisk/llsolls2
+	echo 0 > ramdisk/llv1
+	echo 0 > ramdisk/llvs11
+	echo 0 > ramdisk/llvs21
+	echo 0 > ramdisk/llv2
+	echo 0 > ramdisk/llvs12
+	echo 0 > ramdisk/llvs22
+	echo 0 > ramdisk/llv3
+	echo 0 > ramdisk/llvs13
+	echo 0 > ramdisk/llvs23
+	echo 0 > ramdisk/pluggedtimer1
+	echo 0 > ramdisk/pluggedladungbishergeladen
+	echo 0 > ramdisk/pluggedladungbishergeladenlp2
+	echo 0 > ramdisk/pluggedladungbishergeladenlp3
+	echo 0 > ramdisk/plugstat
+	echo 0 > ramdisk/plugstats1
+	echo 0 > ramdisk/plugstatlp3
+	echo 0 > ramdisk/llaltnv
+	echo 0 > ramdisk/llhz
+	echo 0 > ramdisk/llkombiniert
+	echo 0 > ramdisk/llkwhges
+	echo 0 > ramdisk/llpf1
+	echo 0 > ramdisk/llpf2
+	echo 0 > ramdisk/llpf3
+	echo 0 > ramdisk/llaktuell
+	echo 0 > ramdisk/llaktuells1
+	echo 0 > ramdisk/llaktuells2
+	echo 0 > ramdisk/nachtladen2state
+	echo 0 > ramdisk/nachtladen2states1
+	echo 0 > ramdisk/nachtladenstate
+	echo 0 > ramdisk/nachtladenstates1
+#	echo 0 > ramdisk/pluggedtimer1
+#	echo 0 > ramdisk/pluggedtimer2
+#	echo 0 > ramdisk/pluggedtimerlp3
+	echo 0 > ramdisk/progevsedinlp1
+	echo 0 > ramdisk/progevsedinlp12000
+	echo 0 > ramdisk/progevsedinlp12007
+	echo 0 > ramdisk/progevsedinlp2
+	echo 0 > ramdisk/progevsedinlp22000
+	echo 0 > ramdisk/progevsedinlp22007
+	echo 0 > ramdisk/cpulp1counter
+	echo 0 > ramdisk/soc
+	echo 0 > ramdisk/soc1
+	echo 0 > ramdisk/soc1KM
+	echo 0 > ramdisk/soc2KM
+	echo 0 > ramdisk/soc3KM
+	echo 0 > ramdisk/soc1Range
+    echo 0 > ramdisk/soc2Range
+    echo 0 > ramdisk/socvorhanden
+	echo 0 > ramdisk/soc1vorhanden
+	echo 0 > ramdisk/tmpsoc
+	echo 0 > ramdisk/tmpsoc1
+	echo 0 > ramdisk/zielladenkorrektura
+	echo 0 > ramdisk/ladungdurchziel
+	echo 20000 > ramdisk/soctimer
+	echo 20000 > ramdisk/soctimer1
+	echo 28 > ramdisk/evsemodbustimer
+	touch ramdisk/llog1
+	touch ramdisk/llogs1
+	touch ramdisk/llogs2
 
 	# rct
-	echo 0 > $RamdiskPath/HB_discharge_max
-	echo 0 > $RamdiskPath/HB_loadWatt
-	echo 0 > $RamdiskPath/HB_load_minutes
-	echo 0 > $RamdiskPath/HB_soctarget
-	echo 0 > $RamdiskPath/HB_iskalib
-	echo 1 > $RamdiskPath/HB_enable_discharge_max
-	echo 0 > $RamdiskPath/HB_enable_priceloading
+	echo 0 > ramdisk/HB_discharge_max
+	echo 0 > ramdisk/HB_loadWatt
+	echo 0 > ramdisk/HB_load_minutes
+	echo 0 > ramdisk/HB_soctarget
+	echo 0 > ramdisk/HB_iskalib
+	echo 1 > ramdisk/HB_enable_discharge_max
+	echo 0 > ramdisk/HB_enable_priceloading
 
 	
 	# SmartHome 2.0
-	echo 0 > $RamdiskPath/device1_temp0
-	echo 0 > $RamdiskPath/device1_temp1
-	echo 0 > $RamdiskPath/device1_temp2
-	echo 0 > $RamdiskPath/device1_wh
-	echo 0 > $RamdiskPath/device2_temp0
-	echo 0 > $RamdiskPath/device2_temp1
-	echo 0 > $RamdiskPath/device2_temp2
-	echo 0 > $RamdiskPath/device2_wh
-	echo 0 > $RamdiskPath/device3_wh
-	echo 0 > $RamdiskPath/device4_wh
-	echo 0 > $RamdiskPath/device5_wh
-	echo 0 > $RamdiskPath/device6_wh
-	echo 0 > $RamdiskPath/device7_wh
-	echo 0 > $RamdiskPath/device8_wh
-	echo 0 > $RamdiskPath/device9_wh
-	echo 0 > $RamdiskPath/smarthome_device_minhaus_1
-	echo 0 > $RamdiskPath/smarthome_device_minhaus_2
-	echo 0 > $RamdiskPath/smarthome_device_minhaus_3
-	echo 0 > $RamdiskPath/smarthome_device_minhaus_4
-	echo 0 > $RamdiskPath/smarthome_device_minhaus_5
-	echo 0 > $RamdiskPath/smarthome_device_minhaus_6
-	echo 0 > $RamdiskPath/smarthome_device_minhaus_7
-	echo 0 > $RamdiskPath/smarthome_device_minhaus_8
-	echo 0 > $RamdiskPath/smarthome_device_minhaus_9
-	echo 0 > $RamdiskPath/smarthome_device_manual_1
-	echo 0 > $RamdiskPath/smarthome_device_manual_2
-	echo 0 > $RamdiskPath/smarthome_device_manual_3
-	echo 0 > $RamdiskPath/smarthome_device_manual_4
-	echo 0 > $RamdiskPath/smarthome_device_manual_5
-	echo 0 > $RamdiskPath/smarthome_device_manual_6
-	echo 0 > $RamdiskPath/smarthome_device_manual_7
-	echo 0 > $RamdiskPath/smarthome_device_manual_8
-	echo 0 > $RamdiskPath/smarthome_device_manual_9
-	echo 0 > $RamdiskPath/smarthomehandlermaxbatterypower
-	echo 0 > $RamdiskPath/smarthomehandlerloglevel
+	echo 0 > ramdisk/device1_temp0
+	echo 0 > ramdisk/device1_temp1
+	echo 0 > ramdisk/device1_temp2
+	echo 0 > ramdisk/device1_wh
+	echo 0 > ramdisk/device2_temp0
+	echo 0 > ramdisk/device2_temp1
+	echo 0 > ramdisk/device2_temp2
+	echo 0 > ramdisk/device2_wh
+	echo 0 > ramdisk/device3_wh
+	echo 0 > ramdisk/device4_wh
+	echo 0 > ramdisk/device5_wh
+	echo 0 > ramdisk/device6_wh
+	echo 0 > ramdisk/device7_wh
+	echo 0 > ramdisk/device8_wh
+	echo 0 > ramdisk/device9_wh
+	echo 0 > ramdisk/smarthome_device_minhaus_1
+	echo 0 > ramdisk/smarthome_device_minhaus_2
+	echo 0 > ramdisk/smarthome_device_minhaus_3
+	echo 0 > ramdisk/smarthome_device_minhaus_4
+	echo 0 > ramdisk/smarthome_device_minhaus_5
+	echo 0 > ramdisk/smarthome_device_minhaus_6
+	echo 0 > ramdisk/smarthome_device_minhaus_7
+	echo 0 > ramdisk/smarthome_device_minhaus_8
+	echo 0 > ramdisk/smarthome_device_minhaus_9
+	echo 0 > ramdisk/smarthome_device_manual_1
+	echo 0 > ramdisk/smarthome_device_manual_2
+	echo 0 > ramdisk/smarthome_device_manual_3
+	echo 0 > ramdisk/smarthome_device_manual_4
+	echo 0 > ramdisk/smarthome_device_manual_5
+	echo 0 > ramdisk/smarthome_device_manual_6
+	echo 0 > ramdisk/smarthome_device_manual_7
+	echo 0 > ramdisk/smarthome_device_manual_8
+	echo 0 > ramdisk/smarthome_device_manual_9
+# 	echo 0 > ramdisk/smarthomehandlerloglevel
 
 	# evu
-	echo 0 > $RamdiskPath/bezuga1
-	echo 0 > $RamdiskPath/bezuga2
-	echo 0 > $RamdiskPath/bezuga3
-	echo 0 > $RamdiskPath/bezugkwh
-	echo 0 > $RamdiskPath/bezugw1
-	echo 0 > $RamdiskPath/bezugw2
-	echo 0 > $RamdiskPath/bezugw3
-	echo 0 > $RamdiskPath/einspeisungkwh
-	echo 0 > $RamdiskPath/evuhz
-	echo 0 > $RamdiskPath/evupf1
-	echo 0 > $RamdiskPath/evupf2
-	echo 0 > $RamdiskPath/evupf3
-	echo 0 > $RamdiskPath/evuv1
-	echo 0 > $RamdiskPath/evuv2
-	echo 0 > $RamdiskPath/evuv3
-	echo 0 > $RamdiskPath/wattbezug
+	echo 0 > ramdisk/bezuga1
+	echo 0 > ramdisk/bezuga2
+	echo 0 > ramdisk/bezuga3
+	echo 0 > ramdisk/bezugkwh
+	echo 0 > ramdisk/bezugw1
+	echo 0 > ramdisk/bezugw2
+	echo 0 > ramdisk/bezugw3
+	echo 0 > ramdisk/einspeisungkwh
+	echo 0 > ramdisk/evuhz
+	echo 0 > ramdisk/evupf1
+	echo 0 > ramdisk/evupf2
+	echo 0 > ramdisk/evupf3
+	echo 0 > ramdisk/evuv1
+	echo 0 > ramdisk/evuv2
+	echo 0 > ramdisk/evuv3
+	echo 0 > ramdisk/wattbezug
 
 	# pv
-	echo 0 > $RamdiskPath/daily_pvkwhk
-#NC	echo 0 > $RamdiskPath/daily_pvkwhk1
-#NC	echo 0 > $RamdiskPath/daily_pvkwhk2
-	echo 0 > $RamdiskPath/monthly_pvkwhk
-#NC	echo 0 > $RamdiskPath/monthly_pvkwhk1
-#NC	echo 0 > $RamdiskPath/monthly_pvkwhk2
-	echo 0 > $RamdiskPath/nurpv70dynstatus
-	echo 0 > $RamdiskPath/pv1watt
-	echo 0 > $RamdiskPath/pv2a1
-	echo 0 > $RamdiskPath/pv2a2
-	echo 0 > $RamdiskPath/pv2a3
-	echo 0 > $RamdiskPath/pv2kwh
-	echo 0 > $RamdiskPath/pv2watt
-	echo 0 > $RamdiskPath/pvcounter
-	echo 0 > $RamdiskPath/pvecounter
-	echo 0 > $RamdiskPath/pvkwh
-	echo 0 > $RamdiskPath/pvkwhk
-	echo 0 > $RamdiskPath/pvkwhk1
-	echo 0 > $RamdiskPath/pvkwhk2
-	echo 0 > $RamdiskPath/pv1vorhanden
-	echo 0 > $RamdiskPath/pv2vorhanden
-	echo 0 > $RamdiskPath/pvwatt
-	echo 0 > $RamdiskPath/pvwatt1
-	echo 0 > $RamdiskPath/pvwatt2
-	echo 0 > $RamdiskPath/yearly_pvkwhk
-#NC	echo 0 > $RamdiskPath/yearly_pvkwhk1
-#NC	echo 0 > $RamdiskPath/yearly_pvkwhk2
+	echo 0 > ramdisk/daily_pvkwhk
+# NC	echo 0 > ramdisk/daily_pvkwhk1
+# NC	echo 0 > ramdisk/daily_pvkwhk2
+	echo 0 > ramdisk/monthly_pvkwhk
+# NC	echo 0 > ramdisk/monthly_pvkwhk1
+# NC	echo 0 > ramdisk/monthly_pvkwhk2
+	echo 0 > ramdisk/nurpv70dynstatus
+	echo 0 > ramdisk/pv1watt
+	echo 0 > ramdisk/pv2a1
+	echo 0 > ramdisk/pv2a2
+	echo 0 > ramdisk/pv2a3
+	echo 0 > ramdisk/pv2kwh
+	echo 0 > ramdisk/pv2watt
+	echo 0 > ramdisk/pvcounter
+	echo 0 > ramdisk/pvecounter
+	echo 0 > ramdisk/pvkwh
+	echo 0 > ramdisk/pvkwhk
+	echo 0 > ramdisk/pvkwhk1
+	echo 0 > ramdisk/pvkwhk2
+	echo 0 > ramdisk/pv1vorhanden
+	echo 0 > ramdisk/pv2vorhanden
+	echo 0 > ramdisk/pvwatt
+	echo 0 > ramdisk/pvwatt1
+	echo 0 > ramdisk/pvwatt2
+	echo 0 > ramdisk/yearly_pvkwhk
+# NC	echo 0 > ramdisk/yearly_pvkwhk1
+# NC	echo 0 > ramdisk/yearly_pvkwhk2
 
 	# bat
-	echo 0 > $RamdiskPath/speicher
-	echo 0 > $RamdiskPath/speicherekwh
-	echo 0 > $RamdiskPath/speicherikwh
-	echo 0 > $RamdiskPath/speicherleistung
-	echo 0 > $RamdiskPath/speicherleistung1
-	echo 0 > $RamdiskPath/speicherleistung2
-	echo 0 > $RamdiskPath/speichersoc
-	echo 0 > $RamdiskPath/speichersoc2
+	echo 0 > ramdisk/speicher
+	echo 0 > ramdisk/speicherekwh
+	echo 0 > ramdisk/speicherikwh
+	echo 0 > ramdisk/speicherleistung
+	echo 0 > ramdisk/speicherleistung1
+	echo 0 > ramdisk/speicherleistung2
+	echo 0 > ramdisk/speichersoc
+	echo 0 > ramdisk/speichersoc2
 # HH
-	echo 0 > $RamdiskPath/speichervorhanden
+	echo 0 > ramdisk/speichervorhanden
 
 
 	# rfid
-	echo "$rfidlist" > $RamdiskPath/rfidlist
-	echo 0 > $RamdiskPath/rfidlasttag
-	echo 0 > $RamdiskPath/rfidlp1
-	echo 0 > $RamdiskPath/rfidlp2
-	echo 0 > $RamdiskPath/rfidlp3
-	echo 0 > $RamdiskPath/readtag
-	echo 0 > $RamdiskPath/tagScanInfoLp1
-	echo 0 > $RamdiskPath/tagScanInfoLp2
-	echo 0 > $RamdiskPath/tagScanInfoLp3
+	echo "$rfidlist" > ramdisk/rfidlist
+	echo 0 > ramdisk/rfidlasttag
+	echo 0 > ramdisk/rfidlp1
+	echo 0 > ramdisk/rfidlp2
+	echo 0 > ramdisk/rfidlp3
+	echo 0 > ramdisk/readtag
+	echo 0 > ramdisk/tagScanInfoLp1
+	echo 0 > ramdisk/tagScanInfoLp2
+	echo 0 > ramdisk/tagScanInfoLp3
 
 	# SmartHome 1.0
-	echo 0 > $RamdiskPath/hook1akt
-	echo 0 > $RamdiskPath/hook1einschaltverzcounter
-	echo 0 > $RamdiskPath/hook2akt
-	echo 0 > $RamdiskPath/hook2einschaltverzcounter
-	echo 0 > $RamdiskPath/hook3akt
-	echo 0 > $RamdiskPath/hook3einschaltverzcounter      # fehlte
-	echo "$verbraucher1_name" > $RamdiskPath/verbraucher1_name
-	echo "$verbraucher2_name" > $RamdiskPath/verbraucher2_name
+	echo 0 > ramdisk/hook1akt
+	echo 0 > ramdisk/hook1einschaltverzcounter
+	echo 0 > ramdisk/hook2akt
+	echo 0 > ramdisk/hook2einschaltverzcounter
+	echo 0 > ramdisk/hook3akt
+	echo 0 > ramdisk/hook3einschaltverzcounter      # fehlte
+	echo "$verbraucher1_name" > ramdisk/verbraucher1_name
+	echo "$verbraucher2_name" > ramdisk/verbraucher2_name
 
 
-	echo 0 > $RamdiskPath/verbraucher1_watt
-	echo 0 > $RamdiskPath/verbraucher1_wh
-	echo 0 > $RamdiskPath/verbraucher1_whe
-	echo 0 > $RamdiskPath/verbraucher1vorhanden
-	echo 0 > $RamdiskPath/daily_verbraucher1ekwh
-	echo 0 > $RamdiskPath/daily_verbraucher1ikwh
+	echo 0 > ramdisk/verbraucher1_watt
+	echo 0 > ramdisk/verbraucher1_wh
+	echo 0 > ramdisk/verbraucher1_whe
+	echo 0 > ramdisk/verbraucher1vorhanden
+	echo 0 > ramdisk/daily_verbraucher1ekwh
+	echo 0 > ramdisk/daily_verbraucher1ikwh
 
-	echo 0 > $RamdiskPath/verbraucher2_watt
-	echo 0 > $RamdiskPath/verbraucher2_wh
-	echo 0 > $RamdiskPath/verbraucher2_whe
-	echo 0 > $RamdiskPath/verbraucher2vorhanden
-	echo 0 > $RamdiskPath/daily_verbraucher2ekwh
-	echo 0 > $RamdiskPath/daily_verbraucher2ikwh
+	echo 0 > ramdisk/verbraucher2_watt
+	echo 0 > ramdisk/verbraucher2_wh
+	echo 0 > ramdisk/verbraucher2_whe
+	echo 0 > ramdisk/verbraucher2vorhanden
+	echo 0 > ramdisk/daily_verbraucher2ekwh
+	echo 0 > ramdisk/daily_verbraucher2ikwh
     
-	touch $RamdiskPath/ladestophooklp1aktiv # benötigt damit der Ladestopp-WebHook nicht beim Neustart auslöst
-	touch $RamdiskPath/abgesteckthooklp1aktiv # benötigt damit der Abgesteckt-WebHook nicht beim Neustart auslöst
+	touch ramdisk/ladestophooklp1aktiv # benötigt damit der Ladestopp-WebHook nicht beim Neustart auslöst
+	touch ramdisk/abgesteckthooklp1aktiv # benötigt damit der Abgesteckt-WebHook nicht beim Neustart auslöst
 
 	# standard socket
-#	echo 0 > $RamdiskPath/socketa
-#	echo 0 > $RamdiskPath/socketv
-#	echo 0 > $RamdiskPath/socketp
-#	echo 0 > $RamdiskPath/socketpf
-#	echo 0 > $RamdiskPath/socketkwh
-#	echo 0 > $RamdiskPath/socketApproved
-#	echo 0 > $RamdiskPath/socketActivated
-#	echo 0 > $RamdiskPath/socketActivationRequested
+#	echo 0 > ramdisk/socketa
+#	echo 0 > ramdisk/socketv
+#	echo 0 > ramdisk/socketp
+#	echo 0 > ramdisk/socketpf
+#	echo 0 > ramdisk/socketkwh
+#	echo 0 > ramdisk/socketApproved
+#	echo 0 > ramdisk/socketActivated
+#	echo 0 > ramdisk/socketActivationRequested
 
 	# diverse Dateien
-#	echo 0 > $RamdiskPath/autolocktimer  NC
-	echo 0 > $RamdiskPath/blockall
-	echo 0 > $RamdiskPath/devicetotal_watt
-	echo 0 > $RamdiskPath/etprovidermaxprice
-	echo 0 > $RamdiskPath/etproviderprice
-	touch $RamdiskPath/etprovidergraphlist
-	echo 0 > $RamdiskPath/evseausgelesen
-	echo 0 > $RamdiskPath/glattwattbezug
-	echo 0 > $RamdiskPath/hausverbrauch
-	echo 0 > $RamdiskPath/ipaddress
-	echo 0 > $RamdiskPath/ledstatus
-	echo 0 > $RamdiskPath/netzschutz
+#	echo 0 > ramdisk/autolocktimer  NC
+	echo 0 > ramdisk/blockall
+	echo 0 > ramdisk/devicetotal_watt
+	echo 0 > ramdisk/etprovidermaxprice
+	echo 0 > ramdisk/etproviderprice
+	touch ramdisk/etprovidergraphlist
+	echo 0 > ramdisk/evseausgelesen
+	echo 0 > ramdisk/glattwattbezug
+	echo 0 > ramdisk/hausverbrauch
+	echo 0 > ramdisk/ipaddress
+	echo 0 > ramdisk/ledstatus
+	echo 0 > ramdisk/netzschutz
 # Yourcharge
-#	echo 0 > $RamdiskPath/randomSleepValue
-	echo 0 > $RamdiskPath/renewmqtt
-	echo 0 > $RamdiskPath/rseaktiv
-    echo 0 > $RamdiskPath/rsestatus
-	echo 0 > $RamdiskPath/schieflast
-	echo 0 > $RamdiskPath/u1p3pstat
-	echo 0 > $RamdiskPath/uhcounter
-	echo 0 > $RamdiskPath/urcounter
-	echo 1 > $RamdiskPath/anzahlphasen
-	echo 1 > $RamdiskPath/bootinprogress
-	echo 1 > $RamdiskPath/execdisplay
-	echo 4 > $RamdiskPath/graphtimer
+#	echo 0 > ramdisk/randomSleepValue
+	echo 0 > ramdisk/renewmqtt
+	echo 0 > ramdisk/rseaktiv
+    echo 0 > ramdisk/rsestatus
+	echo 0 > ramdisk/schieflast
+	echo 0 > ramdisk/u1p3pstat
+	echo 0 > ramdisk/uhcounter
+	echo 0 > ramdisk/urcounter
+	echo 1 > ramdisk/anzahlphasen
+	echo 1 > ramdisk/bootinprogress
+	echo 1 > ramdisk/execdisplay
+	echo 4 > ramdisk/graphtimer
 
 
 
-#	# temporäre Zwischenspeicher für z. B. Kostal Plenticore, da
-#	# bei Anschluss von Speicher und Energiemanager direkt am WR
-#	# alle Werte im Modul des Wechselrichters aus den Registern
-#	# gelesen werden, um einen zeitlich zusammenhängenden Datensatz
-#	# zu bekommen. Im jeweiligen Modul Speicher/Bezug werden
-#	# die Werte dann in die ramdisk für die weitere globale
-#	# Verarbeitung geschrieben.
-#	# Bezug/Einspeisung
-#	echo 0 > $RamdiskPath/temp_wattbezug
-#	# Gesamte AC-Leistung des Speichers am WR 1 + 2
-#	echo 0 > $RamdiskPath/temp_peicherleistung
-#	# AC-Leistung des Speichers am WR 1
-#	echo 0 > $RamdiskPath/temp_peicherleistung1
-#	# AC-Leistung des Speichers am WR 2
-#	echo 0 > $RamdiskPath/temp_peicherleistung2
-#	# SoC des Speichers am WR 1
-#	echo 0 > $RamdiskPath/temp_speichersoc
-#	# Strom auf den jeweiligen Phasen
-#	echo 0 > $RamdiskPath/temp_bezuga1
-#	echo 0 > $RamdiskPath/temp_bezuga2
-#	echo 0 > $RamdiskPath/temp_bezuga3
-#	# Netzfrequenz
-#	echo 0 > $RamdiskPath/temp_evuhz
-#	# Leistung auf den jeweiligen Phasen
-#	echo 0 > $RamdiskPath/temp_bezugw1
-#	echo 0 > $RamdiskPath/temp_bezugw2
-#	echo 0 > $RamdiskPath/temp_bezugw3
-#	# Spannung auf den jeweiligen Phasen
-#	echo 0 > $RamdiskPath/temp_evuv1
-#	echo 0 > $RamdiskPath/temp_evuv2
-#	echo 0 > $RamdiskPath/temp_evuv3
-#	# Wirkfaktor, wird aus historischen Gründen je Phase geschrieben
-#	echo 0 > $RamdiskPath/temp_evupf1
-#	echo 0 > $RamdiskPath/temp_evupf2
-#	echo 0 > $RamdiskPath/temp_evupf3
+	initrdmqtt_i pluggedladunglp1startkwh lp/1/plugStartkWh 0
+	initrdmqtt_i manual_soc_lp1 lp/1/manualSoc 0
+	initrdmqtt_i pluggedladungaktlp1 lp/1/pluggedladungakt 0
+	initrdmqtt_i lp1sofortll config/get/sofort/lp/1/current 10
+
+	initrdmqtt_i pluggedladunglp2startkwh lp/2/plugStartkWh 0
+	initrdmqtt_i manual_soc_lp2 lp/2/manualSoc 0
+	initrdmqtt_i pluggedladungaktlp2 lp/2/pluggedladungakt 0
+	initrdmqtt_i lp2sofortll config/get/sofort/lp/2/current 10
+
+	initrdmqtt_i pluggedladunglp3startkwh lp/3/plugStartkWh 0
+	initrdmqtt_i manual_soc_lp3 lp/3/manualSoc 0
+	initrdmqtt_i pluggedladungaktlp3 lp/3/pluggedladungakt 0
+	initrdmqtt_i lp3sofortll config/get/sofort/lp/3/current 10
+
+	initrdmqtt_i lp1phasen "" 0
+	initrdmqtt_i lp1enabled "" 1
+	initrdmqtt_i restzeitlp1 "" 0
+	initrdmqtt_i rfidlp1 "" 0
+	initrdmqtt_i boolstopchargeafterdisclp1 "" 0
+
+	initrdmqtt_i lp2phasen "" 0
+	initrdmqtt_i lp2enabled "" 1
+	initrdmqtt_i restzeitlp2 "" 0
+	initrdmqtt_i rfidlp2 "" 0
+	initrdmqtt_i boolstopchargeafterdisclp2 "" 0
+
+	initrdmqtt_i lp3phasen "" 0
+	initrdmqtt_i lp3enabled "" 1
+	initrdmqtt_i restzeitlp3 "" 0
+	initrdmqtt_i rfidlp3 "" 0
+	initrdmqtt_i boolstopchargeafterdisclp3 "" 0
+
+	initrdmqtt_i sm/maxbatterypower config/get/SmartHome/maxBatteryPower 0
+	initrdmqtt_i smartmq config/get/SmartHome/smartmq 1
 
 
+	sudo chmod 777 ramdisk/*
 
-#  "autolockstatuslp${i}::0" \
-#  "autolockconfiguredlp${i}::0" \
-
-	# init common files for lp1 to lp8
-	# "<ramdiskFileName>:<MqttTopic>:<defaultValue>"
-	# <Mqtt-Topic> is optional and request to broker will be skipped if empty
-#	for i in $(seq 1 8);
-	for i in $(seq 1 3);
-	do
-		for f in \
-			"pluggedladunglp${i}startkwh:openWB/lp/${i}/plugStartkWh:0" \
-			"manual_soc_lp${i}:openWB/lp/${i}/manualSoc:0" \
-			"pluggedladungaktlp${i}:openWB/lp/${i}/pluggedladungakt:0" \
-			"lp${i}phasen::0" \
-			"lp${i}enabled::1" \
-			"restzeitlp${i}::0" \
-			"lp${i}sofortll:openWB/config/get/sofort/lp/${i}/current:10" \
-			"rfidlp${i}::0" \
-			"boolstopchargeafterdisclp${i}::0" 
-		do
-			IFS=':' read -r -a tuple <<< "$f"
-			currentRamdiskFile="$RamdiskPath/${tuple[0]}"
-			if ! [ -f "$currentRamdiskFile" ]; then
-				if [[ ! -z ${tuple[1]} ]]; then # oder -n 
-					mqttValue=$(timeout 1 mosquitto_sub -C 1 -t "${tuple[1]}")
-					if [[ ! -z "$mqttValue" ]]; then	# oder -n
-						openwbDebugLog "MAIN" 2 "'$currentRamdiskFile' missing: Setting from MQTT topic '${tuple[0]}' to value '$mqttValue'"
-						echo "$mqttValue" > "$currentRamdiskFile"
-					else
-						openwbDebugLog "MAIN" 2 "'$currentRamdiskFile' missing: MQTT topic '${tuple[0]}' can also not provide any value: Setting to default of '${tuple[2]}'"
-						echo "${tuple[2]}" > "$currentRamdiskFile"
-					fi
-				else
-					openwbDebugLog "MAIN" 2  "'$currentRamdiskFile' missing: no MQTT topic set: Setting to default of '${tuple[2]}'"
-					echo "${tuple[2]}" > "$currentRamdiskFile"
-				fi
-			fi
-		done
-	done
-
-		
-# init other files
-##	for f in \
-##			"mqttlastlademodus:-1" 
-##		do
-##			IFS=':' read -r -a tuple <<< "$f"
-##			currentRamdiskFile="$RamdiskPath/${tuple[0]}"
-##			if ! [ -f "$currentRamdiskFile" ]; then
-##				if [[ ! -z "${tuple[1]}" ]]; then   -n
-##					openwbDebugLog "MAIN" 2  "'${tuple[0]}' missing: Setting to provided default value '${tuple[1]}'"
-##					echo "${tuple[1]}" > "$currentRamdiskFile"
-##				else
-##					openwbDebugLog "MAIN" 2  "'${tuple[0]}' missing: No default value provided. Setting to 0."
-##					echo 0 > "$currentRamdiskFile"
-##				fi
-##			fi
-##		done
-
-	# read values from mosquitto and store them to ramdisk for smarthomehandler.py
-	ra='^-?[0-9]+$'
-	importtemp=$(timeout 1 mosquitto_sub -t openWB/config/get/SmartHome/maxBatteryPower)
-	if ! [[ $importtemp =~ $ra ]] ; then
-		importtemp="0"
-	fi
-	echo $importtemp > $RamdiskPath/smarthomehandlermaxbatterypower
-
-	ra='^-?[0-9]+$'
-	smartmqtemp=$(timeout 1 mosquitto_sub -t openWB/config/get/SmartHome/smartmq)
-	if ! [[ $smartmqtemp =~ $ra ]] ; then
-		smartmqtemp="1"
-	fi
-	echo $smartmqtemp > $RamdiskPath/smartmq
-	
-	sudo chmod 777 $RamdiskPath/*
-
-	openwbDebugLog "MAIN" 2  "Trigger update of logfiles..."
+	openwbDebugLog "MAIN" 2  "INRD Trigger update of logfiles..."
 	python3 /var/www/html/openWB/runs/csvcalc.py --input /var/www/html/openWB/web/logging/data/daily/ --output /var/www/html/openWB/web/logging/data/v001/ --partial /var/www/html/openWB/ramdisk/ --mode M >> /var/www/html/openWB/ramdisk/csvcalc.log 2>&1 &
-	openwbDebugLog "MAIN" 2  "Ramdisk init done."
+	openwbDebugLog "MAIN" 2  "INRD Ramdisk init done."
 }

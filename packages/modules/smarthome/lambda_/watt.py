@@ -30,7 +30,7 @@ initlog("lambda", devicenumber)
 log = logging.getLogger("lambda")
 if (uberschussvz == 'UN'):
     uberschuss = uberschuss * -1
-bp = '/var/www/html/openWB/ramdisk/smarthome_device_'
+bp = '/var/www/html/openWB/ramdisk/sm/device_'
 file_stringpv = bp + str(devicenumber) + '_pv'
 file_stringcount = bp + str(devicenumber) + '_count'
 file_stringcount5 = bp + str(devicenumber) + '_count5'

@@ -34,7 +34,7 @@ resp = client.read_holding_registers(CurrentPowerRegisterAddress, 1, unit=MODBUS
 CurrentPower = int(resp.registers[0])
 
 answer = '{"power":' + str(CurrentPower) + ',"powerc":' + str(TotalEnergy) + '} '
-f1 = open('/var/www/html/openWB/ramdisk/smarthome_device_ret' + str(devicenumber), 'w')
+f1 = open('/var/www/html/openWB/ramdisk/sm/device_ret' + str(devicenumber), 'w')
 json.dump(answer, f1)
 f1.close()
 

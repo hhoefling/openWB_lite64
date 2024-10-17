@@ -106,6 +106,13 @@ function  getdateurl($dir,$file)
 						</div>
 					</div>
 				</div>
+				<div class="card-footer text-center">
+					<button type="button" class="btn btn-success" data-toggle="modal" data-target="#shutdownConfirmationModal">Runterfahren/Ausschalten</button>
+					&nbsp;&nbsp;
+					<button type="button" class="btn btn-success" data-toggle="modal" data-target="#rebootConfirmationModal">Neustart</button>
+					&nbsp;&nbsp;
+					<button type="button" class="btn btn-success" data-toggle="modal" data-target="#restartDisplayConfirmationModal">Display neustarten</button>
+				</div>				
 			</div>
 
 			<div class="card border-secondary">
@@ -194,6 +201,49 @@ function  getdateurl($dir,$file)
 					</div>
 				</div>
 
+				<div class="card-header bg-secondary">
+					Servies
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col">
+							<p><pre style="font-size:0.7em;"><?php 
+											$lines=[];
+											exec('sudo -u pi bash -c "/var/www/html/openWB/runs/services.sh status all | grep STATE: " ', $lines);
+                                            $lines[]="";
+											echo implode('<br>',$lines);
+                                       ?>
+								</pre>
+							</p>
+						<table class=table>
+						  <thead><tr><th>Service</th><th>Status</th><th>aktion</th></tr>
+						  </thead>
+						  <tbody>
+						  <?php
+						   foreach( $lines as $k=>$line)
+						    {
+							 if ( trim($line)=="" ) continue;
+							 //$xline=preg_replace('/\s\s+/', '|' ,$line);
+							 $xline=preg_replace('/\s\s*/', ' ' ,$line);
+							 $aa = explode(' ',$xline);
+							 array_shift($aa);
+							 $service=array_shift($aa);
+							 $as=join(" ",$aa);
+							 $xx='';
+							 if(  preg_match('/^runs/' , $as) )
+							   $xx .= sprintf('<button type="button" class="btn btn-success">Restart</button>','');
+							 if(  preg_match('/shut run/' , $as) )
+							   $xx .= sprintf('<button type="button" class="btn btn-success">Start</button>','');
+							 
+							 printf('<tr><td>%s</td><td>%s</td><td>%s</td></tr>', $service ,  $as , $xx );
+							 
+							}
+						  ?>
+						 </tbody>
+						</table>
+						</div>
+					</div>
+				</div>
 
 				<div class="card-header bg-secondary">
 					Jobs

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 USER=${USER:-`id -un`}
-[ "$USER" != "pi" ] && exec sudo^ -u pi "$0" -- "$@"
+[ "$USER" != "pi" ] && exec sudo -u pi "$0" -- "$@"
 
 # called from cron as user  pi
 # called from update.sh as pi
@@ -25,8 +25,6 @@ fi
 cd $OPENWBBASEDIR || exit 1
 source "./helperFunctions.sh"
 
-read debvers </etc/debian_version
-debver=${debvers%.*}
 
 
 function log()
@@ -129,16 +127,16 @@ sudo chmod 777 web/tools/upload
 sudo touch web/backup/.donotdelete
 sudo chmod 777 openwb.conf
 if [[ ! -f smarthome.conf ]]  ; then
-  cp -p runs/files/smarthome.conf.default smarthome.conf 
+  cp -p web/files/smarthome.conf smarthome.conf 
   openwbDebugLog "MAIN" 2 "smarthome.conf added"
 fi
 sudo chmod 777 smarthome.conf
 sudo chmod 777 ramdisk
 sudo chmod 777 ramdisk/
-sudo chmod 777 runs/files/*
-sudo chmod -R a+x modules/*
-sudo chmod -R a+x runs/*
-sudo chmod    a+x *.sh
+sudo chmod 777 web/files/*
+sudo chmod -R +x modules/*
+sudo chmod -R +x runs/*
+sudo chmod    +x *.sh
 
 
 # die schreiben in ihr verzeichniss
@@ -283,88 +281,14 @@ else
 fi
 
 # check for apache configuration
-#openwbDebugLog "MAIN" 2 "apache..."
-#if ( sudo grep -Fq "AllowOverride" /etc/apache2/sites-available/000-default.conf )
-#then
-#	openwbDebugLog "MAIN" 2  "...ok"
-#else
-#	sudo cp /var/www/html/openWB/runs/files/000-default.conf /etc/apache2/sites-available/
-#	openwbDebugLog "MAIN" 2  "...changed"
-#fi
-
-	# check for apache configuration
-	openwbDebugLog "MAIN" 2 "check apache..."
-	restartService=0
-    # Stand version 1
-	if grep -q "openwb-lite-version:1$" /etc/apache2/sites-available/000-default.conf >/dev/null 2>&1
-	then
-		openwbDebugLog "MAIN" 2 "...ok"
-	else
-		sudo cp "/var/www/html/openWB/runs/files/000-default.conf" /etc/apache2/sites-available/
-		openwbDebugLog "MAIN" 2 "...updated"
-		restartService=1
-	fi
-	
-    # Stand version 2
-	if grep -q "openwb-lite-version:2$" /etc/apache2/sites-available/001-openwb_ssl.conf >/dev/null 2>&1
-	then
-		openwbDebugLog "MAIN" 2 "ssl...ok"
-	else
-		sudo cp "/var/www/html/openWB/runs/files/001-openwb_ssl.conf" /etc/apache2/sites-available/
-		openwbDebugLog "MAIN" 2 "ssl ...updated"
-		restartService=1
-	fi
-	
-	openwbDebugLog "MAIN" 2 "checking required apache modules..."
-	if sudo a2query -m headers >/dev/null 2>&1
-	then
-		openwbDebugLog "MAIN" 2 "headers already enabled"
-	else
-		openwbDebugLog "MAIN" 2 "headers currently disabled; enabling module"
-		sudo a2enmod headers
-		restartService=1
-	fi
-	
-	if sudo a2query -m proxy_wstunnel >/dev/null 2>&1
-	then
-		openwbDebugLog "MAIN" 2 "proxy_wstunnel already enabled"
-	else
-		openwbDebugLog "MAIN" 2 "proxy_wstunnel currently disabled; enabling module"
-		sudo a2enmod proxy_wstunnel
-		restartService=1
-	fi
-	
-	if sudo a2query -m ssl >/dev/null 2>&1
-	then
-		openwbDebugLog "MAIN" 2 "ssl already enabled"
-	else
-		openwbDebugLog "MAIN" 2 "ssl currently disabled; enabling module"
-		sudo a2enmod ssl
-		sudo a2dissite default-ssl
-		sudo a2ensite 001-openwb_ssl
-		sudo make-ssl-cert generate-default-snakeoil --force-overwrite
-		restartService=1
-	fi
-	# set upload limit in php
-	openwbDebugLog "MAIN" 2  "fix upload limit..."
-	for d in /etc/php/*/apache2/conf.d ; do
-		fn="$d/21-uploadlimit.ini"
-		fnold="$d/20-uploadlimit.ini"
-		[ -f "$fnold" ] && sudo rm "$fnold"
-		if [ ! -f "$fn" ]; then
-			sudo /bin/su -c " echo -e 'upload_max_filesize = 300M\npost_max_size = 300M' >\"$fn\" "
-			openwbDebugLog "MAIN" 2 "Fix upload limit in $d and switch to v. 21"
-			restartService=1
-		fi
-	done
-		
-	if (( restartService == 1 )); then
-		openwbDebugLog "MAIN" 2  "restarting apache..."
-		sudo systemctl restart apache2
-		openwbDebugLog "MAIN" 2 "apache done"
-	fi
-    
-##################
+openwbDebugLog "MAIN" 2 "apache..."
+if ( sudo grep -Fq "AllowOverride" /etc/apache2/sites-available/000-default.conf )
+then
+	openwbDebugLog "MAIN" 2  "...ok"
+else
+	sudo cp /var/www/html/openWB/web/tools/000-default.conf /etc/apache2/sites-available/
+	openwbDebugLog "MAIN" 2  "...changed"
+fi
 
 # add some crontab entries for user pi
 openwbDebugLog "MAIN" 2  "crontab 2..."
@@ -401,7 +325,7 @@ fi
 #  # check for configuration
 #   if [ ! -f /etc/msmtprc ] ; then
 #	openwbDebugLog "MAIN" 2  "updating global msmtprc config file"
-#	sudo cp /var/www/html/openWB/runs/files/msmtprc /etc/msmtprc
+#	sudo cp /var/www/html/openWB/web/files/msmtprc /etc/msmtprc
 #    sudo chown root:mail /etc/msmtprc
 #    sudo chmod 0640 /etc/msmtprc
 #   fi
@@ -416,6 +340,19 @@ if [[ ! -x /usr/bin/mmc ]] ; then
   openwbDebugLog "MAIN" 2  "install mmc tool"
   sudo apt-get -q -y install mmc-utils
 fi
+
+if [[ ! -x /usr/sbin/ssmtp ]] ; then
+  openwbDebugLog "MAIN" 2  "install a simple smtp client (ssmtp,mailutils)"
+  sudo apt get -q -y ssmtp mailutils
+  openwbDebugLog "MAIN" 2  "updating global ssmtp file"
+  sudo cp run/files/ssmtp.conf /etc/ssmtp/ssmtp.conf
+  sudo chown root:root /etc/ssmtp/ssmtp.conf
+  sudo chmod 0644 /etc/ssmtp/ssmtp.conf
+# sample sending:
+# ps -elf  | mail -s "Betreff" user@domain  
+fi
+
+
 
 
 # check for python2 needed packages  
@@ -479,20 +416,9 @@ if [ ! -f /etc/mosquitto/mosquitto.conf ]; then
 fi
 
 # check for mosquitto configuration
-if [ ! -f /etc/mosquitto/conf.d/openwb.conf ] || ! sudo grep -Fq "persistent_client_expiration" /etc/mosquitto/conf.d/openwb.conf ; then
+if [ ! -f /etc/mosquitto/conf.d/openwb.conf ] || ! sudo grep -Fq "persistent_client_expiration" /etc/mosquitto/mosquitto.conf; then
 	openwbDebugLog "MAIN" 2  "updating mosquitto config file"
-	sudo cp /var/www/html/openWB/runs/files/mosquitto.conf /etc/mosquitto/conf.d/openwb.conf
-	if (( debver <= 9 )) ; then
-		sudo sed -i "s/^socket_domain ipv4/# socket_domain ipv4/g" /etc/mosquitto/conf.d/openwb.conf
-		openwbDebugLog "MAIN" 2  "modifiy mosquitto openwb.conf for Stretch"
-	fi
-	if [[ ! -f "/etc/mosquitto/certs/openwb.key" ]]; then
-		openwbDebugLog "MAIN" 2  "updating mosquitto certificates"
-		sudo cp "/etc/ssl/certs/ssl-cert-snakeoil.pem" "/etc/mosquitto/certs/openwb.pem"
-		sudo cp "/etc/ssl/private/ssl-cert-snakeoil.key" "/etc/mosquitto/certs/openwb.key"
-		sudo chgrp mosquitto "/etc/mosquitto/certs/openwb.key"
-	fi
-    
+	sudo cp /var/www/html/openWB/web/files/mosquitto.conf /etc/mosquitto/conf.d/openwb.conf
 	sudo service mosquitto stop
 	sudo service mosquitto start
 fi
@@ -684,7 +610,7 @@ rm -rf /var/www/html/openWB/web/themes/dark19_01
 echo " " > ramdisk/lastregelungaktiv
 chmod 777 ramdisk/lastregelungaktiv
 chmod 777 ramdisk/smarthome.log
-chmod 777 ramdisk/smarthomehandlerloglevel
+# chmod 777 ramdisk/smarthomehandlerloglevel
 
 # update etprovider pricelist
 openwbDebugLog "MAIN" 2  "etprovider..."

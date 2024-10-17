@@ -7,7 +7,7 @@ import logging
 from pymodbus.client.sync import ModbusTcpClient
 from smarthome.smartlog import initlog
 from smarthome.smartret import writeret
-bp = '/var/www/html/openWB/ramdisk/smarthome_device_'
+bp = '/var/www/html/openWB/ramdisk/sm/device_'
 devicenumber = int(sys.argv[1])
 ipadr = str(sys.argv[2])
 uberschuss = int(sys.argv[3])

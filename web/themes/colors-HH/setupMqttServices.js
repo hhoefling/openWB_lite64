@@ -87,8 +87,9 @@ var topicsToSubscribe = [
 	["openWB/global/awattar/MaxPriceForCharging", 1],
 	["openWB/global/awattar/ActualPriceForCharging", 1],
 	["openWB/global/awattar/pricelist", 1],
+	// MHI
+	["openWB/global/mqtt2mhiConfigured", 1],
 	// graph topics
-	//
 	["openWB/graph/boolDisplayLp1", 1],
 	["openWB/graph/boolDisplayLp2", 1],
 	["openWB/graph/boolDisplayLp3", 1],
@@ -393,10 +394,10 @@ client.onMessageArrived = function (message) {
 function subscribeLiveGraphSegments() {
 	if(livesubcribted)
 	{
-		console.log('##### subscribe_LiveGraphSegements, allredy done skip')
+		console.log('##### subscribeLiveGraphSegements, allredy done skip')
 	} else
 	{
-		console.log('SubScribe_LiveGraphSegements');
+		console.log('SubScribeLiveGraphSegements');
 		for (var segments = 1; segments < 17; segments++) {
 			if(iscloud ) topic = "openWB/system/" + segments + "alllivevalues";
  				    else topic = "openWB/graph/" + segments + "alllivevalues";
@@ -414,7 +415,7 @@ function subscribeLiveGraphSegments() {
 function unsubscribeLiveGraphSegments() {
 	if(livesubcribted)
 	{
-		console.log('unSubScribe_LiveGraphSegements');
+		console.log('unSubScribeLiveGraphSegements');
 		for (var segments = 1; segments < 17; segments++) {
 			if(iscloud ) topic = "openWB/system/" + segments + "alllivevalues";
  				    else topic = "openWB/graph/" + segments + "alllivevalues";
@@ -422,16 +423,16 @@ function unsubscribeLiveGraphSegments() {
 		}
 		livesubcribted=false;
 	} else
-	 	console.log('##### unSubScribe_LiveGraphSegments not subscribted, skip');
+	 	console.log('##### unSubScribeLiveGraphSegments not subscribted, skip');
 }
 
 function subscribeGraphUpdates() {
 	if( lastlivesubcribted )
 	{
-		console.log('##### subscribe_GraphUpdates, allredy done skip')
+		console.log('##### subscribeGraphUpdates, allredy done skip')
 	} else
 	{
-		console.log('SubScribe_GraphUpdate');
+		console.log('SubScribeGraphUpdate');
 		if(iscloud ) topic = "openWB/system/lastlivevalues";
  			    else topic = "openWB/graph/lastlivevalues";
 		clientsubscribe(topic, { qos: 0 });
@@ -442,23 +443,23 @@ function subscribeGraphUpdates() {
 function unsubscribeGraphUpdates() {
 	if( lastlivesubcribted )
 	 {
-	 	console.log('unSubScribe_GraphUpdate');
+	 	console.log('unSubScribeGraphUpdate');
 		if(iscloud ) topic = "openWB/system/lastlivevalues";
 			else 	 topic = "openWB/graph/lastlivevalues";
  	 	clientunsubscribe(topic);
 		lastlivesubcribted=false;
 	 } else
-	 	console.log('##### unSubScribe_GraphUpdate not subscribted, skip');
+	 	console.log('##### unSubScribeGraphUpdate not subscribted, skip');
 	 
 }
 
 function subscribeDayGraph(date) {
 	if( daysubcribted )
 	{
-		console.log('##### subscribe_DayGraph, allredy done skip')
+		console.log('##### subscribeDayGraph, allredy done skip')
 	} else
 	{
-		console.log('SubScribe_DayGraph');
+		console.log('SubScribeDayGraph');
 		// var today = new Date();
 		var dd = String(date.getDate()).padStart(2, '0');
 		var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -476,24 +477,24 @@ function subscribeDayGraph(date) {
 function unsubscribeDayGraph() {
 	if( daysubcribted )
 	 {
-		console.log('unSubScribe_DayGraph');
+		console.log('unSubScribeDayGraph');
 		for (var segment = 1; segment < 13; segment++) {
 			var topic = "openWB/system/DayGraphData" + segment;
 			clientunsubscribe(topic);
 		}
 		daysubcribted=false;
 	} else 
-		console.log('##### unSubScribe_DayGraph not subscribted, skip');
+		console.log('##### unSubScribeDayGraph not subscribted, skip');
 	publish("0", "openWB/set/graph/RequestDayGraph");
 }
 
 function subscribeMonthGraph(date) {
 	if( monthubcribted )
 	{
-		console.log('##### subscribe_MonthGraph, allredy done skip')
+		console.log('##### subscribeMonthGraph, allredy done skip')
 	} else
 	{
-		console.log('SubScribe_MonthGraphV1');
+		console.log('SubScribeMonthGraphV1');
 		var mm = String(date.month + 1).padStart(2, '0'); //January is 0!
 		var yyyy = date.year;
 		graphdate = yyyy + mm;
@@ -509,14 +510,14 @@ function subscribeMonthGraph(date) {
 function unsubscribeMonthGraph() {
 	if( monthubcribted )
 	 {
-		console.log('unSubScribe_MonthGraphV1');
+		console.log('unSubScribeMonthGraphV1');
 		for (var segment = 1; segment < 13; segment++) {
 			var topic = "openWB/system/MonthGraphDatan" + segment;
 			clientunsubscribe(topic);
 		}
 		monthubcribted=false;
 	} else
-		console.log('##### unSubScribe_MonthGraph not subscribted, skip');
+		console.log('##### unSubScribeMonthGraph not subscribted, skip');
 	publish("0", "openWB/set/graph/RequestMonthGraphv1");
 }
 

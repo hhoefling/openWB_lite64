@@ -221,6 +221,7 @@ do
 		pvdailyyield=$(echo "scale=2;($pvkwh - $i) / 1000" |bc)
 		echo $pvdailyyield > ramdisk/daily_pvkwhk
 	fi
+	# 5,6,7   ll1,ll2,ll3
 	# all charge points
 	if (( pvyieldcount == 8 )); then
 		lladailyyield=$(echo "scale=2;($llg - $i) / 1000" |bc)
@@ -257,6 +258,8 @@ do
 #		verbraucher3dailyyield=$(echo "scale=2;($NCverbraucher3 - $i) / 1000" |bc)
 #		echo $NCverbraucher3dailyyield > ramdisk/daily_verbraucher3ikwh
 #	fi
+	# 16,17,18,19,20   NC lp4-lp8
+	# 21,26  Socs+temp1-3
 	# smarthome 2.0 devices
 	if (( pvyieldcount == 27 )); then
 		d1dailyyield=$(echo "scale=2;($d1 - $i) / 1000" |bc)
@@ -294,6 +297,8 @@ do
 		d9dailyyield=$(echo "scale=2;($d9 - $i) / 1000" |bc)
 		echo $d9dailyyield > ramdisk/daily_d9kwh
 	fi
+	# 36 NC d10
+	#  37,38,39 temp4,5,6
 done
 
 # zero out devices were kwh should be included in house consumtion

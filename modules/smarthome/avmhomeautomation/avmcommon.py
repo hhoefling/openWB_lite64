@@ -29,12 +29,12 @@ class AVMHomeAutomation:
         m.update(self.password.encode('utf-8'))
         m.hexdigest()
         self.cacheKey = "%s:%s@%s" % (self.username, m.hexdigest(), self.host)
-        try:
-            with open('ramdisk/smarthomehandlerloglevel', 'r') as value:
-                self.loglevel = int(value.read())
-        except:
-            self.loglevel=2
-
+#        try:
+#            with open('ramdisk/smarthomehandlerloglevel', 'r') as value:
+#                self.loglevel = int(value.read())
+#        except:
+#            self.loglevel=2
+        self.loglevel=LOGLEVELDEBUG
         self.cache = {}
         if os.path.isfile(CACHEFILE):
             self.logMessage(LOGLEVELDEBUG, "found an AVM cache file, trying to load")

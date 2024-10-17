@@ -144,7 +144,9 @@ function  geturl($file)
             function errorlog() {
                 readLogFile("/openWB/ramdisk/openwb.error.log", "#errordiv");
             }
-
+            function mhilog() {
+                readLogFile("/openWB/ramdisk/mqtt2mhi.log", "#mhidiv");
+            }
             function etproviderlog() {
                 readLogFile("/openWB/ramdisk/etprovider.log", "#etproviderdiv");
             }
@@ -692,12 +694,21 @@ function  geturl($file)
                         <button class="btn btn-info reloadEtProviderLog" style="margin-bottom:12px" type="reset">Aktualisieren <i class="fas fa-redo-alt"></i> </button>
                         <pre id="etproviderdiv">Lade Daten...</pre>
                     </div>
+
                     <div class="card-header bg-secondary collapsed" data-toggle="collapse" data-target="#collapse12">
                         <a class="card-title">openwb-Error Log</a>
                     </div>
                     <div id="collapse12" class="card-body collapse" data-parent="#accordion">
                         <button class="btn btn-info reloaderrorLog" style="margin-bottom:12px" type="reset">Aktualisieren <i class="fas fa-redo-alt"></i> </button>
                         <pre id="errordiv">Lade Daten...</pre>
+                    </div>
+
+                    <div class="card-header bg-secondary collapsed" data-toggle="collapse" data-target="#collapse13">
+                        <a class="card-title">MHI-Error Log</a>
+                    </div>
+                    <div id="collapse13" class="card-body collapse" data-parent="#accordion">
+                        <button class="btn btn-info reloadmhiLog" style="margin-bottom:12px" type="reset">Aktualisieren <i class="fas fa-redo-alt"></i> </button>
+                        <pre id="mhidiv">Lade Daten...</pre>
                     </div>
 
 
@@ -898,6 +909,12 @@ function  geturl($file)
             });
             $('#collapse12').on('shown.bs.collapse', function(){
                 errorlog();
+            });
+            $('.reloadmhiLog').click(function(event){
+                mhilog();
+            });
+            $('#collapse13').on('shown.bs.collapse', function(){
+                mhilog();
             });
 		</script>
 

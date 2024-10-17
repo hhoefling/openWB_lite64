@@ -90,6 +90,9 @@ function  getdateurl($dir,$file)
 			// load normal UI
 			// check if theme cookie exists and theme is installed
 			// else set standard theme
+			if ( !(isset($_COOKIE['openWBTheme'] ) === true) ) 
+				out("Cookie Set");
+			
 			if ( !(isset($_COOKIE['openWBTheme'] ) === true) || !(is_dir('themes/'.$_COOKIE['openWBTheme']) === true) ) {
 				$_COOKIE['openWBTheme'] = 'standard';
 			}
@@ -114,6 +117,7 @@ function  getdateurl($dir,$file)
 				include($file.'/theme.php');
 			else
 				include $file.'/theme.html';
+				
 		}
 	}
 ?>

@@ -28,7 +28,7 @@ except Exception:
 shaut = int(sys.argv[5])
 user = str(sys.argv[6])
 pw = str(sys.argv[7])
-fbase = '/var/www/html/openWB/ramdisk/smarthome_device_ret.'
+fbase = '/var/www/html/openWB/ramdisk/sm/device_ret.'
 fnameg = fbase + str(ipadr) + '_shelly_infogv1'
 if os.path.isfile(fnameg):
     with open(fnameg, 'r') as f:

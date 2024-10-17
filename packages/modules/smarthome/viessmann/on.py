@@ -20,8 +20,8 @@ uberschuss = int(sys.argv[3])
 # coils read write boolean
 # register start 00000
 #
-file_string = '/var/www/html/openWB/ramdisk/smarthome_device_' + str(devicenumber) + '_viessmann.log'
-file_stringpv = '/var/www/html/openWB/ramdisk/smarthome_device_' + str(devicenumber) + '_pv'
+file_string = '/var/www/html/openWB/ramdisk/sm/device_' + str(devicenumber) + '_viessmann.log'
+file_stringpv = '/var/www/html/openWB/ramdisk/sm/device_' + str(devicenumber) + '_pv'
 if os.path.isfile(file_string):
     f = open(file_string, 'a')
 else:

@@ -18,7 +18,8 @@ mqttcs = 'openWB/config/set/SmartHome/'
 mqttsdevstat = 'openWB/SmartHome/Devices'
 mqttsglobstat = 'openWB/SmartHome/Status/'
 mqtttopicdisengageable = 'openWB/SmartHome/Status/wattschalt'
-ramdiskwrite = True
+# ramdiskwrite = True  brauchen wir nicht, kommt keine 2.0 
+ramdiskwrite = False
 mqttport = 1883
 #
 #  openwb 2.0 spec

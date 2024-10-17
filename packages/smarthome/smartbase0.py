@@ -14,7 +14,7 @@ class Sbase0:
     _prefixpy = _basePath + '/packages/modules/smarthome/'
 
     def readret(self) -> Dict[str, Any]:
-        with open(self._basePath + '/ramdisk/smarthome_device_ret' +
+        with open(self._basePath + '/ramdisk/sm/device_ret' +
                   str(self.device_nummer), 'r') as f1:
             answer = json.loads(json.load(f1))
         return answer

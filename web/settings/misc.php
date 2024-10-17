@@ -325,6 +325,26 @@ function  getdateurl($dir,$file)
 								</div>
 							</div>
 						</div>
+						<hr class="border-secondary">
+						<div class="form-group">
+							<div class="form-row mb-1">
+								<div class="col-md-4">
+									<label class="col-form-label">RSE Daemon</label>
+								</div>
+								<div class="col">
+									<div class="btn-group btn-block btn-group-toggle" data-toggle="buttons">
+										<label class="btn btn-outline-info<?php if($rsenabledold == 0) echo " active" ?>">
+											<input type="radio" name="rseenabled" id="rseenabledOff" value="0"<?php if($rseenabledold == 0) echo " checked=\"checked\"" ?>>Aus
+										</label>
+										<label class="btn btn-outline-info<?php if($rseenabledold == 1) echo " active" ?>">
+											<input type="radio" name="rseenabled" id="rseenabledOn" value="1"<?php if($rseenabledold == 1) echo " checked=\"checked\"" ?>>An
+										</label>
+										<span class="d_label">openwb.conf  rseenabled [0|1]</span>
+									</div>
+									<span class="form-text small">Wenn aktiviert, wird nach einem Neustart der RSE Server aktiviert.</span>
+								</div>
+							</div>
+						</div>
 					</div>
 					<script>
 						var lp2akt = <?php echo $lastmanagementold ?>;

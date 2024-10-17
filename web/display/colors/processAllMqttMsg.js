@@ -52,8 +52,8 @@ function handlevar(mqttmsg, mqttpayload) {
 	// receives all messages and calls respective function to process them
 	if (mqttmsg.match(/^openwb\/graph\//i)) { processGraphMessages(mqttmsg, mqttpayload); }
 	else if (mqttmsg.match(/^openwb\/evu\//i)) { processEvuMessages(mqttmsg, mqttpayload); }
-	else if (mqttmsg.match( /^openwb\/global\/awattar\//i) ) { processETProviderMessages(mqttmsg, mqttpayload); }
-	else if (mqttmsg.match( /^openwb\/global\/ETProvider\//i) ) { processETProviderMessages(mqttmsg, mqttpayload); }
+	else if (mqttmsg.match(/^openwb\/global\/awattar\//i) ) { processETProviderMessages(mqttmsg, mqttpayload); }
+	else if (mqttmsg.match(/^openwb\/global\/ETProvider\//i) ) { processETProviderMessages(mqttmsg, mqttpayload); }
 	else if (mqttmsg.match(/^openwb\/global\//i)) { processGlobalMessages(mqttmsg, mqttpayload); }
 	else if (mqttmsg.match(/^openwb\/housebattery\//i)) { processHousebatteryMessages(mqttmsg, mqttpayload); }
 	else if (mqttmsg.match(/^openwb\/system\//i)) { processSystemMessages(mqttmsg, mqttpayload); }
@@ -103,6 +103,7 @@ function processETProviderMessages(mqttmsg, mqttpayload) {
 			$('#navStromtarifInfo').addClass('hide');
 		}
 	}
+
 	else if ( mqttmsg == 'openWB/global/awattar/pricelist' ) {
 		// read etprovider values and trigger graph creation
 		// loadElectricityPriceChart will show electricityPriceChartCanvas if etprovideraktiv=1 in openwb.conf
@@ -126,6 +127,7 @@ function processETProviderMessages(mqttmsg, mqttpayload) {
 	else if ( mqttmsg == 'openWB/global/awattar/ActualPriceForCharging' ) {
 		$('#aktuellerStrompreis').text(parseFloat(mqttpayload).toLocaleString(undefined, {maximumFractionDigits: 2}) + ' ct/kWh');
 	}
+
  }
 
 	
@@ -372,6 +374,16 @@ function processGlobalMessages(mqttmsg, mqttpayload) {
 					   else
 						   { $('#rootdev').text(mqttpayload); }
 	}
+	else if ( mqttmsg == 'openWB/global/mqtt2mhiConfigured' ) {
+		// sets icon, graph and price-info-field visible/invisible
+		console.log( 'MHI: ' + mqttmsg +  mqttpayload)
+		if ( mqttpayload == '1' ) {
+			$('#navMHI').removeClass('hide');
+		} else {
+			$('#navMHI').addClass('hide');
+		}
+	}
+	
 	
 /*
 					  Eth:<span id="iplan">--</span>,<span id="iplan2">--</span>

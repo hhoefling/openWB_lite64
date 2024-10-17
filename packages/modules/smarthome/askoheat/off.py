@@ -3,7 +3,7 @@ import sys
 import logging
 import os
 from smarthome.smartlog import initlog
-bp = '/var/www/html/openWB/ramdisk/smarthome_device_'
+bp = '/var/www/html/openWB/ramdisk/sm/device_'
 devicenumber = int(sys.argv[1])
 ipadr = str(sys.argv[2])
 uberschuss = int(sys.argv[3])

@@ -61,7 +61,7 @@ class Sbshelly(Spbase):
                         % (self.device_nummer, self._device_pbip, str(e1)))
             return newmanual, newmanual_control
         a = json.loads(at)
-        with open(self._basePath + '/ramdisk/smarthome_device_ret' +
+        with open(self._basePath + '/ramdisk/sm/device_ret' +
                   str(self.device_nummer) + '_shelly_bp', 'w') as f:
             f.write(str(a))
         self.oldevent_cnt = self.event_cnt

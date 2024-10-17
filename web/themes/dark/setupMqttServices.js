@@ -110,7 +110,8 @@ var topicsToSubscribe = [
 	["openWB/global/awattar/MaxPriceForCharging", 1],
 	["openWB/global/awattar/ActualPriceForCharging", 1],
 	["openWB/global/awattar/pricelist", 1],
-
+	// MHI
+	["openWB/global/mqtt2mhiConfigured", 1],
 	// graph topics.   Speicher , nur auf dem Webssrver-mqtt. kommt nicht aus dem Haus
 	["openWB/graph/boolDisplayLp1", 0],
 	["openWB/graph/boolDisplayLp2", 0],

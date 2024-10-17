@@ -101,12 +101,12 @@ class Sbase(Sbase0):
                   '_relais', 'w') as f:
             f.write(str(self.relais))
         try:
-            with open(self._basePath + '/ramdisk/smarthome_device_' +
+            with open(self._basePath + '/ramdisk/sm/device_' +
                       str(self.device_nummer) + 'watt0pos', 'r') as value:
                 importtemp = int(value.read())
                 if (self.newwattk > 0):
                     # Shadow calculation for devices mit gelierten Zaehler (z.b. sdm630)
-                    self.newwattks = self.simcount(self._oldwatt, "smarthome_device_" +
+                    self.newwattks = self.simcount(self._oldwatt, "sm/device_" +
                                                    str(self.device_nummer),
                                                    "device" + str(self.device_nummer) + "_wh",
                                                    "device" + str(self.device_nummer) + "_whe",
@@ -116,7 +116,7 @@ class Sbase(Sbase0):
                     #
                 else:
                     # uebernehmen gerechneten Zaehlerstand für alle anderen devices (z.b. shelly)
-                    self.newwattk = self.simcount(self._oldwatt, "smarthome_device_" +
+                    self.newwattk = self.simcount(self._oldwatt, "sm/device_" +
                                                   str(self.device_nummer),
                                                   "device" + str(self.device_nummer) + "_wh",
                                                   "device" + str(self.device_nummer) + "_whe",
@@ -126,10 +126,10 @@ class Sbase(Sbase0):
             # first run simcount also update
             # add start point for shadow
             importtemp = self._whimported_tmp
-            with open(self._basePath + '/ramdisk/smarthome_device_' +
+            with open(self._basePath + '/ramdisk/sm/device_' +
                       str(self.device_nummer) + 'watt0pos', 'w') as f:
                 f.write(str(importtemp))
-            with open(self._basePath + '/ramdisk/smarthome_device_' +
+            with open(self._basePath + '/ramdisk/sm/device_' +
                       str(self.device_nummer) + 'watt0neg', 'w') as f:
                 f.write(str("0"))
             if (self.newwattk > 0):
@@ -137,7 +137,7 @@ class Sbase(Sbase0):
                          ") Simcount Startwert aus Z1 (HW) übernommen " +
                          str(self.newwattk) + " kwh " + str(self.newwattk * 3600) + " wh")
                 self.newwattks = self.simcount(self._oldwatt,
-                                               "smarthome_device_" +
+                                               "sm/device_" +
                                                str(self.device_nummer),
                                                "device" + str(self.device_nummer) + "_wh",
                                                "device" + str(self.device_nummer) + "_whe",
@@ -146,7 +146,7 @@ class Sbase(Sbase0):
                 log.info("(" + str(self.device_nummer) +
                          ") Simcount Startwert aus mqtt übernommen " +
                          str(self._whimported_tmp) + " wh")
-                self.newwattk = int(self.simcount(self._oldwatt, "smarthome_device_" +
+                self.newwattk = int(self.simcount(self._oldwatt, "sm/device_" +
                                                   str(self.device_nummer),
                                                   "device" + str(self.device_nummer) + "_wh",
                                                   "device" + str(self.device_nummer) + "_whe",

@@ -60,7 +60,7 @@ else:
 	except Exception:
 		powerc = 0
 
-fn = '/var/www/html/openWB/ramdisk/smarthome_device_ret' + str(devicenumber)
+fn = '/var/www/html/openWB/ramdisk/sm/device_ret' + str(devicenumber)
 f1 = open(fn, 'w')
 answer = '{"power":' + str(power) + ',"powerc":' + str(powerc) + '}'
 json.dump(answer, f1)

@@ -102,8 +102,9 @@ var topicsToSubscribe = [
 	["openWB/global/awattar/MaxPriceForCharging", 1],
 	["openWB/global/awattar/ActualPriceForCharging", 1],
 	["openWB/global/awattar/pricelist", 1],
+	// MHI
+	["openWB/global/mqtt2mhiConfigured", 1],
 	// graph topics
-	//
 /*	
 	["openWB/graph/lastlivevalues", 1],
 	["openWB/graph/1alllivevalues", 1],

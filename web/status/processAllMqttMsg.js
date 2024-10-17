@@ -86,9 +86,16 @@ function processGlobalMsg (mqttmsg, mqttpayload) {
 		case "openWB/global/kWhCounterAllChargePoints":
 			fractionDigitsShow(mqttpayload, '#kWhCounterAll');
 			break;
+		case "openWB/global/mqtt2mhiConfigured":
+			if( mqttpayload == "1" )
+				 console.log('MHI ON');
+			else console.log('MHI OFF');
+			break;
+					
 		default:
 			console.log("Unknown topic: "+mqttmsg+": "+mqttpayload);
 			break;
+			
 	}
 }
 function processSystemMsg (mqttmsg, mqttpayload) {

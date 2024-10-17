@@ -20,6 +20,6 @@ temp = templong[0:5]
 powerc = 0
 answer = '{"power":' + str(aktpower) + ',"powerc":' + str(powerc) + ',"on":' + \
     str(relais) + ',"temp0":' + str(temp) + '} '
-f1 = open('/var/www/html/openWB/ramdisk/smarthome_device_ret' + str(devicenumber), 'w')
+f1 = open('/var/www/html/openWB/ramdisk/sm/device_ret' + str(devicenumber), 'w')
 json.dump(answer, f1)
 f1.close()

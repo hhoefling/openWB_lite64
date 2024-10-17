@@ -62,9 +62,9 @@ ipbind = '0.0.0.0'
 MCAST_GRP = '239.12.255.254'
 MCAST_PORT = 9522
 
-returnfile = '/var/www/html/openWB/ramdisk/smarthome_device_ret' + \
+returnfile = '/var/www/html/openWB/ramdisk/sm/device_ret' + \
     str(devicenumber)  # Return file (.ret) for energy metering
-timefile = '/var/www/html/openWB/ramdisk/smarthome_device_ret' + \
+timefile = '/var/www/html/openWB/ramdisk/sm/device_ret' + \
     str(devicenumber) + '_time'  # Dummy file needed for timestamp of last metering
 # Logfile for additional output beside of the smarthome.log
 debugfile = open('/var/www/html/openWB/ramdisk/smaem.log', 'a', newline='\r\n')
@@ -160,7 +160,7 @@ else:
     # This will cause error messages in /var/www/html/openWB/ramdisk/smarthome.log:
     # Module SMAEM: No data received and no historical data since boot time
     # Leistungsmessung smaem [...] Fehlermeldung: [Errno 2] No such file or directory:
-    # '/var/www/html/openWB/ramdisk/smarthome_device_ret1'
+    # '/var/www/html/openWB/ramdisk/sm/device_ret1'
     debugfile.write(str(datetime.datetime.now()) + ': 4 - No data received and no historical data since boottime\n')
     sys.exit(str(datetime.datetime.now()) + ": Module SMAEM: No data received and no historical data since boottime")
 

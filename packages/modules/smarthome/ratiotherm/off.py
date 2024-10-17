@@ -6,7 +6,7 @@ from smarthome.smartlog import initlog
 devicenumber = int(sys.argv[1])
 ipadr = str(sys.argv[2])
 uberschuss = int(sys.argv[3])
-bp = '/var/www/html/openWB/ramdisk/smarthome_device_'
+bp = '/var/www/html/openWB/ramdisk/sm/device_'
 # standard
 file_stringpv = bp + str(devicenumber) + '_pv'
 file_stringcount = bp + str(devicenumber) + '_count'

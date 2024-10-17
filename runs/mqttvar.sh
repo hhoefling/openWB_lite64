@@ -83,6 +83,7 @@ mqttconfvar["config/get/u1p3p/standbyPhases"]=u1p3pstandby
 mqttconfvar["global/awattar/boolAwattarEnabled"]=etprovideraktiv
 mqttconfvar["global/ETProvider/modulePath"]=etprovider
 mqttconfvar["global/rfidConfigured"]=rfidakt
+mqttconfvar["global/mqtt2mhiConfigured"]=mqtt2mhi
 mqttconfvar["hook/1/boolHookConfigured"]=hook1_aktiv
 mqttconfvar["hook/2/boolHookConfigured"]=hook2_aktiv
 mqttconfvar["hook/3/boolHookConfigured"]=hook3_aktiv

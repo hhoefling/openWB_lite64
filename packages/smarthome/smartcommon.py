@@ -82,7 +82,7 @@ def logmqgl(keyword: str, value: str) -> None:
                           '"openWB/LegacySmartHome/config/get/' + keyword +
                           '" -r -m "' + str(value) + '"'), file=f)
 
-
+# read-config client
 def on_message(client, userdata, msg) -> None:
     # wenn exception hier wird mit nächster msg weitergemacht
     # macht paho unter phyton 3 immer so
@@ -148,7 +148,7 @@ def getdevicevalues(uberschuss: int, uberschussoffset: int, pvwatt: int, charges
                  + str(mydevice.oncntstandby) + "/" +
                  str(mydevice.runningtime) + " Status/Üeb: " +
                  str(mydevice.devstatus) + "/" +
-                 str(mydevice.ueberschussberechnung) + " akt: " + str(watt) +
+                 str(mydevice.ueberschussberechnung) + " Watt: " + str(watt) +
                  " Z1: " + str(wattk) + " Z2: " + str(wattks))
         #  mqtt_all.update(mydevice.mqtt_param)
         for keyread, value in mydevice.mqtt_param.items():
@@ -179,7 +179,9 @@ def getdevicevalues(uberschuss: int, uberschussoffset: int, pvwatt: int, charges
     log.info("Einschaltgruppe rel: " + str(Sbase.einrelais) +
              " Summe Einschaltschwelle: " +
              str(Sbase.einschwelle) + " max Einschaltverzögerung " +
-             str(Sbase.einverz) + " nur Einschaltgruppe prüfen bis: " +
+             str(Sbase.einverz)
+             )
+    log.info("Nur Einschaltgruppe prüfen bis: " +
              str('%.2d' % nurhh) + ":" + str('%.2d' % nurmm) + ":" +
              str('%.2d' % nurss) +
              " in Total sec " + str(Sbase.nureinschaltinsec)
@@ -336,6 +338,7 @@ def readmq() -> None:
     if ramdiskwrite:
         with open(bp + '/ramdisk/smartparam.sh', 'w') as f:
             print('%s' % ('#!/bin/bash'), file=f)
+            print('%s' % ('# To upgrade sh to 2.0'), file=f)
     parammqtt = []
     client = mqtt.Client("openWB-mqttsmarthome")
     client.on_connect = on_connect
@@ -469,12 +472,7 @@ def mainloop(wattbezug: int, speicherleistung: int, speichersoc: int, pvwatt: in
     getdevicevalues(uberschuss, uberschussoffset, pvwatt, chargestatus)
     conditions(speichersoc)
     
-    log.debug('debug message')
-    log.info('info message')
-    log.warn('warn message')
-    log.error('error message')
-    log.critical('critical message')
-        
+    log.info('Mainloop')
     # do the manual stuff
     for i in range(1, (numberOfSupportedDevices + 1)):
         for mydevice in mydevices:

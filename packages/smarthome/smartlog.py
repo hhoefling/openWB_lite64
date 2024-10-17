@@ -6,8 +6,7 @@ def initlog(name: str, devicenumber: int) -> None:
     log = logging.getLogger(name)
     formatter = logging.Formatter('%(asctime)s %(name)-10s %(levelname)-8s ; %(message)s')
     log.setLevel(logging.DEBUG)
-    fname = '/var/www/html/openWB/ramdisk/smarthome_device_'
-    fname += str(devicenumber) + '_' + str(name) + '.log'
+    fname = '/var/www/html/openWB/ramdisk/sm/device_' + str(devicenumber) + '_' + str(name) + '.log'
     fh = logging.FileHandler(fname, encoding='utf8')
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)

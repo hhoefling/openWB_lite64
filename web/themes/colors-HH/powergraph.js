@@ -177,21 +177,17 @@ class PowerGraph {
     if (wbdata.graphMode == 'live') { // only update if live graph is active
       if (this.initialized) { // steady state
         //if (topic === "openWB/graph/lastlivevalues") {
-        if (sindex < 0) 
-		{
-		  console.log('get ' +sindex+ ' ' + topic + ' ' + payload );
+        if (sindex < 0) {
           const values = this.extractLiveValues(payload.toString());
           this.graphRefreshCounter++;
           this.graphData.push(values);
           this.updateGraph();
-          if (this.graphRefreshCounter > 60) 
-		  {
-			unsubscribeGraphUpdates
+          if (this.graphRefreshCounter > 60) {
             this.resetLiveGraph();
             subscribeLiveGraphSegments();
           }
         }
-	    else console.log('live+initited, but wrong topic:' + topic + ' idx: ' + sindex);
+	    else console.log('live+initited, but wrong topic:' + topic );
       } else { // init phase
         // const t = topic;
         // if (t.substring(t.length - 13, t.length) === "alllivevalues") {
@@ -732,9 +728,10 @@ class PowerGraph {
     this.drawXAxis(svg, width, height);
   }
 
+	// Mittlere Grafik
   drawSourceGraph(svg, width, height) {
     var keys = (wbdata.graphMode == 'month') ? ["gridPull", "batOut", "selfUsage", "gridPush"] : ["selfUsage", "gridPush", "batOut", "gridPull"];
-
+	console.log('drawSourceGraph' , keys);
     if (wbdata.graphMode == 'month') {
       const dayRange = d3.extent(this.graphData, d => d.date.getDate())
       this.xScale = d3.scaleBand()
@@ -800,6 +797,7 @@ class PowerGraph {
       ;
   }
 
+// unter Hälfte der mittleren Grafik
   drawUsageGraph(svg, width, height) {
     const yScale = d3.scaleLinear().range([height + 10, 2 * height]);
 
@@ -823,6 +821,7 @@ class PowerGraph {
 			"batIn", "inverter"]
 		];
 
+	
     const stackGen = d3.stack().keys(keys[wbdata.usageStackOrder]);
     const stackedSeries = stackGen(this.graphData);
     if (wbdata.graphMode == 'month') {

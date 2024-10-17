@@ -11,7 +11,7 @@ time_string = time.strftime("%m/%d/%Y, %H:%M:%S vampair on.py", named_tuple)
 devicenumber = str(sys.argv[1])
 ipadr = str(sys.argv[2])
 uberschuss = int(sys.argv[3])
-bp = '/var/www/html/openWB/ramdisk/smarthome_device_'
+bp = '/var/www/html/openWB/ramdisk/sm/device_'
 # standard
 # lesen
 # own log

@@ -191,7 +191,7 @@ ECHOCHECKBOX;
 										<div class="input-group">
 											<input type="text" class="form-control" readonly id="{$elemId}" name="{$elemName}" placeholder="--" value="{$elemValue}">
 											<div class="input-group-append">
-												<span class="input-group-text far fa-xs fa-clock vaRow"></span>
+												<span class="input-group-text fa fa-xs fa-clock vaRow"></span>
 											</div>
 										</div>
 									</div>\n

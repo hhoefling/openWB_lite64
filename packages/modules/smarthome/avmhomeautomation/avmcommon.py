@@ -30,12 +30,12 @@ class AVMHomeAutomation:
         m.update(self.password.encode('utf-8'))
         m.hexdigest()
         self.cacheKey = "%s:%s@%s" % (self.username, m.hexdigest(), self.host)
-        try:
-            with open('ramdisk/smarthomehandlerloglevel', 'r') as value:
-                self.loglevel = int(value.read())
-        except Exception:
-            self.loglevel = 2
-
+#        try:
+#            with open('ramdisk/smarthomehandlerloglevel', 'r') as value:
+#                self.loglevel = int(value.read())
+#        except Exception:
+#            self.loglevel = 2
+        self.loglevel = LOGLEVELDEBUG
         self.cache = {}
         if os.path.isfile(CACHEFILE):
             self.logMessage(LOGLEVELDEBUG, "found an AVM cache file, trying to load")
@@ -357,7 +357,7 @@ class AVMHomeAutomation:
                             (exc_type, fname, exc_tb.tb_lineno))
 
         self.logMessage(LOGLEVELDEBUG, "constructed JSON answer: %s" % (answer))
-        outFileString = '/var/www/html/openWB/ramdisk/smarthome_device_ret' + str(self.devicenumber)
+        outFileString = '/var/www/html/openWB/ramdisk/sm/device_ret' + str(self.devicenumber)
         self.logMessage(LOGLEVELDEBUG, "handing answer back to smarthomehandler via %s" % (outFileString))
         try:
             f1 = open(outFileString, 'w')

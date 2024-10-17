@@ -48,7 +48,7 @@ function makedebugreihe()
 					<div class="card-header bg-secondary collapsed" data-toggle="collapse" data-target="#debugOne">
 						<a class="card-title">Debug </a>
 					</div>
-					<div id="debugOne" class="card-body collapse" data-parent="#accordion">
+					<div id="debugOne" class="card-body collapse" data-parent="#accordion" >
 						<pre id="debugdiv" style="font-size:0.7rem;">
 
 END;
@@ -288,8 +288,8 @@ END;
 			</div>
 		</div>
 
-		<div id="verbraucher" class="row justify-content-center regularTextSize font-weight-bold text-center hide">
-			<div id="verbraucher1" class="col-sm px-1 openwb-device-1 hide">
+		<div id="verbraucher" class="row justify-content-center regularTextSize font-weight-bold text-center text-black hide">
+			<div id="verbraucher1" class="col-sm px-1x openwb-device-1 hide">
 				<span class="smallTextSize"><span id="verbraucher1name">Verbraucher 1</span>: <span id="verbraucher1leistung">lade Daten</span></span><span class="verySmallTextSize" id="verbraucher1dailyyield"></span>
 			</div>
 			<div id="verbraucher2" class="col-sm px-1 openwb-device-2 hide">

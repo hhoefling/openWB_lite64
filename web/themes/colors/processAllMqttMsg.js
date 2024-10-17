@@ -505,6 +505,15 @@ function processGlobalMessages(mqttmsg, mqttpayload) {
 	else if (mqttmsg == 'openWB/global/awattar/ActualPriceForCharging') {
 		$('#aktuellerStrompreis').text(parseFloat(mqttpayload).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' ct/kWh');
 	}
+	else if ( mqttmsg == 'openWB/global/mqtt2mhiConfigured' ) {
+		// sets icon, graph and price-info-field visible/invisible
+		console.log( 'MHI: ' + mqttmsg +  ' '+ mqttpayload)
+		if ( mqttpayload == '1' ) {
+			$('#navMHI').removeClass('hide');
+		} else {
+			$('#navMHI').addClass('hide');
+		}
+	}	
 	else if (mqttmsg == 'openWB/global/ChargeMode') {
 		// set modal button colors depending on charge mode
 		// set visibility of divs

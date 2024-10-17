@@ -9,7 +9,7 @@ ipadr = str(sys.argv[2])
 uberschuss = int(sys.argv[3])
 initlog("stiebel", devicenumber)
 log = logging.getLogger("stiebel")
-file_stringpv = '/var/www/html/openWB/ramdisk/smarthome_device_' + str(devicenumber) + '_pv'
+file_stringpv = '/var/www/html/openWB/ramdisk/sm/device_' + str(devicenumber) + '_pv'
 # PV-Modus
 pvmodus = 0
 if os.path.isfile(file_stringpv):

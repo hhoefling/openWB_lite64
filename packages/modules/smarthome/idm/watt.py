@@ -21,7 +21,7 @@ forcesend = int(sys.argv[8])
 # forcesend = 9 default overwritten no send
 initlog("idm", devicenumber)
 log = logging.getLogger("idm")
-bp = '/var/www/html/openWB/ramdisk/smarthome_device_'
+bp = '/var/www/html/openWB/ramdisk/sm/device_'
 file_stringpv = bp + str(devicenumber) + '_pv'
 file_stringcount = bp + str(devicenumber) + '_count'
 file_stringcount5 = bp + str(devicenumber) + '_count5'

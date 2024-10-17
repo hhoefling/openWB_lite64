@@ -8,7 +8,7 @@ ipadr = str(sys.argv[2])
 uberschuss = int(sys.argv[3])
 initlog("stiebel", devicenumber)
 log = logging.getLogger("stiebel")
-file_stringpv = '/var/www/html/openWB/ramdisk/smarthome_device_' + str(devicenumber) + '_pv'
+file_stringpv = '/var/www/html/openWB/ramdisk/sm/device_' + str(devicenumber) + '_pv'
 log.info('on devicenr %d ipadr %s ueberschuss %6d try to connect (modbus)' % (devicenumber, ipadr, uberschuss))
 client = ModbusTcpClient(ipadr, port=502)
 # activate switch one (manual 4002)
