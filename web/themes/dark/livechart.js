@@ -467,11 +467,19 @@ function loadgraph(animationDuration = 1000) {
 				labels: {
 					fontColor: fontCol,
 					filter: function(item,chart) {
-						if ( item.text.includes(hidehaus)   || item.text.includes(hideload2)  || item.text.includes(hideload1) 
-						  || item.text.includes(hidelp2soc) || item.text.includes(hidelp1soc) || item.text.includes(hidelp1) 
-						  || item.text.includes(hidelp2)    || item.text.includes(hidelp3)    
-						  || item.text.includes(hidespeichersoc) || item.text.includes(hidespeicher) 
-						  || item.text.includes(hidelpa) || item.text.includes(hidepv) || item.text.includes(hideevu) 
+						if ( item.text.includes(hidehaus)   
+						  || item.text.includes(hideload2)  
+						  || item.text.includes(hideload1) 
+						  || item.text.includes(hidelp2soc) 
+						  || item.text.includes(hidelp1soc) 
+						  || item.text.includes(hidelp1) 
+						  || item.text.includes(hidelp2)    
+						  || item.text.includes(hidelp3)    
+						  || item.text.includes(hidespeichersoc) 
+						  || item.text.includes(hidespeicher) 
+						  || item.text.includes(hidelpa) 
+						  || item.text.includes(hidepv) 
+						  || item.text.includes(hideevu) 
 						  || item.text.includes(hideshd1)|| item.text.includes(hideshd2)|| item.text.includes(hideshd3)
 						  || item.text.includes(hideshd4)|| item.text.includes(hideshd5)|| item.text.includes(hideshd6) 
 						  || item.text.includes(hideshd7) || item.text.includes(hideshd8)|| item.text.includes(hideshd9) 
@@ -542,6 +550,7 @@ function loadgraph(animationDuration = 1000) {
 	});
 	initialread = 1;
 	console.log('Set initialread = 1 ')
+	console.log('line:', 	window.myLine )
 	$('#waitforgraphloadingdiv').hide();
 }	// end loadgraph
 
@@ -628,6 +637,10 @@ function putgraphtogether() {
 			//ashd1t1 = getCol(csvData, 30);
 			//ashd1t2 = getCol(csvData, 31);
 			
+			// diese bool's dufen in mqtt fehlen 
+			etvisibility(asoc,'hidehaus','Hausverbrauch','boolDisplayHouseConsumption');
+			setvisibility(asoc,'hidespeicher','Speicher','boolDisplaySpeicher');
+			setvisibility(asoc,'hidespeichersoc','Speicher-Soc','boolDisplaySpeicherSoc');
 			
 			setvisibility(asoc,'hidelp1soc','Lp1 Soc','boolDisplayLp1Soc');
 			setvisibility(asoc1,'hidelp2soc','Lp2 Soc','boolDisplayLp2Soc');

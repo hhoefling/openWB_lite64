@@ -64,7 +64,7 @@ function visibility(datavar,hidevar,hidevalue,boolvar) {
 	});
 	if ( vis == 1 ){
 		window[hidevar] = 'foo';
-		window[boolvar] = 'flase';
+		window[boolvar] = 'false';	// HH  war 'flase'
 	} else {
 		window[hidevar] = hidevalue;
 		window[boolvar] = 'true';
@@ -377,10 +377,20 @@ function loadgraph() {
 					// middle grey, opacity = 100% (visible)
 					fontColor: "rgba(153, 153, 153, 1)",
 					filter: function(item,chart) {
-						if ( item.text.includes(hidehaus) || item.text.includes(hideload2) || item.text.includes(hideload1) || item.text.includes(hidelp2soc) || item.text.includes(hidelp1soc) 
-						  || item.text.includes(hidelp1) || item.text.includes(hidelp2) || item.text.includes(hidelp3) 
+						if ( item.text.includes(hidehaus) 
+						  || item.text.includes(hideload2) 
+						  || item.text.includes(hideload1) 
+						  || item.text.includes(hidelp2soc) 
+						  || item.text.includes(hidelp1soc) 
+						  || item.text.includes(hidelp1) 
+						  || item.text.includes(hidelp2) 
+						  || item.text.includes(hidelp3) 
 						  //|| item.text.includes(hidelp4) || item.text.includes(hidelp5) || item.text.includes(hidelp6) || item.text.includes(hidelp7) || item.text.includes(hidelp8) 
-						  || item.text.includes(hidespeichersoc) || item.text.includes(hidespeicher) || item.text.includes(hidelpa) || item.text.includes(hidepv) || item.text.includes(hidebezug) ) {
+						  || item.text.includes(hidespeichersoc) 
+						  || item.text.includes(hidespeicher) 
+						  || item.text.includes(hidelpa) 
+						  || item.text.includes(hidepv) 
+						  || item.text.includes(hidebezug) ) {
 							return false
 						} else {
 							return true

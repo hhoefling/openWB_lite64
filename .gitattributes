@@ -1,5 +1,6 @@
-*               text=auto
+*               text eol=lf
 .*		text eol=lf
+*.csv		text eol=lf
 *.txt		text eol=lf
 *.sh		text eol=lf
 *.py		text eol=lf
@@ -13,4 +14,9 @@ version     	text eol=lf
 *.json      text eol=lf
 *.jpg		-text
 *.png   	-text
+*.eot   	-text
+*.ttf   	-text
+*.woff   	-text
+*.woff2   	-text
+
 

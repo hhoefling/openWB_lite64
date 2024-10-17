@@ -1,5 +1,5 @@
 <?php
-function  geturl($dir,$file)
+function  xgeturl($dir,$file)
 	{
  			$fn=sprintf('./%s/%s', $dir, $file);
  			$ftime=filemtime($file);
@@ -43,7 +43,7 @@ function  geturl($dir,$file)
 		<!-- include settings-style -->
 		<link rel="stylesheet" type="text/css" href="css/settings_style.css">
 		<!-- load helper functions -->
-		<script src = "<?php echo geturl('settings','helperFunctions.js');?>"></script>
+		<script src = "<?php echo xgeturl('settings','helperFunctions.js');?>"></script>
 			
 	</head>
 	<body>
@@ -446,11 +446,11 @@ function  geturl($dir,$file)
 		<!-- load mqtt library -->
 		<script src = "js/mqttws31.js" ></script>
 		<!-- load topics -->
-		<script src = "<?php echo geturl('settings','topicsToSubscribe_graphconfig.js');?>"></script>
+		<script src = "<?php echo xgeturl('settings','topicsToSubscribe_graphconfig.js');?>"></script>
 		<!-- load service -->
-		<script src = "<?php echo geturl('settings','setupMqttServices.js');?>"></script>
+		<script src = "<?php echo xgeturl('settings','setupMqttServices.js');?>"></script>
 		<!-- load mqtt handler-->
-		<script src = "<?php echo geturl('settings','processAllMqttMsg.js');?>"></script>
+		<script src = "<?php echo xgeturl('settings','processAllMqttMsg.js');?>"></script>
 
 		<script>
 

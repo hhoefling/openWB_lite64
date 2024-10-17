@@ -579,27 +579,37 @@ do
 		mosquitto_pub -r -t openWB/config/get/SmartHome/Devices/$i/device_configured -m "0"
 	fi
 done
-mosquitto_pub -r -t openWB/graph/boolDisplayLiveGraph -m "1"
+// Init Startwerte für Dark Theme und Display
+mosquitto_pub -t openWB/graph/boolDisplayLiveGraph -r -m "1"
+mosquitto_pub -t openWB/graph/boolDisplayLegend -r -m "1"
+mosquitto_pub -t openWB/graph/boolDisplayEvu -r -m "1"
+mosquitto_pub -t openWB/graph/boolDisplayLp1 -r -m "1"
+mosquitto_pub -t openWB/graph/boolDisplayLpAll -r -m "1"
+mosquitto_pub -t openWB/graph/boolDisplayPv -r -m "1"
+mosquitto_pub -t openWB/graph/boolDisplayLp1Soc -r -m "1"
+mosquitto_pub -t openWB/graph/boolDisplayLoad1 -r -m "0"
+mosquitto_pub -t openWB/graph/boolDisplayLoad2 -r -m "0"
+
 mosquitto_pub -t openWB/global/strLastmanagementActive -r -m ""
 mosquitto_pub -t openWB/global/strLaderegler -r -m " "
 mosquitto_pub -t openWB/lp/1/W -r -m "0"
 mosquitto_pub -t openWB/lp/2/W -r -m "0"
 mosquitto_pub -t openWB/lp/3/W -r -m "0"
 mosquitto_pub -t openWB/lp/1/boolChargePointConfigured -r -m "1"
-mosquitto_pub -r -t openWB/SmartHome/Devices/1/TemperatureSensor0 -m ""
-mosquitto_pub -r -t openWB/SmartHome/Devices/1/TemperatureSensor1 -m ""
-mosquitto_pub -r -t openWB/SmartHome/Devices/1/TemperatureSensor2 -m ""
-mosquitto_pub -r -t openWB/SmartHome/Devices/2/TemperatureSensor0 -m ""
-mosquitto_pub -r -t openWB/SmartHome/Devices/2/TemperatureSensor1 -m ""
-mosquitto_pub -r -t openWB/SmartHome/Devices/2/TemperatureSensor2 -m ""
+mosquitto_pub -t openWB/SmartHome/Devices/1/TemperatureSensor0 -r -m ""
+mosquitto_pub -t openWB/SmartHome/Devices/1/TemperatureSensor1 -r -m ""
+mosquitto_pub -t openWB/SmartHome/Devices/1/TemperatureSensor2 -r -m ""
+mosquitto_pub -t openWB/SmartHome/Devices/2/TemperatureSensor0 -r -m ""
+mosquitto_pub -t openWB/SmartHome/Devices/2/TemperatureSensor1 -r -m ""
+mosquitto_pub -t openWB/SmartHome/Devices/2/TemperatureSensor2 -r -m ""
 # lasse die leeren Graphicn anlegen
-mosquitto_pub -r -t openWB/set/graph/RequestMonthGraph -m "0"
-mosquitto_pub -r -t openWB/set/graph/RequestDayGraph -m "0"
-mosquitto_pub -r -t openWB/set/graph/RequestMonthGraphv1 -m "0"
-mosquitto_pub -r -t openWB/set/graph/RequestYearGraph -m "0"
-mosquitto_pub -r -t openWB/set/graph/RequestMonthLadelog -m "0"
+mosquitto_pub -t openWB/set/graph/RequestMonthGraph -r -m "0"
+mosquitto_pub -t openWB/set/graph/RequestDayGraph -r -m "0"
+mosquitto_pub -t openWB/set/graph/RequestMonthGraphv1 -r -m "0"
+mosquitto_pub -t openWB/set/graph/RequestYearGraph -r -m "0"
+mosquitto_pub -t openWB/set/graph/RequestMonthLadelog -r -m "0"
 # NC 
-# mosquitto_pub -r -t openWB/set/graph/RequestLLiveGraph -m "0"
+# mosquitto_pub -t openWB/set/graph/RequestLLiveGraph -r -m "0"
 
 
 
