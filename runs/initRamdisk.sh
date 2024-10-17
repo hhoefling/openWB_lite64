@@ -14,7 +14,7 @@ initrdmqtt_i()  # ramname,  topic default
 		:
 	else
 		if [[ ! -z $2 ]]; then # oder -n 
-			val=$(mosquitto_sub -W 1 -C 1 -t openWB/$2)
+			val=$(timeout 1 mosquitto_sub -C 1 -t openWB/$2)
 			# openwbDebugLog "MAIN" 0 "initrdmqtt read openWB/$1 from mosquito: [$val]"
 			if ! [[ $val =~ $ri ]] ; then
 				val=$3

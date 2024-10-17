@@ -579,7 +579,7 @@ do
 		mosquitto_pub -r -t openWB/config/get/SmartHome/Devices/$i/device_configured -m "0"
 	fi
 done
-// Init Startwerte für Dark Theme und Display
+# Init Startwerte für Dark Theme und Display
 mosquitto_pub -t openWB/graph/boolDisplayLiveGraph -r -m "1"
 mosquitto_pub -t openWB/graph/boolDisplayLegend -r -m "1"
 mosquitto_pub -t openWB/graph/boolDisplayEvu -r -m "1"

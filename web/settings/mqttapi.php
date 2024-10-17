@@ -30,7 +30,7 @@ if(isset($_GET["topic"])) {
 	}
 	# reading topic
 	else{
-		$command = "mosquitto_sub -h localhost -t " . escapeshellarg($topic) . " -C 1 -W 1 2>&1";
+		$command = "timeout 2 mosquitto_sub -h localhost -t " . escapeshellarg($topic) . " -C 1 2>&1";
 		$output = exec($command);
 		# Skip an annoying warning because it doesn't cause any problems
 		$output = str_replace("Warning: Unable to locate configuration directory, default config not loaded.", "", $output);
