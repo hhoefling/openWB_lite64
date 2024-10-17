@@ -127,7 +127,7 @@ sudo chmod 777 web/tools/upload
 sudo touch web/backup/.donotdelete
 sudo chmod 777 openwb.conf
 if [[ ! -f smarthome.conf ]]  ; then
-  cp -p web/files/smarthome.conf smarthome.conf 
+  cp -p runs/files/smarthome.conf.default smarthome.conf 
   openwbDebugLog "MAIN" 2 "smarthome.conf added"
 fi
 sudo chmod 777 smarthome.conf
