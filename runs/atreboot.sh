@@ -286,7 +286,7 @@ if ( sudo grep -Fq "AllowOverride" /etc/apache2/sites-available/000-default.conf
 then
 	openwbDebugLog "MAIN" 2  "...ok"
 else
-	sudo cp /var/www/html/openWB/web/tools/000-default.conf /etc/apache2/sites-available/
+	sudo cp runs/files/000-default.conf /etc/apache2/sites-available/
 	openwbDebugLog "MAIN" 2  "...changed"
 fi
 
@@ -345,7 +345,7 @@ if [[ ! -x /usr/sbin/ssmtp ]] ; then
   openwbDebugLog "MAIN" 2  "install a simple smtp client (ssmtp,mailutils)"
   sudo apt get -q -y ssmtp mailutils
   openwbDebugLog "MAIN" 2  "updating global ssmtp file"
-  sudo cp run/files/ssmtp.conf /etc/ssmtp/ssmtp.conf
+  sudo cp runs/files/ssmtp.conf /etc/ssmtp/ssmtp.conf
   sudo chown root:root /etc/ssmtp/ssmtp.conf
   sudo chmod 0644 /etc/ssmtp/ssmtp.conf
 # sample sending:
@@ -418,7 +418,7 @@ fi
 # check for mosquitto configuration
 if [ ! -f /etc/mosquitto/conf.d/openwb.conf ] || ! sudo grep -Fq "persistent_client_expiration" /etc/mosquitto/mosquitto.conf; then
 	openwbDebugLog "MAIN" 2  "updating mosquitto config file"
-	sudo cp /var/www/html/openWB/web/files/mosquitto.conf /etc/mosquitto/conf.d/openwb.conf
+	sudo cp runs/files/mosquitto.conf /etc/mosquitto/conf.d/openwb.conf
 	sudo service mosquitto stop
 	sudo service mosquitto start
 fi
@@ -579,7 +579,7 @@ do
 		mosquitto_pub -r -t openWB/config/get/SmartHome/Devices/$i/device_configured -m "0"
 	fi
 done
-# Init Startwerte für Dark Theme und Display
+# Init Startwerte fÃ¼r Dark Theme und Display
 mosquitto_pub -t openWB/graph/boolDisplayLiveGraph -r -m "1"
 mosquitto_pub -t openWB/graph/boolDisplayLegend -r -m "1"
 mosquitto_pub -t openWB/graph/boolDisplayEvu -r -m "1"
