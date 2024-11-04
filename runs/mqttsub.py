@@ -103,8 +103,8 @@ def replaceinconfig(changeval, newval):
 
 
 def xsubprocess(xcommand):
-    subprocess.run(xcommand)
     dolog("  subprocess run [%s]" % (xcommand))
+    subprocess.run(xcommand)
 
 
 #  "sofortsocstatlp1=", msg.payload.decode("utf-8"))
@@ -246,6 +246,8 @@ def on_connect(client, userdata, flags, rc):
 #    return tok
 #
 
+# Global flag
+setTopicCleared = False
 
 def processSmartHomeDevice(topic, payload):
     global numberOfSupportedDevices, client, ramdisk
@@ -343,16 +345,179 @@ def processSmartHomeDevice(topic, payload):
         dolog("SmartHomeTopic: [%s] Message: [%s] [%d] [%s] NOT ASSIGNED" % (topic, payload, di, ds))
 
 
+# set/graph/
+def processGraphMessage(topic, payload):
+    global setTopicCleared, client, RequestYearGraphv1
+    dolog("graph Topic: [%s] Message: [%s]" % (topic, payload))
+    if (topic == "openWB/set/graph/LiveGraphDuration"):
+        if (int(payload) >= 20 and int(payload) <= 120):
+            replaceinconfig("livegraph=", payload)
+    elif (topic == "openWB/set/graph/RequestLiveGraph"):		# NC, maybe from cloud?
+        if (int(payload) == 1):
+            subprocess.run("/var/www/html/openWB/runs/sendlivegraphdata.sh")
+        else:
+            client.publish("openWB/system/LiveGraphData", "empty", qos=0, retain=True)
+        setTopicCleared = True
+# Live wird immer erzeugt und nicht angfordert
+# (nur die letzen 50) daher nach mqtt neustart erst nur wenige daten
+#
+    elif (topic == "openWB/set/graph/RequestLLiveGraph"):
+        if (int(payload) == 1):
+            xsubprocess(["/var/www/html/openWB/runs/sendllivegraphdata.sh"])
+        else:
+            client.publish("openWB/system/1alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/2alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/3alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/4alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/5alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/6alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/7alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/8alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/9alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/10alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/11alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/12alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/13alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/14alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/15alllivevalues", "empty", qos=0, retain=True)
+            client.publish("openWB/system/16alllivevalues", "empty", qos=0, retain=True)
+        setTopicCleared = True
+    elif (topic == "openWB/set/graph/RequestDayGraph"):
+        if (int(payload) >= 1 and int(payload) <= 20501231):
+            # sendcommand = ["/var/www/html/openWB/runs/senddaygraphdata.sh", payload]
+            # subprocess.run(sendcommand)
+            xsubprocess(["/var/www/html/openWB/runs/senddaygraphdata.sh", payload])
+        else:
+            client.publish("openWB/system/DayGraphData1", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData2", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData3", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData4", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData5", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData6", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData7", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData8", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData9", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData10", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData11", "empty", qos=0, retain=True)
+            client.publish("openWB/system/DayGraphData12", "empty", qos=0, retain=True) 
+        setTopicCleared = True
+    elif (topic == "openWB/set/graph/RequestMonthGraph"):
+        if (int(payload) >= 1 and int(payload) <= 205012):
+            # sendcommand = ["/var/www/html/openWB/runs/sendmonthgraphdata.sh", payload]
+            # subprocess.run(sendcommand)
+            xsubprocess(["/var/www/html/openWB/runs/sendmonthgraphdata.sh", payload])
+        else:
+            client.publish("openWB/system/MonthGraphData1", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData2", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData3", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData4", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData5", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData6", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData7", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData8", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData9", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData10", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData11", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphData12", "empty", qos=0, retain=True)
+        setTopicCleared = True
+    elif (topic == "openWB/set/graph/RequestMonthGraphv1"):
+        if (int(payload) >= 1 and int(payload) <= 205012):
+            # sendcommand = ["/var/www/html/openWB/runs/sendmonthgraphdatav1.sh", payload]
+            # subprocess.run(sendcommand)
+            xsubprocess(["/var/www/html/openWB/runs/sendmonthgraphdatav1.sh", payload])
+        else:
+            client.publish("openWB/system/MonthGraphDatan1", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan2", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan3", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan4", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan5", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan6", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan7", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan8", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan9", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan10", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan11", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthGraphDatan12", "empty", qos=0, retain=True)
+        setTopicCleared = True
+    elif (topic == "openWB/set/graph/RequestYearGraph"):
+        if (int(payload) >= 1 and int(payload) <= 2050):
+            # sendcommand = ["/var/www/html/openWB/runs/sendyeargraphdata.sh", payload]
+            # subprocess.run(sendcommand)
+            xsubprocess(["/var/www/html/openWB/runs/sendyeargraphdata.sh", payload])
+        else:
+            client.publish("openWB/system/YearGraphData1", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData2", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData3", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData4", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData5", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData6", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData7", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData8", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData9", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData10", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData11", "empty", qos=0, retain=True)
+            client.publish("openWB/system/YearGraphData12", "empty", qos=0, retain=True)
+        setTopicCleared = True
+    elif (topic == "openWB/set/graph/RequestYearGraphv1"):
+        if (int(payload) >= 1 and int(payload) <= 2050):
+            # sendcommand = ["/var/www/html/openWB/runs/sendyeargraphdatav1.sh", payload]
+            # subprocess.run(sendcommand)
+            xsubprocess(["/var/www/html/openWB/runs/sendyeargraphdatav1.sh", payload])
+            RequestYearGraphv1 = int(payload)
+            dolog("set RequestYearGraphv1 to :%d" % (RequestYearGraphv1))
+        else:
+            if (RequestYearGraphv1 > 0):
+                RequestYearGraphv1 = 0
+                dolog("RequestYearGraphv1 clear :%d" % (RequestYearGraphv1))
+                client.publish("openWB/system/YearGraphDatan1", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan2", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan3", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan4", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan5", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan6", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan7", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan8", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan9", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan10", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan11", "empty", qos=0, retain=True)
+                client.publish("openWB/system/YearGraphDatan12", "empty", qos=0, retain=True)
+            else:
+                dolog("RequestYearGraphv1 skip :%d" % (RequestYearGraphv1))
+        setTopicCleared = True
+    elif (topic == "openWB/set/graph/RequestMonthLadelog"):
+        if (int(payload) >= 1 and int(payload) <= 205012):
+            # sendcommand = ["/var/www/html/openWB/runs/sendladelog.sh", payload]
+            # subprocess.run(sendcommand)
+            xsubprocess(["/var/www/html/openWB/runs/sendladelog.sh", payload])
+        else:
+            client.publish("openWB/system/MonthLadelogData1", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData2", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData3", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData4", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData5", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData6", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData7", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData8", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData9", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData10", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData11", "empty", qos=0, retain=True)
+            client.publish("openWB/system/MonthLadelogData12", "empty", qos=0, retain=True)
+        setTopicCleared = True
+    else:
+        dolog("graphTopic: [%s] Message: [%s] NOT ASSIGNED" % (topic, payload))
+
+
+
 # handle each set topic
 def on_message(client, userdata, msg):
-    global numberOfSupportedDevices, RequestYearGraphv1
+    global numberOfSupportedDevices, RequestYearGraphv1, setTopicCleared
     # log all messages before any error forces this process to die
     if (len(msg.payload.decode("utf-8")) >= 1):
         lock.acquire()
         try:
             setTopicCleared = False
             payload = msg.payload.decode("utf-8")
-            dolog("Topic: [%s] Message: [%s]" % (msg.topic, payload))
+            # dolog("Topic: [%s] Message: [%s]" % (msg.topic, payload))
             if (("openWB/set/lp" in msg.topic) and ("ChargePointEnabled" in msg.topic)):
                 devicenumb = re.sub(r'\D', '', msg.topic)
                 if (1 <= int(devicenumb) <= numberOfSupportedLP and 0 <= int(payload) <= 1):  # 8
@@ -370,6 +535,9 @@ def on_message(client, userdata, msg):
             #
             if ("openWB/config/set/SmartHome/Device" in msg.topic):
                 processSmartHomeDevice(msg.topic, payload)
+            elif ("openWB/set/graph/" in msg.topic):
+                processGraphMessage(msg.topic, payload)
+               
             if (("openWB/config/set/SmartHome/Device" in msg.topic) and ("device_deactivateWhileEvCharging" in msg.topic)):
                 devicenumb = re.sub(r'\D', '', msg.topic)
                 if (1 <= int(devicenumb) <= numberOfSupportedDevices and 0 <= int(payload) <= 2):
@@ -640,11 +808,11 @@ def on_message(client, userdata, msg):
             elif (msg.topic == "openWB/config/set/SmartHome/smartmq"):
                 if (0 <= int(payload) <= 1):
                     ramdisk.write('smartmq', payload)
-                    client.publish("openWB/config/get/SmartHome/smartmq", payload, qos=0, retain=True)
+                    publish0r("openWB/config/get/SmartHome/smartmq", payload)
             elif (msg.topic == "openWB/config/set/SmartHome/logLevel"):
                 if (int(payload) >= 0 and int(payload) <= 2):
                     ramdisk.write('sm/loglevel', payload)
-                    client.publish("openWB/config/get/SmartHome/logLevel", payload, qos=0, retain=True)
+                    publish0r("openWB/config/get/SmartHome/logLevel", payload)
             #
             # ##############################################################################
             #
@@ -1013,11 +1181,6 @@ def on_message(client, userdata, msg):
                     # sendcommand = ["/var/www/html/openWB/runs/replaceinconfig.sh", "speicherpveinbeziehen=", einbeziehen]
                     # subprocess.run(sendcommand)
                     client.publish("openWB/config/get/pv/priorityModeEVBattery", einbeziehen, qos=0, retain=True)
-            if (msg.topic == "openWB/set/graph/LiveGraphDuration"):
-                if (int(payload) >= 20 and int(payload) <= 120):
-                    replaceinconfig("livegraph=", payload)
-                    # sendcommand = ["/var/www/html/openWB/runs/replaceinconfig.sh", "livegraph=", payload]
-                    # subprocess.run(sendcommand)
             if (msg.topic == "openWB/set/system/SimulateRFID"):
                 if len(str(payload)) >= 1 and bool(re.match(namenumballowed, payload)):
                     ramdisk.write('readtag', payload)
@@ -1032,25 +1195,15 @@ def on_message(client, userdata, msg):
                     try:
                         json_payload = json_loads(str(payload))
                     except JSONDecodeError:
-                        file = open('/var/www/html/openWB/ramdisk/mqtt.log', 'a')
-                        file.write("payload is not valid JSON, fallback to simple text\n")
-                        file.close()
+                        dolog("payload is not valid JSON, fallback to simple text")
                         payload = payload.rpartition('email: ')
                         json_payload = {"message": payload[0], "email": payload[2]}
                     finally:
                         if (re.match(emailallowed, json_payload["email"])):
                             ramdisk.write('debuguser', "%s\n%s\n" % (json_payload["message"], json_payload["email"]))
-                            # f = open('/var/www/html/openWB/ramdisk/debuguser', 'w')
-                            # f.write("%s\n%s\n" % (json_payload["message"], json_payload["email"]))
-                            # f.close()
                             ramdisk.write('debugmail', json_payload["email"] + "\n")
-                            # f = open('/var/www/html/openWB/ramdisk/debugemail', 'w')
-                            # f.write(json_payload["email"] + "\n")
-                            # f.close()
                         else:
-                            file = open('/var/www/html/openWB/ramdisk/mqtt.log', 'a')
-                            file.write("payload does not contain a valid email: '%s'\n" % (str(json_payload["email"])))
-                            file.close()
+                            dolog("payload does not contain a valid email: '%s'" % (str(json_payload["email"])))
                         client.publish("openWB/set/system/SendDebug", "0", qos=0, retain=True)
                         setTopicCleared = True
                         subprocess.run("/var/www/html/openWB/runs/senddebuginit.sh")
@@ -1058,177 +1211,18 @@ def on_message(client, userdata, msg):
                 if (int(payload) >= 0 and int(payload) <= 1):
                     client.publish("openWB/system/reloadDisplay", payload, qos=0, retain=True)
                     xsubprocess(["/var/www/html/openWB/runs/reloadDisplay.sh", payload])
-                    # script = "/var/www/html/openWB/runs/reloadDisplay.sh"
-                    # ps = Path(script)
-                    # if ps.is_file():
-                    #   # sendcommand = [script, payload)]
-                    # ps = None
             # if (msg.topic == "openWB/config/set/releaseTrain"):
             if (msg.topic == "openWB/set/system/releaseTrain"):
                 if (payload == "stable17" or payload == "master" or payload == "beta" or payload.startswith("yc/")):
                     sendcommand = ["/var/www/html/openWB/runs/replaceinconfig.sh", "releasetrain=", payload]
                     subprocess.run(sendcommand)
                     client.publish("openWB/system/releaseTrain", payload, qos=0, retain=True)
-
-            if (msg.topic == "openWB/set/graph/RequestLiveGraph"):		# NC, maybe from cloud?
-                if (int(payload) == 1):
-                    subprocess.run("/var/www/html/openWB/runs/sendlivegraphdata.sh")
-                else:
-                    client.publish("openWB/system/LiveGraphData", "empty", qos=0, retain=True)
-                setTopicCleared = True
-# Live wird immer erzeugt und nicht angfordert
-# (nur die letzen 50) daher nach mqtt neustart erst nur wenige daten
-#
-
-            if (msg.topic == "openWB/set/graph/RequestLLiveGraph"):
-                if (int(payload) == 1):
-                    # subprocess.run("/var/www/html/openWB/runs/sendllivegraphdata.sh")
-                    xsubprocess(["/var/www/html/openWB/runs/sendllivegraphdata.sh"])
-                else:
-                    client.publish("openWB/system/1alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/2alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/3alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/4alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/5alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/6alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/7alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/8alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/9alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/10alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/11alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/12alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/13alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/14alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/15alllivevalues", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/16alllivevalues", "empty", qos=0, retain=True)
-                setTopicCleared = True
-            if (msg.topic == "openWB/set/graph/RequestDayGraph"):
-                if (int(payload) >= 1 and int(payload) <= 20501231):
-                    # sendcommand = ["/var/www/html/openWB/runs/senddaygraphdata.sh", msg.payload]
-                    # subprocess.run(sendcommand)
-                    xsubprocess(["/var/www/html/openWB/runs/senddaygraphdata.sh", payload])
-                else:
-                    client.publish("openWB/system/DayGraphData1", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData2", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData3", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData4", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData5", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData6", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData7", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData8", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData9", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData10", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData11", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/DayGraphData12", "empty", qos=0, retain=True)
-                setTopicCleared = True
-            if (msg.topic == "openWB/set/graph/RequestMonthGraph"):
-                if (int(payload) >= 1 and int(payload) <= 205012):
-                    # sendcommand = ["/var/www/html/openWB/runs/sendmonthgraphdata.sh", msg.payload]
-                    # subprocess.run(sendcommand)
-                    xsubprocess(["/var/www/html/openWB/runs/sendmonthgraphdata.sh", payload])
-                else:
-                    client.publish("openWB/system/MonthGraphData1", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData2", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData3", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData4", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData5", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData6", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData7", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData8", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData9", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData10", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData11", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphData12", "empty", qos=0, retain=True)
-                setTopicCleared = True
-            if (msg.topic == "openWB/set/graph/RequestMonthGraphv1"):
-                if (int(payload) >= 1 and int(payload) <= 205012):
-                    # sendcommand = ["/var/www/html/openWB/runs/sendmonthgraphdatav1.sh", msg.payload]
-                    # subprocess.run(sendcommand)
-                    xsubprocess(["/var/www/html/openWB/runs/sendmonthgraphdatav1.sh", payload])
-                else:
-                    client.publish("openWB/system/MonthGraphDatan1", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan2", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan3", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan4", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan5", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan6", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan7", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan8", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan9", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan10", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan11", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthGraphDatan12", "empty", qos=0, retain=True)
-                setTopicCleared = True
-            if (msg.topic == "openWB/set/graph/RequestYearGraph"):
-                if (int(payload) >= 1 and int(payload) <= 2050):
-                    # sendcommand = ["/var/www/html/openWB/runs/sendyeargraphdata.sh", msg.payload]
-                    # subprocess.run(sendcommand)
-                    xsubprocess(["/var/www/html/openWB/runs/sendyeargraphdata.sh", payload])
-                else:
-                    client.publish("openWB/system/YearGraphData1", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData2", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData3", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData4", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData5", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData6", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData7", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData8", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData9", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData10", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData11", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/YearGraphData12", "empty", qos=0, retain=True)
-                setTopicCleared = True
-            if (msg.topic == "openWB/set/graph/RequestYearGraphv1"):
-                if (int(payload) >= 1 and int(payload) <= 2050):
-                    # sendcommand = ["/var/www/html/openWB/runs/sendyeargraphdatav1.sh", msg.payload]
-                    # subprocess.run(sendcommand)
-                    xsubprocess(["/var/www/html/openWB/runs/sendyeargraphdatav1.sh", payload])
-                    RequestYearGraphv1 = int(payload)
-                    dolog("set RequestYearGraphv1 to :%d" % (RequestYearGraphv1))
-                else:
-                    if (RequestYearGraphv1 > 0):
-                        RequestYearGraphv1 = 0
-                        dolog("RequestYearGraphv1 clear :%d" % (RequestYearGraphv1))
-                        client.publish("openWB/system/YearGraphDatan1", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan2", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan3", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan4", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan5", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan6", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan7", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan8", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan9", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan10", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan11", "empty", qos=0, retain=True)
-                        client.publish("openWB/system/YearGraphDatan12", "empty", qos=0, retain=True)
-                    else:
-                        dolog("RequestYearGraphv1 skip :%d" % (RequestYearGraphv1))
-                setTopicCleared = True
             if (msg.topic == "openWB/set/system/debug/RequestDebugInfo"):
                 if (int(payload) == 1):
-                    xsubprocess(["/var/www/html/openWB/runs/sendmdebug.sh"])
+                    xsubprocess(["/var/www/html/openWB/runs/sendmqttdebug.sh"])
                 else:
                     xsubprocess(["runs/sendinfo.sh", payload])
-                setTopicCleared = True
-            if (msg.topic == "openWB/set/graph/RequestMonthLadelog"):
-                if (int(payload) >= 1 and int(payload) <= 205012):
-                    # sendcommand = ["/var/www/html/openWB/runs/sendladelog.sh", msg.payload]
-                    # subprocess.run(sendcommand)
-                    xsubprocess(["/var/www/html/openWB/runs/sendladelog.sh", payload])
-                else:
-                    client.publish("openWB/system/MonthLadelogData1", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData2", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData3", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData4", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData5", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData6", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData7", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData8", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData9", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData10", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData11", "empty", qos=0, retain=True)
-                    client.publish("openWB/system/MonthLadelogData12", "empty", qos=0, retain=True)
-                setTopicCleared = True
+                # setTopicCleared = True
             if (msg.topic == "openWB/set/pv/NurPV70Status"):
                 if (int(payload) >= 0 and int(payload) <= 1):
                     client.publish("openWB/pv/bool70PVDynStatus", payload, qos=0, retain=True)

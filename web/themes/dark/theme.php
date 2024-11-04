@@ -48,7 +48,7 @@ function makedebugreihe()
 					<div class="card-header bg-secondary collapsed" data-toggle="collapse" data-target="#debugOne">
 						<a class="card-title">Debug </a>
 					</div>
-					<div id="debugOne" class="card-body collapse" data-parent="#accordion" >
+					<div id="debugOne" class="card-body collapse" data-parent="#accordion">
 						<pre id="debugdiv" style="font-size:0.7rem;">
 
 END;

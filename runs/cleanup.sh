@@ -9,7 +9,8 @@ timestamp=`date +"%Y-%m-%d %H:%M:%S"`
     # Dateien die auf /var/log verlinken werden nicht verkleinert 
 	echo "$timestamp cleanup.sh: checking logfiles" >> /var/www/html/openWB/ramdisk/openWB.log
 	echo "$timestamp cleanup.sh: checking logfiles"
-	find /var/www/html/openWB/ramdisk/ -name "*.log" -type f -exec /var/www/html/openWB/runs/cleanupf.sh {} \;
+	find /var/www/html/openWB/ramdisk/sm/ -name "*.log" -type f -exec /var/www/html/openWB/runs/cleanupf.sh {} 1024 \;
+	find /var/www/html/openWB/ramdisk/ -name "*.log" -type f -exec /var/www/html/openWB/runs/cleanupf.sh {} 2048 \;
     # nun die verlinkte ebenfalls 
 	/var/www/html/openWB/runs/cleanupf.sh /var/log/openWB.log  4096;
 #fi

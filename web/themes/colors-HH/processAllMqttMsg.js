@@ -151,8 +151,8 @@ function processSystemMessages(mqttmsg, mqttpayload) {
 	// processes mqttmsg for topic openWB/system
 	// called by handlevar
 	if( mqttpayload.length < 128)
-	     console.log('processSystemMessages', mqttmsg,  mqttpayload )
-	else console.log('processSystemMessages', mqttmsg,  ' Bytes:' , mqttpayload.length )
+	     console.log('processSystemMessages ' +  mqttmsg + ' ' + mqttpayload )
+	else console.log('processSystemMessages	' + mqttmsg + ' Bytes:' + mqttpayload.length )
 	
 	processPreloader(mqttmsg);
 	//console.log(mqttmsg, ' ', mqttpayload);
@@ -196,14 +196,14 @@ function processSystemMessages(mqttmsg, mqttpayload) {
       $('#uptimem').val(ss);
     } 
 	else if (mqttmsg == 'openWB/system/devicename') {
-     console.log('set devicename from ', mqttmsg, ' ', mqttpayload);
+     console.log('set devicename from '+ mqttmsg + ' '+  mqttpayload);
       $('.devicename').text(mqttpayload);
 	  if( iscloud )
 	     $('.devicename').addClass('fa fa-cloud');
       window.document.title='oWB ' + mqttpayload; 
     } 
     else if (mqttmsg == 'openWB/system/regelneeds') {
-     console.log('set regelneeds from ', mqttmsg, ' ', mqttpayload);
+     //console.log('set regelneeds from ', mqttmsg, ' ', mqttpayload);
       $('#needs').html('<small>'+mqttpayload+'</small>');
       meter=$('#need');
       if( mqttpayload>8 )
@@ -547,7 +547,7 @@ function processGlobalMessages(mqttmsg, mqttpayload) {
 		}
 	}
 	else if (mqttmsg == 'openWB/global/strLaderegler') {
-		console.log('laderegler:'+mqttpayload )
+		//console.log('laderegler:'+mqttpayload )
 		if (mqttpayload.length >= 5) {
 			// if there is info-text in payload for topic, show the text
 			$('#LadereglerTxt').text(mqttpayload);
@@ -557,7 +557,7 @@ function processGlobalMessages(mqttmsg, mqttpayload) {
 		}
 	}
 	else if (mqttmsg == 'openWB/global/strBatSupport') {
-		console.log('batSupport:'+mqttpayload )
+		//console.log('batSupport:'+mqttpayload )
 		if (mqttpayload.length >= 2) {
 			// if there is info-text in payload for topic, show the text
 			$('#BatSupportTxt').text(mqttpayload);
@@ -772,7 +772,7 @@ function processHousebatteryMessages(mqttmsg, mqttpayload) {
 		wbdata.updateBat("batteryEnergyImport", makeFloat(mqttpayload))
     }
     else {
-        console.log('****** Unknown :', mqttmsg, ' ', mqttpayload);
+        console.log('****** Unknown :' +  mqttmsg +  ' ' + mqttpayload);
 	}
 	// end color theme
 
@@ -958,7 +958,7 @@ function processLpMessages(mqttmsg, mqttpayload) {
 
         if( index > 3 )
         {
-          console.log('ignore mqtttopic ', mqttmsg, ' ',index, ' ' , mqttpayload);
+          console.log('ignore mqtttopic ' + mqttmsg + ' ' + index +  ' ' +  mqttpayload);
           return;
         }
         //console.log('use mqtttopic ', mqttmsg, ' ',mqttpayload);

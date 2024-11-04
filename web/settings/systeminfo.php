@@ -191,7 +191,7 @@ function  getdateurl($dir,$file)
 						<div class="col">
 							<p><pre style="font-size:0.7em;"><?php 
 											$lines=[];
-											exec('sudo ps -efl | grep -E "regel.sh|openWB|runs|tsp|puller|skoda|packages" | grep -v grep | grep -v sudo ', $lines);
+											exec('sudo ps -efl | grep -E "regel.sh|openWB|runs|tsp|puller|skoda|packages" | grep -v grep | grep -v sudo | grep -v avahi | grep -v chromium ', $lines);
                                             $lines[]="";
 											echo implode('<br>',$lines);
                                        ?>
@@ -202,7 +202,7 @@ function  getdateurl($dir,$file)
 				</div>
 
 				<div class="card-header bg-secondary">
-					Servies
+					OpenWB - Services
 				</div>
 				<div class="card-body">
 					<div class="row">

@@ -197,7 +197,6 @@ try:
             workchan = chan - 1
         else:
             workchan = chan
-#        workchan = chan
         sw = 'switch:' + str(workchan)
         log.info('Get from ' + str(sw) )
         if ("SPEM-003CE" in model):

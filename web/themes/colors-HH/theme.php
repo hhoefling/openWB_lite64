@@ -881,6 +881,16 @@ END;
 						countTopicsReceived++;
 					}
 				};
+				
+	var d = new Date();
+	let h = (d.getHours());
+	let m = (d.getMinutes());
+	let s = (d.getSeconds());
+	let ms =(d.getMilliseconds());
+	let time = h + ":" + m + ":" + s + ":" + ms;	
+
+				
+				console.log( time + ' Preloader:'+ mqttTopic + ' '+countTopicsReceived);
 				// countTopicsToBeReceived holds all topics flagged 1 and not only those for preloader
 				countTopicsReceived = countTopicsReceived - countTopicsNotForPreloader;
 				var countTopicsToBeReceived = topicsToSubscribe.length - countTopicsNotForPreloader;

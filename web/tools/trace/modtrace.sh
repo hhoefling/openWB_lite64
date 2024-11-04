@@ -10,9 +10,14 @@ temp="${input#*fun=}"
 fun="${temp%%&*}"
 temp="${input#*id=}"
 id="${temp%%&*}"
-echo "<br/> parmeters parsed ip $ip ";
-echo " start $start ";
-echo " len $len ";
-echo " id $id ";
-echo " fun $fun <br/>";
-sudo python /var/www/html/openWB/web/tools/trace/trace.py $ip $start $len $id $fun
+temp="${input#*dtyp=}"
+dtyp="${temp%%&*}"
+
+echo "<br/> parmeters parsed ip [$ip] ";
+echo "<br/> start [$start] ";
+echo "<br/> len [$len] ";
+echo "<br/> id [$id] ";
+echo "<br/> dtyp [$dtyp] ";
+echo "<br/> fun [$fun] ";
+echo "<br/> sudo python /var/www/html/openWB/web/tools/trace/trace.py $ip $start $len $id $dtyp $fun ";
+sudo python /var/www/html/openWB/web/tools/trace/trace.py $ip $start $len $id $dtyp $fun 
