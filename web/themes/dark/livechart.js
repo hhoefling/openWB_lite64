@@ -550,7 +550,6 @@ function loadgraph(animationDuration = 1000) {
 	});
 	initialread = 1;
 	console.log('Set initialread = 1 ')
-	console.log('line:', 	window.myLine )
 	$('#waitforgraphloadingdiv').hide();
 }	// end loadgraph
 
