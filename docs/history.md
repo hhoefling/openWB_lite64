@@ -74,3 +74,12 @@ Um auch Firefox (99.0 64B Windows) verwenden zu können muss man in about:config
 12.2.2023 Beim Wechsel vom/zum "Nur Ladepunkt" Mode werden die Dienste angepasst. Smarthome/tasker/modbusserver werden beim issss Mode gestoppt.
 
 1.3.2023 Wer diese Version verwendet braucht keinen Remote-Support da sowieso der Root-Zugriff vorhanden ist. Daher wurde das senden einen Fehlerberichtes an openwb.de sowie der Supportzugang für openWB.de entfernt.
+
+11.2024 Das große aufraümen hat begonnen.
+Entfernen werde ich nun:
+- Cloudbasierte Soc_mode, Die haben meist nur eine Halbwertszeit von 3-6 Monaten. Danach klappen sie nicht nehr da sich das Webinterface des Anieters geändert hat. Wer ein solchen Spiel mitmachen will soll sich mit den SoC selbst besorgen und über http/mqtt weitergeben an die Wallbox.
+- EVCC support,
+
+- 
+- 
+- 
