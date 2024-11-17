@@ -31,7 +31,7 @@ class AVMHomeAutomation:
         m.hexdigest()
         self.cacheKey = "%s:%s@%s" % (self.username, m.hexdigest(), self.host)
 #        try:
-#            with open('ramdisk/smarthomehandlerloglevel', 'r') as value:
+#            with open('ramdisk/sm/loglevel', 'r') as value:
 #                self.loglevel = int(value.read())
 #        except Exception:
 #            self.loglevel = 2
