@@ -38,6 +38,7 @@ mqttsdevstat = 'none'
 mqttsglobstat = 'none'
 mqtttopicdisengageable = 'none'
 ramdiskwrite = True
+ramdiskwriteparamfile = False
 mqttport = 0
 bp = '/var/www/html/openWB'
 numberOfSupportedDevices = 9  # limit number of smarthome devices
@@ -59,14 +60,14 @@ def on_connect(client, userdata, flags, rc) -> None:
 
 def logmq(topic: str, devicenumb: int, keyword: str, value: str) -> None:
     global parammqtt
-    global ramdiskwrite
+    global ramdiskwriteparamfile
     #  richtig  topic single
     if (devicenumb < 1) or (devicenumb > numberOfSupportedDevices):
         pass
     else:
         log.info("(" + str(devicenumb) + ") Key " + str(keyword) + " Value " + str(value))
         parammqtt.append([devicenumb, keyword, value])
-        if ramdiskwrite:
+        if ramdiskwriteparamfile:
             with open(bp + '/ramdisk/smartparam.sh', 'a') as f:
                 print('%s' % ('mosquitto_pub -p 1886 -t ' +
                               '"' + topic + '/' + str(devicenumb) + '/' + keyword +
@@ -75,8 +76,9 @@ def logmq(topic: str, devicenumb: int, keyword: str, value: str) -> None:
 
 def logmqgl(keyword: str, value: str) -> None:
     #  richtig  topic global
+    global ramdiskwriteparamfile
     log.info("( global ) Key " + str(keyword) + " Value " + str(value))
-    if ramdiskwrite:
+    if ramdiskwriteparamfile:
         with open(bp + '/ramdisk/smartparam.sh', 'a') as f:
             print('%s' % ('mosquitto_pub -p 1886 -t ' +
                           '"openWB/LegacySmartHome/config/get/' + keyword +
@@ -206,8 +208,8 @@ def sendmq(mqtt_input: Dict[str, str]) -> None:
         if (valueold == value):
             pass
         else:
-            log.info("Mq pub " + str(key) + "=" +
-                     str(value) + " old " + str(valueold))
+            log.info("Mq pub " + str(key) + "= [" +
+                     str(value) + "] old [" + str(valueold) + "]" )
             if (mqttcs in str(key)):
                 log.info("Mq no caching " + str(key))
             else:
@@ -334,8 +336,9 @@ def update_devices() -> None:
 def readmq() -> None:
     global parammqtt
     global mydevices
+    global ramdiskwriteparamfile
     log.info("Config reRead start / Parameter check")
-    if ramdiskwrite:
+    if ramdiskwriteparamfile:
         with open(bp + '/ramdisk/smartparam.sh', 'w') as f:
             print('%s' % ('#!/bin/bash'), file=f)
             print('%s' % ('# To upgrade sh to 2.0'), file=f)
@@ -355,7 +358,7 @@ def readmq() -> None:
     log.info("Config reRead / Parameter check done")
     update_devices()
     log.info("Config reRead done")
-    if ramdiskwrite:
+    if ramdiskwriteparamfile:
         with open(bp + '/ramdisk/smartparam.sh', 'a') as f:
             print('%s' % ('echo 1 > /var/www/html/openWB/ramdisk/rereadsmarthomedevices'), file=f)
 

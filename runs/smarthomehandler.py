@@ -577,14 +577,17 @@ def loadregelvars():
         logDebug(LOGLEVELERROR, "Fehler beim Auslesen der Ramdisk (smarthomehandlermaxbatterypower): " + str(e))
         maxspeicher = 0
     uberschussoffset = wattbezug + speicherleistung - maxspeicher
-    try:
-        with open('ramdisk/smarthomehandlerloglevel', 'r') as value:
-            loglevel = int(value.read())
-    except:
-            loglevel=2
-            f = open(basePath+'/ramdisk/smarthomehandlerloglevel', 'w')
-            f.write(str(2))
-            f.close()
+    
+#    try:
+#        with open('ramdisk/sm/loglevel', 'r') as value:
+#            loglevel = int(value.read())
+#    except:
+#            loglevel=2
+#            f = open(basePath+'/ramdisk/sm/loglevel', 'w')
+#            f.write(str(2))
+#            f.close()
+     self.loglevel = 2
+     
     try:
         with open('ramdisk/rereadsmarthomedevices', 'r') as value:
             reread = int(value.read())
