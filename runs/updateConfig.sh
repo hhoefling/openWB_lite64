@@ -1444,34 +1444,34 @@ updateConfig(){
 	if ! grep -Fq "cpunterbrechungdauerlp2=" $ConfigFile; then
 		echo "cpunterbrechungdauerlp2=4" >> $ConfigFile
 	fi
-	if ! grep -Fq "soc_zerong_username=" $ConfigFile; then
-		echo "soc_zerong_username=deine@email.com" >> $ConfigFile
-	fi
-	if ! grep -Fq "soc_zerong_password=" $ConfigFile; then
-		echo "soc_zerong_password=''" >> $ConfigFile
-	else
-		sed -i "/soc_zerong_password='/b; s/^soc_zerong_password=\(.*\)/soc_zerong_password=\'\1\'/g" $ConfigFile
-	fi
-	if ! grep -Fq "soc_zerong_intervallladen=" $ConfigFile; then
-		echo "soc_zerong_intervallladen=10" >> $ConfigFile
-	fi
-	if ! grep -Fq "soc_zerong_intervall=" $ConfigFile; then
-		echo "soc_zerong_intervall=20" >> $ConfigFile
-	fi
-	if ! grep -Fq "soc_zeronglp2_username=" $ConfigFile; then
-		echo "soc_zeronglp2_username=" >> $ConfigFile
-	fi
-	if ! grep -Fq "soc_zeronglp2_password=" $ConfigFile; then
-		echo "soc_zeronglp2_password=''" >> $ConfigFile
-	else
-		sed -i "/soc_zeronglp2_password='/b; s/^soc_zeronglp2_password=\(.*\)/soc_zeronglp2_password=\'\1\'/g" $ConfigFile
-	fi
-	if ! grep -Fq "soc_zeronglp2_intervallladen=" $ConfigFile; then
-		echo "soc_zeronglp2_intervallladen=10" >> $ConfigFile
-	fi
-	if ! grep -Fq "soc_zeronglp2_intervall=" $ConfigFile; then
-		echo "soc_zeronglp2_intervall=20" >> $ConfigFile
-	fi
+//	if ! grep -Fq "soc_zerong_username=" $ConfigFile; then
+//		echo "soc_zerong_username=deine@email.com" >> $ConfigFile
+//	fi
+//	if ! grep -Fq "soc_zerong_password=" $ConfigFile; then
+//		echo "soc_zerong_password=''" >> $ConfigFile
+//	else
+//		sed -i "/soc_zerong_password='/b; s/^soc_zerong_password=\(.*\)/soc_zerong_password=\'\1\'/g" $ConfigFile
+//	fi
+//	if ! grep -Fq "soc_zerong_intervallladen=" $ConfigFile; then
+//		echo "soc_zerong_intervallladen=10" >> $ConfigFile
+//	fi
+//	if ! grep -Fq "soc_zerong_intervall=" $ConfigFile; then
+//		echo "soc_zerong_intervall=20" >> $ConfigFile
+//	fi
+//	if ! grep -Fq "soc_zeronglp2_username=" $ConfigFile; then
+//		echo "soc_zeronglp2_username=" >> $ConfigFile
+//	fi
+//	if ! grep -Fq "soc_zeronglp2_password=" $ConfigFile; then
+//		echo "soc_zeronglp2_password=''" >> $ConfigFile
+//	else
+//		sed -i "/soc_zeronglp2_password='/b; s/^soc_zeronglp2_password=\(.*\)/soc_zeronglp2_password=\'\1\'/g" $ConfigFile
+//	fi
+//	if ! grep -Fq "soc_zeronglp2_intervallladen=" $ConfigFile; then
+//		echo "soc_zeronglp2_intervallladen=10" >> $ConfigFile
+//	fi
+//	if ! grep -Fq "soc_zeronglp2_intervall=" $ConfigFile; then
+//		echo "soc_zeronglp2_intervall=20" >> $ConfigFile
+//	fi
 	if ! grep -Fq "alphaessip=" $ConfigFile; then
 		echo "alphaessip=192.168.193.31" >> $ConfigFile
 	fi

@@ -663,7 +663,7 @@ function  xgetdateurl($dir,$file)
 										<option <?php if($socmodulold == "soc_citigo") echo "selected" ?> value="soc_citigo">SKoda Citogo eIV</option>
 										<option <?php if($socmodulold == "soc_carnet") echo "selected" ?> value="soc_carnet">VW Carnet</option>
 										<option <?php if($socmodulold == "soc_id") echo "selected" ?> value="soc_id">VW ID</option>
-										<option <?php if($socmodulold == "soc_zerong") echo "selected" ?> value="soc_zerong">Zero NG</option>
+										<!--option <?php if($socmodulold == "soc_zerong") echo "selected" ?> value="soc_zerong">Zero NG</option-->
 									</optgroup>
 								</select>
 								<div id="socoldevccwarning" class="mt-1 alert alert-danger hide">
@@ -1021,6 +1021,7 @@ function  xgetdateurl($dir,$file)
 									});
 								</script>
 							</div>
+<!--
 							<div id="socmzerong" class="hide">
 								<div class="form-group">
 									<div class="form-row mb-1">
@@ -1061,6 +1062,7 @@ function  xgetdateurl($dir,$file)
 									</div>
 								</div>
 							</div>
+-->
 							<div id="socmaudi" class="hide">
 								<div class="form-group">
 									<div class="form-row mb-1">
@@ -2180,8 +2182,8 @@ function  xgetdateurl($dir,$file)
 							hideSection('#socevnotify');
 							hideSection('#socmtesla');
 							hideSection('#soccarnet');
-							hideSection('#socmzerong');
-							hideSection('#socmeq');
+							// hideSection('#socmzerong');
+							// hideSection('#socmeq');
 							hideSection('#socmaudi');
 							hideSection('#socmid');
 							hideSection('#socvag');
@@ -2253,9 +2255,9 @@ function  xgetdateurl($dir,$file)
 								showSection('#socsupportinfo');
 								showSection('#socmhttp');
 							}
-							if($('#socmodul').val() == 'soc_zerong') {
-								showSection('#socmzerong');
-							}
+//							if($('#socmodul').val() == 'soc_zerong') {
+//								showSection('#socmzerong');
+//							}
 //							if($('#socmodul').val() == 'soc_eq') {
 //								$('#socsuportlink').attr('href', 'https://openwb.de/forum/viewtopic.php?f=12&t=3135')
 //								showSection('#socsupportinfo');
@@ -2775,7 +2777,7 @@ function  xgetdateurl($dir,$file)
 										<option <?php if($socmodul1old == "soc_citigolp2") echo "selected" ?> value="soc_citigolp2">SKoda Citigo e-IV</option>
 										<option <?php if($socmodul1old == "soc_carnetlp2") echo "selected" ?> value="soc_carnetlp2">VW Carnet</option>
 										<option <?php if($socmodul1old == "soc_idlp2") echo "selected" ?> value="soc_idlp2">VW ID</option>
-										<option <?php if($socmodul1old == "soc_zeronglp2") echo "selected" ?> value="soc_zeronglp2">Zero NG</option>
+										<!--option <?php if($socmodul1old == "soc_zeronglp2") echo "selected" ?> value="soc_zeronglp2">Zero NG</option-->
 									</optgroup>
 								</select>
 								<div id="socoldevccwarninglp2" class="mt-1 alert alert-danger hide">
@@ -2890,6 +2892,7 @@ function  xgetdateurl($dir,$file)
 									<span class="text-info">openWB/set/lp/2/%Soc</span> Ladezustand in %, int, 0-100
 								</div>
 							</div>
+<!--
 							<div id="socmzeronglp2" class="hide">
 								<div class="form-group">
 									<div class="form-row mb-1">
@@ -2930,6 +2933,7 @@ function  xgetdateurl($dir,$file)
 									</div>
 								</div>
 							</div>
+-->
 							<div id="socmteslalp2" class="hide">
 								<div class="form-group">
 									<div class="form-row mb-1">
@@ -4056,10 +4060,10 @@ function  xgetdateurl($dir,$file)
 							hideSection('#socevnotifylp2');
 							hideSection('#soczoelp2');
 							hideSection('#socmteslalp2');
-							hideSection('#socmeqlp2');
+							//hideSection('#socmeqlp2');
 							hideSection('#socmyrenaultlp2');
 							hideSection('#soccarnetlp2');
-							hideSection('#socmzeronglp2');
+							//hideSection('#socmzeronglp2');
 							hideSection('#socmypeugeotlp2');
 							hideSection('#socmyopellp2');
 							hideSection('#socpsalp2');
@@ -4159,9 +4163,9 @@ function  xgetdateurl($dir,$file)
 								showSection('#socsupportinfolp2');
 								showSection('#socmteslalp2');
 							}
-							if($('#socmodul1').val() == 'soc_zeronglp2') {
-								showSection('#socmzeronglp2');
-							}
+//							if($('#socmodul1').val() == 'soc_zeronglp2') {
+//								showSection('#socmzeronglp2');
+//							}
 							if($('#socmodul1').val() == 'soc_mypeugeotlp2') {
 								showSection('#socmypeugeotlp2');
 							}
