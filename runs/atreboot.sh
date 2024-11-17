@@ -341,16 +341,16 @@ if [[ ! -x /usr/bin/mmc ]] ; then
   sudo apt-get -q -y install mmc-utils
 fi
 
-if [[ ! -x /usr/sbin/ssmtp ]] ; then
-  openwbDebugLog "MAIN" 2  "install a simple smtp client (ssmtp,mailutils)"
-  sudo apt get -q -y ssmtp mailutils
-  openwbDebugLog "MAIN" 2  "updating global ssmtp file"
-  sudo cp runs/files/ssmtp.conf /etc/ssmtp/ssmtp.conf
-  sudo chown root:root /etc/ssmtp/ssmtp.conf
-  sudo chmod 0644 /etc/ssmtp/ssmtp.conf
-# sample sending:
-# ps -elf  | mail -s "Betreff" user@domain  
-fi
+#if [[ ! -x /usr/sbin/ssmtp ]] ; then
+#  openwbDebugLog "MAIN" 2  "install a simple smtp client (ssmtp,mailutils)"
+#  sudo apt get -q -y ssmtp mailutils
+#  openwbDebugLog "MAIN" 2  "updating global ssmtp file"
+#  sudo cp runs/files/ssmtp.conf /etc/ssmtp/ssmtp.conf
+#  sudo chown root:root /etc/ssmtp/ssmtp.conf
+#  sudo chmod 0644 /etc/ssmtp/ssmtp.conf
+### sample sending:
+## ps -elf  | mail -s "Betreff" user@domain  
+#fi
 
 
 
@@ -620,7 +620,6 @@ rm -rf /var/www/html/openWB/web/themes/dark19_01
 echo " " > ramdisk/lastregelungaktiv
 chmod 777 ramdisk/lastregelungaktiv
 chmod 777 ramdisk/smarthome.log
-# chmod 777 ramdisk/smarthomehandlerloglevel
 
 # update etprovider pricelist
 openwbDebugLog "MAIN" 2  "etprovider..."

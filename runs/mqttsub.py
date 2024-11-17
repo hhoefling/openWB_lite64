@@ -3,7 +3,7 @@ import configparser
 import fileinput
 import re
 import subprocess
-# import sys
+import sys
 import threading
 import time
 from datetime import datetime
@@ -11,8 +11,8 @@ from json import loads as json_loads
 from json.decoder import JSONDecodeError
 import paho.mqtt.client as mqtt
 # import os
-# from pathlib import Path
-# from subprocess import run
+from pathlib import Path
+from subprocess import run
 
 inaction = 0
 openwbconffile = "/var/www/html/openWB/openwb.conf"
@@ -159,7 +159,7 @@ class Ramdisk:
             if debug > 0:
                 dolog("  write ramdisk %s = [%s] old[%s] " % (fn, val, oldval))
         else:
-            if debug > 0:
+            if debug > 2:
                 dolog("  Not write ramdisk %s = [%s] Same value" % (fn, val))
         return True
 

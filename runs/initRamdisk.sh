@@ -225,7 +225,7 @@ initRamdisk(){
 	echo 0 > ramdisk/smarthome_device_manual_7
 	echo 0 > ramdisk/smarthome_device_manual_8
 	echo 0 > ramdisk/smarthome_device_manual_9
-# 	echo 0 > ramdisk/smarthomehandlerloglevel
+
 
 	# evu
 	echo 0 > ramdisk/bezuga1

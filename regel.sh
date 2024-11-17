@@ -745,26 +745,9 @@ meld "Ü$uberschuss"
 
 
 ########################
-#Min Ladung + PV Uberschussregelung lademodus 1
-#if (( lademodus == 1 )); then
-#	minundpvlademodus
-#fi
-
-########################
-#NUR PV Uberschussregelung lademodus 2
-# wenn evse aus und $mindestuberschuss vorhanden, starte evse mit 6A Ladestromstaerke (1320 - 3960 Watt je nach Anzahl Phasen)
-# return 0 (no exit anymore)
-#if (( lademodus == 2 )); then
-#	nurpvlademodus
-#fi
-
-########################
-#Lademodus 4 == Standby
-#if (( lademodus == 4 )); then
-#	semiauslademodus
-#fi
-
-########################
 openwbDebugLog "MAIN" 1 "Regulation normal end (EXIT 0)"
+
 exit 0
+
+
 
