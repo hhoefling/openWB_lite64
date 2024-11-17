@@ -650,7 +650,7 @@ function  xgetdateurl($dir,$file)
 										<option <?php if($socmodulold == "soc_audi") echo "selected" ?> value="soc_audi">Audi</option>
 										<option <?php if($socmodulold == "soc_i3") echo "selected" ?> value="soc_i3">BMW &amp; Mini</option>
 										<option <?php if($socmodulold == "soc_kia") echo "selected" ?> value="soc_kia">Kia / Hyundai</option>
-										<option <?php if($socmodulold == "soc_eq") echo "selected" ?> value="soc_eq">Mercedes EQ</option>
+										<!-- option <?php if($socmodulold == "soc_eq") echo "selected" ?> value="soc_eq">Mercedes EQ</option  -->
 										<option <?php if($socmodulold == "soc_myopel") echo "selected" ?> value="soc_myopel">MyOpel</option>
 										<option <?php if($socmodulold == "soc_mypeugeot") echo "selected" ?> value="soc_mypeugeot">MyPeugeot</option>
 										<option <?php if($socmodulold == "soc_myrenault") echo "selected" ?> value="soc_myrenault">MyRenault</option>
@@ -1859,6 +1859,7 @@ function  xgetdateurl($dir,$file)
 									});
 								</script>
 							</div>
+<!--- 
 							<div id="socmeq" class="hide">
 								<div class="form-group">
 									<div class="form-row mb-1">
@@ -1905,6 +1906,7 @@ function  xgetdateurl($dir,$file)
 									</div>
 								</div>
 							</div>
+--->
 							<div id="soctronity" class="hide">
 								<div class="form-group">
 									<div class="form-row mb-1">
@@ -2254,11 +2256,11 @@ function  xgetdateurl($dir,$file)
 							if($('#socmodul').val() == 'soc_zerong') {
 								showSection('#socmzerong');
 							}
-							if($('#socmodul').val() == 'soc_eq') {
-								$('#socsuportlink').attr('href', 'https://openwb.de/forum/viewtopic.php?f=12&t=3135')
-								showSection('#socsupportinfo');
-								showSection('#socmeq');
-							}
+//							if($('#socmodul').val() == 'soc_eq') {
+//								$('#socsuportlink').attr('href', 'https://openwb.de/forum/viewtopic.php?f=12&t=3135')
+//								showSection('#socsupportinfo');
+//								showSection('#socmeq');
+//							}
 							if($('#socmodul').val() == 'soc_leaf') {
 								showSection('#socleaf');
 							}
@@ -2760,7 +2762,7 @@ function  xgetdateurl($dir,$file)
 										<option <?php if($socmodul1old == "soc_audilp2") echo "selected" ?> value="soc_audilp2">Audi</option>
 										<option <?php if($socmodul1old == "soc_i3s1") echo "selected" ?> value="soc_i3s1">BMW &amp; Mini</option>
 										<option <?php if($socmodul1old == "soc_kialp2") echo "selected" ?> value="soc_kialp2">Kia / Hyundai</option>
-										<option <?php if($socmodul1old == "soc_eqlp2") echo "selected" ?> value="soc_eqlp2">Mercedes EQ</option>
+										<!-- option <?php if($socmodul1old == "soc_eqlp2") echo "selected" ?> value="soc_eqlp2">Mercedes EQ</option -->
 										<option <?php if($socmodul1old == "soc_myopellp2") echo "selected" ?> value="soc_myopellp2">MyOpel</option>
 										<option <?php if($socmodul1old == "soc_mypeugeotlp2") echo "selected" ?> value="soc_mypeugeotlp2">MyPeugeot</option>
 										<option <?php if($socmodul1old == "soc_myrenaultlp2") echo "selected" ?> value="soc_myrenaultlp2">MyRenault</option>
@@ -3541,6 +3543,7 @@ function  xgetdateurl($dir,$file)
 								});
 								</script>
 							</div>
+<!--
 							<div id="socmeqlp2" class="hide">
 								<div class="form-group">
 									<div class="form-row mb-1">
@@ -3586,6 +3589,7 @@ function  xgetdateurl($dir,$file)
 									</div>
 								</div>
 							</div>
+-->
 							<div id="socmkialp2" class="hide">
 								<div class="form-group">
 									<div class="form-row mb-1">
@@ -4142,11 +4146,11 @@ function  xgetdateurl($dir,$file)
 							if($('#socmodul1').val() == 'soc_zoelp2') {
 								showSection('#soczoelp2');
 							}
-							if($('#socmodul1').val() == 'soc_eqlp2') {
-								$('#socsuportlinklp2').attr('href', 'https://openwb.de/forum/viewtopic.php?f=12&t=3135')
-								showSection('#socsupportinfolp2');
-								showSection('#socmeqlp2');
-							}
+//							if($('#socmodul1').val() == 'soc_eqlp2') {
+//								$('#socsuportlinklp2').attr('href', 'https://openwb.de/forum/viewtopic.php?f=12&t=3135')
+//								showSection('#socsupportinfolp2');
+//								showSection('#socmeqlp2');
+//							}
 							if($('#socmodul1').val() == 'soc_carnetlp2') {
 								showSection('#soccarnetlp2');
 							}
