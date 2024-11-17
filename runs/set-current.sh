@@ -312,7 +312,7 @@ fi
 
 # value below threshold
 if [[ current -lt 6 ]]; then
-	if (( debug == 2 && current>0 )); then
+	if (( debug == 3 && current>0 )); then
 		echo "Ladestrom $current < 6A, setze auf 0A" >> /var/www/html/openWB/web/lade.log 
 #    else 
 #		echo "(Ladestrom $current < 6A, setze auf 0A)" >> /var/www/html/openWB/web/lade.log 
@@ -382,7 +382,7 @@ if [[ $loadsharinglp12 == "1" ]]; then
 		if (( lslpl1 > aagrenze )) && (( lslpl2 > aagrenze )) && (( lslpl3 > aagrenze )); then
 			current=$(( agrenze - 1))
 			new2=all
-			if [[ $debug == "2" ]]; then
+			if [[ $debug == "3" ]]; then
 			  echo "setzeladung auf $current durch loadsharing LP12" >> /var/www/html/openWB/web/lade.log
 			fi
 		fi
@@ -408,8 +408,9 @@ if [[ $points == "all" ]] || [[ $points == "m" ]]; then
 	setChargingCurrent
 	echo $current > /var/www/html/openWB/ramdisk/llsoll
 	echo $lstate > /var/www/html/openWB/ramdisk/ladestatus
+	if [[ $debug == "2" ]]; then
     echo "LP1 set llsoll=$current ladestats=$lstate" >> /var/www/html/openWB/web/lade.log 
-
+	fi
 	if (( lp1enabled == 0 )); then
 		current=$oldcurrent
 	fi
@@ -446,8 +447,9 @@ if [[ $lastmanagement == "1" ]]; then
 
 		echo $current > /var/www/html/openWB/ramdisk/llsolls1
 		echo $lstate > /var/www/html/openWB/ramdisk/ladestatuss1
+		if [[ $debug == "3" ]]; then
         echo "LP2 set llsolls1=$current ladestatss1=$lstate" >> /var/www/html/openWB/web/lade.log 
-
+		fi
 		if (( lp2enabled == 0 )); then
 			current=$oldcurrent
 		fi
@@ -477,8 +479,9 @@ if [[ $lastmanagements2 == "1" ]]; then
 		setChargingCurrent
 		echo $current > /var/www/html/openWB/ramdisk/llsolls2
 		echo $lstate > /var/www/html/openWB/ramdisk/ladestatuss2
+		if [[ $debug == "3" ]]; then
         echo "LP3 set llsolls2=$current ladestatss2=$lstate" >> /var/www/html/openWB/web/lade.log 
-
+		fi
 		if (( lp3enabled == 0 )); then
 			current=$oldcurrent
 		fi
