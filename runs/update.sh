@@ -54,11 +54,6 @@ done
 
 sleep 15
 
-# No MEq Support 
-# backup some files before fetching new release
-# module soc_eq
-# cp modules/soc_eq/soc_eq_acc_lp1 /tmp/soc_eq_acc_lp1
-# cp modules/soc_eq/soc_eq_acc_lp2 /tmp/soc_eq_acc_lp2
 
 # fetch new release from GitHub
 
@@ -81,11 +76,6 @@ sudo chmod -R +x openWB/runs/*
 sudo chmod +x openWB/*.sh
 sudo chmod 777 openWB/ramdisk/*
 
-# No MEQ Support
-# restore saved files after fetching new release
-# module soc_eq
-# sudo cp /tmp/soc_eq_acc_lp1 /var/www/html/openWB/modules/soc_eq/soc_eq_acc_lp1
-# sudo cp /tmp/soc_eq_acc_lp2 /var/www/html/openWB/modules/soc_eq/soc_eq_acc_lp2
 
 sleep 2
 
