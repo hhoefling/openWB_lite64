@@ -817,93 +817,6 @@ function isss_status() # $needIsss $isss_mode  $isss_32
  fi
 }
 
-#################################################################
-function smarthome_cron5()
-{
- # if enabed  start if not running
- # if disabled kill if running
- isrun=$(pgrep -f '^python.*/smarthomehandler.py' | head -1  )
- services_log "smarthome isrun:[$isrun]"
- if (( $1 == 1  && isss == 0  )) ; then
-    services_log "smarthomehandler enabled"
-    if (( ${isrun:-0} == 0 )) ; then
-      smarthome_start
-    else
-      services_log "smarthomehandler allready run"
-    fi
- else
-    services_log "smarthomehandler disabled"
-    if (( ${isrun:-0} != 0 )) ; then
-       smarthome_stop
-    else
-      services_log "smarthomehandler disabled and not running"
-    fi
- fi 
-}
-function smarthome_reboot() # $1=eneabled
-{
- # kill if running
- # start if enabled
- isrun=$(pgrep -f '^python.*/smarthomehandler.py' | head -1 )
- if (( ${isrun:-0} != 0 )) ; then
-    smarthome_stop
- else
-   services_log "smarthomehandler not running"
- fi
- if (( $1 == 1  && isss == 0  )) ; then
-    isrun=$(pgrep -f '^python.*/smarthomehandler.py' | head -1)
-    services_log "smarthomehandler enabled"
-    if (( ${isrun:-0} == 0 )) ; then
-      smarthome_start
-    else
-      services_log "smarthomehandler allready run"
-    fi
- else
-    services_log "smarthomehandler disabled or isss is running or smartmq aktiv, not start needed "
- fi
-}
-function smarthome_start()
-{
- local LFILE
- LFILE="$OPENWBBASEDIR/ramdisk/smarthome.log"
-  if pgrep -f '^python.*/smarthomemq.py' > /dev/null ; then
-     smartmq_stop
-  fi
-
-  if ! pgrep -f '^python.*/smarthomehandler.py' > /dev/null ; then
-   services_log "startup smarthome";
-   openwbDebugLog "MAIN" 2 "SERVICE: startup smarthomehandler"
-   sudo -u pi bash -c "python3 runs/smarthomehandler.py >>\"$LFILE\" 2>&1 & "
-  else
-    services_log "smarthomehandler allready running"
-  fi
-}
-function smarthome_stop()
-{
-   if pgrep -f '^python.*/smarthomehandler.py' > /dev/null ; then
-      sudo pkill -f "^python.*/smarthomehandler.py"
-      services_log  "kill smarthomehandler daemon"
-      openwbDebugLog "MAIN" 2 "SERVICE: kill smarthomehandler daemon"
-   else
-      services_log "smarthomehandler daemon is actually not running "
-   fi
-}
-function smarthome_status() # $1=eneabled
-{
- if (( $1 == 1  && isss == 0  )) ; then
-    if pgrep -f '^python.*/smarthomehandler.py' > /dev/null ; then
-       line=$(pgrep -fa '^python.*/smarthomehandler.py')
-       printf -v msg '%-12s runs [%s]' "smarthome" "$line"
-    else
-       printf -v msg '%-12s daemon shut run, but dont' "smarthome"
-    fi
- else
-    printf -v msg '%-12s disabled or isss is running' "smarthome"
- fi
- stat_log "$msg"
- openwbDebugLog "MAIN" 0 "STATE: $msg"
-}
-
 
 #################################################################
 function smartmq_cron5()
@@ -912,23 +825,23 @@ function smartmq_cron5()
  # if disabled kill if running
  isrun=$(pgrep -f '^python.*/smarthomemq.py' | head -1)
  services_log "smartmq isrun:[$isrun]"
- if (( $1 == 1  && isss == 0  )) ; then
-    services_log "smartmq enabled"
+ if (( isss == 0  )) ; then
+    services_log "smarthome enabled"
     if (( ${isrun:-0} == 0 )) ; then
       smartmq_start
     else
-      services_log "smartmq allready run"
+      services_log "smarthome allready run"
     fi
  else
-    services_log "smartmq disabled or isss is running"
+    services_log "smarthome disabled or isss is running"
     if (( ${isrun:-0} != 0 )) ; then
        smartmq_stop
     else
-      services_log "smartmq disabled and not running or isss is running"
+      services_log "smarthome disabled and not running or isss is running"
     fi
  fi
 }
-function smartmq_reboot() # $1=eneabled
+function smartmq_reboot() 
 {
  # kill if running
  # start if enabled
@@ -936,57 +849,53 @@ function smartmq_reboot() # $1=eneabled
  if (( ${isrun:-0} != 0 )) ; then
     smartmq_stop
  else
-   services_log "smartmq not running"
+   services_log "smarthome not running"
  fi
- if (( $1 == 1  && isss == 0  )) ; then
+ if (( isss == 0  )) ; then
     isrun=$(pgrep -f '^python.*/smarthomemq.py')
-    services_log "smartmq enabled"
+    services_log "smarthome enabled"
     if (( ${isrun:-0} == 0 )) ; then
       smartmq_start
     else
-      services_log "smartmq allready run"
+      services_log "smarthome allready run"
     fi
  else
-    services_log "smartmq disabled or isss is running, or old smarthome aktiv , no start needed"
+    services_log "smarthome disabled or isss is running, no start needed"
  fi
 }
 function smartmq_start()
 {
   local LFILE
   LFILE="$OPENWBBASEDIR/ramdisk/smarthome.log"
-  if pgrep -f '^python.*/smarthomehandler.py' > /dev/null ; then
-     smarthome_stop
-  fi
-
   if ! pgrep -f '^python.*/smarthomemq.py' > /dev/null ; then
-   services_log "startup smartmq";
-   openwbDebugLog "MAIN" 2 "SERVICE: startup smartmq"
+   services_log "startup smarthome";
+   openwbDebugLog "MAIN" 2 "SERVICE: startup smarthome"
    sudo -u pi bash -c "runs/smarthomemq.sh $LFILE"
   else
-    services_log "smartmq allready running"
+    services_log "smarthome allready running"
   fi
 }
 function smartmq_stop()
 {
    if pgrep -f '^python.*/smarthomemq.py' > /dev/null ; then
       sudo pkill -f "^python.*/smarthomemq.py"
-      services_log  "kill smartmq daemon"
-      openwbDebugLog "MAIN" 2 "SERVICE: kill smartmq daemon"
+      services_log  "kill smarthome daemon"
+      openwbDebugLog "MAIN" 2 "SERVICE: kill smarthome daemon"
    else
-      services_log "smartmq daemon is actually not running "
+      services_log "smarthome daemon is actually not running "
    fi
 }
-function smartmq_status() # $1=eneabled
+function smartmq_status() 
 {
- if (( $1 == 1  && isss == 0  )) ; then
+ if (( isss == 0  )) ; then
     if pgrep -f '^python.*/smarthomemq.py' > /dev/null ; then
        line=$(pgrep -fa '^python.*/smarthomemq.py')
-       printf -v msg '%-12s runs [%s]' "smarthomemq" "$line"
+       printf -v msg '%-12s runs [%s]' "smarthome" "$line"
     else
-       printf -v msg '%-12s daemon shut run, but dont' "smarthomemq"
+       printf -v msg '%-12s daemon shut run, but dont' "smarthome"
     fi  
  else
-    printf -v msg '%-12s disabled or isss is running' "smarthomemq"
+    printf -v msg '%-12s disabled or isss is running' "smarthome"
  fi
  stat_log "$msg"
  openwbDebugLog "MAIN" 0 "STATE: $msg"
@@ -1150,10 +1059,7 @@ function sysdaem_status() # $1=eneabled
 
 function selectstatus()
 {
- local -i smartmq smarthome
- read smartmq </var/www/html/openWB/ramdisk/smartmq
- if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
- openwbDebugLog "MAIN" 2 "****ANF Status for openWB.Services $1 smartmq:$smartmq smarthome:$smarthome ***********"
+ openwbDebugLog "MAIN" 2 "****ANF Status for openWB.Services $1 ***********"
  [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_status $needIsss $isss_mode  $isss_32   
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_status  $rseenabled
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_status  $rfidakt
@@ -1161,8 +1067,7 @@ function selectstatus()
  [[ "$1" == "all" || "$1" == "modbus" ]]  &&  modbus_status  $modbus502enabled
  [[ "$1" == "all" || "$1" == "button" ]]  &&  button_status  $ladetaster
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_status  $mqtt2mhi
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smarthome_status $smarthome
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_status $smartmq  
+ [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_status 1
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_status 1 
  [[ "$1" == "all" || "$1" == "tasker" ]]  &&  tasker_status $taskerenabled
  [[ "$1" == "all" || "$1" == "sysdaem" ]]  &&  sysdaem_status 1
@@ -1171,17 +1076,13 @@ function selectstatus()
 
 function selectstart()
 {
- local -i smartmq smarthome
- read smartmq </var/www/html/openWB/ramdisk/smartmq
- if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
- openwbDebugLog "MAIN" 2 "****ANF start for openWB.Services $1 smartmq:$smartmq smarthome:$smarthome ***********"
+ openwbDebugLog "MAIN" 2 "****ANF start for openWB.Services $1  ***********"
  [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_cron5 $needIsss $isss_mode  $isss_32
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_cron5  $rseenabled
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_cron5 $rfidakt
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid2_cron5 $rfidakt
  [[ "$1" == "all" || "$1" == "modbus" ]]  &&  modbus_cron5 $modbus502enabled
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smarthome_cron5 $smarthome
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_cron5 $smartmq  
+ [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_cron5 1
  [[ "$1" == "all" || "$1" == "button" ]]  &&  button_cron5 $ladetaster
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_cron5  $mqtt2mhi
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_cron5 1 
@@ -1191,17 +1092,13 @@ function selectstart()
 }
 function selectstop()
 {
- local -i smartmq smarthome
- read smartmq</var/www/html/openWB/ramdisk/smartmq
- if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
  #services_log "****ANF Stop for openWB.Services $1 ***********"
  [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_stop  
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_stop $rseenabled  
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_stop $rfidakt
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid2_stop $rfidakt
  [[ "$1" == "all" || "$1" == "modbus" ]]  &&  modbus_stop $modbus502enabled
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smarthome_stop $smarthome
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_stop $smartmq  
+ [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_stop 1
  [[ "$1" == "all" || "$1" == "button" ]]  &&  button_stop  $ladetaster
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_stop  $mqtt2mhi
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_stop 1 
@@ -1211,17 +1108,13 @@ function selectstop()
 }
 function selectcron5()
 {
- local -i smartmq smarthome
- read smartmq</var/www/html/openWB/ramdisk/smartmq
- if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
  #services_log "****ANF cron5 for openWB.Services $1 ***********"
  [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_cron5  $needIsss $isss_mode  $isss_32
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_cron5  $rseenabled
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_cron5 $rfidakt
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid2_cron5 $rfidakt
  [[ "$1" == "all" || "$1" == "modbus" ]]  &&  modbus_cron5 $modbus502enabled
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smarthome_cron5 $smarthome
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_cron5 $smartmq  
+ [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_cron5 1
  [[ "$1" == "all" || "$1" == "button" ]]  &&  button_cron5  $ladetaster
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_cron5  $mqtt2mhi
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_cron5 1 
@@ -1230,17 +1123,13 @@ function selectcron5()
 }
 function selectreboot()
 {
- local -i smartmq smarthome
- read smartmq</var/www/html/openWB/ramdisk/smartmq
- if (( smartmq == 1 )) ; then smarthome=0; else smarthome=1; fi
  #services_log "****ANF reboot for openWB.Services $1 ***********"
  [[ "$1" == "all" || "$1" == "isss" ]]  &&  isss_reboot  $needIsss $isss_mode  $isss_32
  [[ "$1" == "all" || "$1" == "rse" ]]  &&  rse_reboot $rseenabled  
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid1_reboot $rfidakt
  [[ "$1" == "all" || "$1" == "rfid" ]] &&  rfid2_reboot $rfidakt
  [[ "$1" == "all" || "$1" == "modbus" ]]  &&  modbus_reboot $modbus502enabled
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smarthome_reboot $smarthome
- [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_reboot $smartmq  
+ [[ "$1" == "all" || "$1" == "smarthome" ]]  &&  smartmq_reboot 1
  [[ "$1" == "all" || "$1" == "button" ]]  &&  button_reboot  $ladetaster
  [[ "$1" == "all" || "$1" == "mqtt2mhi" ]]  &&  mqtt2mhi_reboot $mqtt2mhi
  [[ "$1" == "all" || "$1" == "mqttsub" ]]  &&  mqttsub_reboot 1 
