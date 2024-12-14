@@ -14,7 +14,7 @@ ziellademodus(){
     openwbDebugLog "MAIN" 1 "ziellademodus called"
 
 	local zielladenkorrektura
-	read zielladenkorrektura <ramdisk/zielladenkorrektur)
+	read zielladenkorrektura <ramdisk/zielladenkorrektura
 
 	read ladestatus <ramdisk/ladestatus
 
