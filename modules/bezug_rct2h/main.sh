@@ -36,10 +36,10 @@ if [[ -z "$debug" ]]; then
 fi
 debug=${1:-$debug}
 # debug=3
-secs=${2:-"120"}
+secs=${2:-"180"}
 
 
-Log 2 "RCT EVU:[$wattbezugmodul] BAT:[$speichermodul] PV:[$pvwattmodul] debug[$debug]"
+Log 2 "RCT EVU:debug[$debug] sec:[$secs] [$wattbezugmodul] [$speichermodul] [$pvwattmodul] "
 
 
 now=`date +%s`
@@ -52,7 +52,7 @@ else
 	chmod a+rw $stamp
 fi
 diff="$((now-lastrun))"
-if (( diff >= secs )) ; then  # alle 5 Minuten 
+if (( diff >= secs )) ; then  # alle 3 Minuten 
    echo $now  >$stamp
    m5="--m5"
    Log  1 "##### fire --m5 event ##### ($debug $secs)"
