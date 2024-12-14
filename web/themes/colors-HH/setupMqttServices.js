@@ -28,41 +28,66 @@ var topicsToSubscribe = [
 	["openWB/housebattery/boolHouseBatteryConfigured", 0],
 	// SmartHome Konfiguration
 	["openWB/config/get/SmartHome/Devices/1/device_configured", 0],
-	["openWB/config/get/SmartHome/Devices/2/device_configured", 0],
-	["openWB/config/get/SmartHome/Devices/3/device_configured", 0],
-	["openWB/config/get/SmartHome/Devices/4/device_configured", 0],
-	["openWB/config/get/SmartHome/Devices/5/device_configured", 0],
-	["openWB/config/get/SmartHome/Devices/6/device_configured", 0],
-	["openWB/config/get/SmartHome/Devices/7/device_configured", 0],
-	["openWB/config/get/SmartHome/Devices/8/device_configured", 0],
-	["openWB/config/get/SmartHome/Devices/9/device_configured", 0],
 	["openWB/config/get/SmartHome/Devices/1/device_name", 1],
-	["openWB/config/get/SmartHome/Devices/2/device_name", 1],
-	["openWB/config/get/SmartHome/Devices/3/device_name", 1],
-	["openWB/config/get/SmartHome/Devices/4/device_name", 1],
-	["openWB/config/get/SmartHome/Devices/5/device_name", 1],
-	["openWB/config/get/SmartHome/Devices/6/device_name", 1],
-	["openWB/config/get/SmartHome/Devices/7/device_name", 1],
-	["openWB/config/get/SmartHome/Devices/8/device_name", 1],
-	["openWB/config/get/SmartHome/Devices/9/device_name", 1],
 	["openWB/config/get/SmartHome/Devices/1/mode", 1],
-	["openWB/config/get/SmartHome/Devices/2/mode", 1],
-	["openWB/config/get/SmartHome/Devices/3/mode", 1],
-	["openWB/config/get/SmartHome/Devices/4/mode", 1],
-	["openWB/config/get/SmartHome/Devices/5/mode", 1],
-	["openWB/config/get/SmartHome/Devices/6/mode", 1],
-	["openWB/config/get/SmartHome/Devices/7/mode", 1],
-	["openWB/config/get/SmartHome/Devices/8/mode", 1],
-	["openWB/config/get/SmartHome/Devices/9/mode", 1],
 	["openWB/config/get/SmartHome/Devices/1/device_homeConsumtion", 1],
+
+	["openWB/config/get/SmartHome/Devices/2/device_configured", 0],
+	["openWB/config/get/SmartHome/Devices/2/device_name", 1],
+	["openWB/config/get/SmartHome/Devices/2/mode", 1],
 	["openWB/config/get/SmartHome/Devices/2/device_homeConsumtion", 1],
+
+	["openWB/config/get/SmartHome/Devices/3/device_configured", 0],
+	["openWB/config/get/SmartHome/Devices/3/device_name", 1],
+	["openWB/config/get/SmartHome/Devices/3/mode", 1],
 	["openWB/config/get/SmartHome/Devices/3/device_homeConsumtion", 1],
+
+	["openWB/config/get/SmartHome/Devices/4/device_configured", 0],
+	["openWB/config/get/SmartHome/Devices/4/device_name", 1],
+	["openWB/config/get/SmartHome/Devices/4/mode", 1],
 	["openWB/config/get/SmartHome/Devices/4/device_homeConsumtion", 1],
+
+	["openWB/config/get/SmartHome/Devices/5/device_configured", 0],
+	["openWB/config/get/SmartHome/Devices/5/device_name", 1],
+	["openWB/config/get/SmartHome/Devices/5/mode", 1],
 	["openWB/config/get/SmartHome/Devices/5/device_homeConsumtion", 1],
+
+	["openWB/config/get/SmartHome/Devices/6/device_configured", 0],
+	["openWB/config/get/SmartHome/Devices/6/device_name", 1],
+	["openWB/config/get/SmartHome/Devices/6/mode", 1],
 	["openWB/config/get/SmartHome/Devices/6/device_homeConsumtion", 1],
+
+	["openWB/config/get/SmartHome/Devices/7/device_configured", 0],
+	["openWB/config/get/SmartHome/Devices/7/device_name", 1],
+	["openWB/config/get/SmartHome/Devices/7/mode", 1],
 	["openWB/config/get/SmartHome/Devices/7/device_homeConsumtion", 1],
+
+	["openWB/config/get/SmartHome/Devices/8/device_configured", 0],
+	["openWB/config/get/SmartHome/Devices/8/device_name", 1],
+	["openWB/config/get/SmartHome/Devices/8/mode", 1],
 	["openWB/config/get/SmartHome/Devices/8/device_homeConsumtion", 1],
+
+	["openWB/config/get/SmartHome/Devices/9/device_configured", 0],
+	["openWB/config/get/SmartHome/Devices/9/device_name", 1],
+	["openWB/config/get/SmartHome/Devices/9/mode", 1],
 	["openWB/config/get/SmartHome/Devices/9/device_homeConsumtion", 1],
+
+
+	// system topics
+	["openWB/system/Timestamp", 0],
+	["openWB/system/debug", 0],	
+	["openWB/system/Uptime", 0],
+	["openWB/system/devicename", 0],
+    ["openWB/system/regelneeds", 0],
+
+
+	["openWB/global/awattar/boolAwattarEnabled", 0],
+	["openWB/global/ChargeMode", 0],
+	["openWB/global/strLaderegler", 0],
+	["openWB/global/strBatSupport", 0],
+	["openWB/housebattery/enable_priceloading", 0],
+
+// ab hier nur noch '1'er
 
 	["openWB/config/get/pv/priorityModeEVBattery", 1],
 	["openWB/config/get/pv/minCurrentMinPv", 1],
@@ -83,7 +108,6 @@ var topicsToSubscribe = [
 
 	// etprovider topics
 	["openWB/global/ETProvider/modulePath", 1],
-	["openWB/global/awattar/boolAwattarEnabled", 0],
 	["openWB/global/awattar/MaxPriceForCharging", 1],
 	["openWB/global/awattar/ActualPriceForCharging", 1],
 	["openWB/global/awattar/pricelist", 1],
@@ -120,11 +144,8 @@ var topicsToSubscribe = [
 	["openWB/global/u1p3p_inwork", 1],
 	["openWB/global/u1p3p_state", 1],
 	["openWB/global/WHouseConsumption", 1],
-	["openWB/global/ChargeMode", 0],
 	["openWB/global/WAllChargePoints", 1],
 	["openWB/global/strLastmanagementActive", 1],
-	["openWB/global/strLaderegler", 0],
-	["openWB/global/strBatSupport", 0],
 	["openWB/global/rfidConfigured", 1],
 	["openWB/global/urlforlink", 1],				// urlforlink=http://192.168.208.64/openWB/web/index.php
 
@@ -216,7 +237,6 @@ var topicsToSubscribe = [
 	["openWB/housebattery/%Soc", 1],
 	["openWB/housebattery/soctarget", 1],
 	["openWB/housebattery/iskalib", 1],
-	["openWB/housebattery/enable_priceloading", 0],
     ["openWB/housebattery/loadWatt", 1],
     ["openWB/housebattery/load_minutes", 1],
 	["openWB/housebattery/discharge_max", 1],
@@ -256,6 +276,15 @@ var topicsToSubscribe = [
 	["openWB/SmartHome/Devices/2/TemperatureSensor0", 1],
 	["openWB/SmartHome/Devices/2/TemperatureSensor1", 1],
 	["openWB/SmartHome/Devices/2/TemperatureSensor2", 1],
+
+	["openWB/SmartHome/Devices/3/TemperatureSensor0", 1],
+	["openWB/SmartHome/Devices/4/TemperatureSensor0", 1],
+	["openWB/SmartHome/Devices/5/TemperatureSensor0", 1],
+	["openWB/SmartHome/Devices/6/TemperatureSensor0", 1],
+	["openWB/SmartHome/Devices/7/TemperatureSensor0", 1],
+	["openWB/SmartHome/Devices/8/TemperatureSensor0", 1],
+	["openWB/SmartHome/Devices/9/TemperatureSensor0", 1],
+
 	["openWB/SmartHome/Devices/3/Watt", 1],
 	["openWB/SmartHome/Devices/4/Watt", 1],
 	["openWB/SmartHome/Devices/5/Watt", 1],
@@ -291,12 +320,6 @@ var topicsToSubscribe = [
 	["openWB/SmartHome/Devices/8/RunningTimeToday", 1],
 	["openWB/SmartHome/Devices/9/RunningTimeToday", 1],
 
-	// system topics
-	["openWB/system/Timestamp", 0],
-	["openWB/system/debug", 0],	
-	["openWB/system/Uptime", 0],
-	["openWB/system/devicename", 0],
-    ["openWB/system/regelneeds", 0]
 
 ];
 

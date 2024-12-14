@@ -890,11 +890,12 @@ END;
 	let time = h + ":" + m + ":" + s + ":" + ms;	
 
 				
-				console.log( time + ' Preloader:'+ mqttTopic + ' '+countTopicsReceived);
 				// countTopicsToBeReceived holds all topics flagged 1 and not only those for preloader
 				countTopicsReceived = countTopicsReceived - countTopicsNotForPreloader;
 				var countTopicsToBeReceived = topicsToSubscribe.length - countTopicsNotForPreloader;
 				var percentageReceived = (countTopicsReceived / countTopicsToBeReceived * 100).toFixed(0);
+				console.log( time + ' Preloader:'+ mqttTopic + ' '+countTopicsReceived + ' '+percentageReceived);
+
 				var timeBetweenTwoMessages = Date.now() - timeOfLastMqttMessage;
 				if (timeBetweenTwoMessages > 3000) {
 					// latest after 3 sec without new messages
