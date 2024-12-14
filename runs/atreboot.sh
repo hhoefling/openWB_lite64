@@ -414,13 +414,25 @@ if [ ! -f /etc/mosquitto/mosquitto.conf ]; then
 	sudo apt-get -qq install -y mosquitto mosquitto-clients
 	sudo service mosquitto start
 fi
+i
 
+# nun auch v 1.5,7 aus /opt unter streatch 
+if mosquitto -h | grep version  | grep 1.4.10 >/dev/null 2>&1; then
+  openwbDebugLog "MAIN" 2 check V 1.4.10"
+   if [ ! -f /etc/mosquitto/conf.d/openwb.conf ] then
+		openwbDebugLog "MAIN" 2  "copy mosquitto config file"
+		sudo cp runs/files/mosquitto.conf.1.4.10 /etc/mosquitto/conf.d/openwb.conf
+		sudo service mosquitto stop
+		sudo service mosquitto start
+	fi
+else
 # check for mosquitto configuration
-if [ ! -f /etc/mosquitto/conf.d/openwb.conf ] || ! sudo grep -Fq "persistent_client_expiration" /etc/mosquitto/mosquitto.conf; then
+	if [ ! -f /etc/mosquitto/conf.d/openwb.conf ] || ! sudo grep -Fq "persistent_client_expiration" /etc/mosquitto/mosquitto.conf; then
 	openwbDebugLog "MAIN" 2  "updating mosquitto config file"
 	sudo cp runs/files/mosquitto.conf /etc/mosquitto/conf.d/openwb.conf
 	sudo service mosquitto stop
 	sudo service mosquitto start
+	fi
 fi
 
 # check for other dependencies

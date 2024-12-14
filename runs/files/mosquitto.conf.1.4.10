@@ -1,14 +1,10 @@
-# openwb-lite-version:1
-
 listener 9001
 protocol websockets
-socket_domain ipv4
 # newer mosquitto versions block unauthorized access by default
 allow_anonymous true
 listener 1883
 protocol mqtt
 allow_anonymous true
-
 listener 1884
 protocol websockets
 allow_anonymous true
