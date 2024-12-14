@@ -52,20 +52,21 @@ def main():
     if clientsocket is not None:
         try:
             MyTab = []
+            MyTab2 = []
             #  Bezug ###########################
             if rct_lib.bb:
-                p_ac_sc_sum = rct_lib.add_by_name(MyTab, 'g_sync.p_ac_sc_sum')
                 volt1 = rct_lib.add_by_name(MyTab, 'g_sync.u_l_rms[0]')
                 volt2 = rct_lib.add_by_name(MyTab, 'g_sync.u_l_rms[1]')
                 volt3 = rct_lib.add_by_name(MyTab, 'g_sync.u_l_rms[2]')
                 watt1 = rct_lib.add_by_name(MyTab, 'g_sync.p_ac_sc[0]')
                 watt2 = rct_lib.add_by_name(MyTab, 'g_sync.p_ac_sc[1]')
                 watt3 = rct_lib.add_by_name(MyTab, 'g_sync.p_ac_sc[2]')
-                freq = rct_lib.add_by_name(MyTab, 'grid_pll[0].f')
-                stat1 = rct_lib.add_by_name(MyTab, 'fault[0].flt')
-                stat2 = rct_lib.add_by_name(MyTab, 'fault[1].flt')
-                stat3 = rct_lib.add_by_name(MyTab, 'fault[2].flt')
-                stat4 = rct_lib.add_by_name(MyTab, 'fault[3].flt')
+                freq = rct_lib.add_by_name(MyTab2, 'grid_pll[0].f')
+                p_ac_sc_sum = rct_lib.add_by_name(MyTab2, 'g_sync.p_ac_sc_sum')
+                stat1 = rct_lib.add_by_name(MyTab2, 'fault[0].flt')
+                stat2 = rct_lib.add_by_name(MyTab2, 'fault[1].flt')
+                stat3 = rct_lib.add_by_name(MyTab2, 'fault[2].flt')
+                stat4 = rct_lib.add_by_name(MyTab2, 'fault[3].flt')
             #  WR ###########################
             if rct_lib.wr:
                 pv1watt = rct_lib.add_by_name(MyTab, 'dc_conv.dc_conv_struct[0].p_dc')
@@ -73,21 +74,22 @@ def main():
                 pvEwatt = rct_lib.add_by_name(MyTab, 'io_board.s0_external_power')
             #  BAT ###########################
             if rct_lib.sp:
-                bsocx = rct_lib.add_by_name(MyTab, 'battery.soc')
-                bsocsoll = rct_lib.add_by_name(MyTab, 'battery.soc_target')
                 bwatt1 = rct_lib.add_by_name(MyTab, 'g_sync.p_acc_lp')
-                bstat1 = rct_lib.add_by_name(MyTab, 'battery.bat_status')
-                bstat2 = rct_lib.add_by_name(MyTab, 'battery.status')
-                bstat3 = rct_lib.add_by_name(MyTab, 'battery.status2')
+                bsocx = rct_lib.add_by_name(MyTab2, 'battery.soc')
+                bsocsoll = rct_lib.add_by_name(MyTab2, 'battery.soc_target')
+                bstat1 = rct_lib.add_by_name(MyTab2, 'battery.bat_status')
+                bstat2 = rct_lib.add_by_name(MyTab2, 'battery.status')
+                bstat3 = rct_lib.add_by_name(MyTab2, 'battery.status2')
                 # pmngsocmax = rct_lib.add_by_name(MyTab, 'power_mng.soc_max')
                 # 0xC642B9D6 acc_conv.i_discharge_max 20.0
-                discharge_max = rct_lib.add_by_name(MyTab, 'acc_conv.i_discharge_max')
-                loadWatt = rct_lib.add_by_name(MyTab, 'power_mng.soc_charge_power')
+                discharge_max = rct_lib.add_by_name(MyTab2, 'acc_conv.i_discharge_max')
+                loadWatt = rct_lib.add_by_name(MyTab2, 'power_mng.soc_charge_power')
 
 
 ################################
             # read via rct_id list
             response = rct_lib.read(clientsocket, MyTab)
+            response = rct_lib.read(clientsocket, MyTab2)
             rct_lib.close(clientsocket)
 
             # output all response elements
