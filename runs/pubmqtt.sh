@@ -125,6 +125,8 @@ mqtc=0
 # openwb.conf ==> mqtt wenn openwb.conf neuer als synctime
 if [[ openwb.conf  -nt ramdisk/mqttv/synctime ]]; then
     openwbDebugLog "MAIN" 2 "openwb.conf newer, now check for openwb.conf changes"
+        pubarr+=("openWB/global/outdoorTemp=")
+        let "mqtc++"
         for mq in "${!mqttconfvar[@]}"; do
             let "mqtc++"
             vn=${mqttconfvar[$mq]}
