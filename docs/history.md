@@ -80,6 +80,12 @@ Entfernen werde ich nun:
 - Cloudbasierte Soc_mode, Die haben meist nur eine Halbwertszeit von 3-6 Monaten. Danach klappen sie nicht nehr da sich das Webinterface des Anieters geändert hat. Wer ein solchen Spiel mitmachen will soll sich mit den SoC selbst besorgen und über http/mqtt weitergeben an die Wallbox.
 - EVCC support,
 
-- 
+12.2024 Turbo für die 3B+ mit Stretch. 
+Ich hatte bemerkt das der MQTT Server unter Debian-Buster deutlich schneller ist als der von Debian-Stetch. Also habe ich mir den Quellcoder der 1.5'er Version die beim Debian-Buster zum einsatz kommt besort, die nötien DEV-Packet nachinstalliert und dann das ganze auf dem Original-openWB-Raspi übersetzt. Ich habe nur das 1.4'er Server-Binary mit dem Binary der 1.5'er ersetzt. Jetzt flupt das wieder :-)
+Das Color's Theme desses Fortschritsbalken beim ersten Laden der Seite schon mal 4,6,8,10 Sekunden brauchte rauscht nun wieder durch bis 100%
+
+
+
+
 - 
 - 
