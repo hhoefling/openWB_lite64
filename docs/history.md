@@ -81,8 +81,8 @@ Entfernen werde ich nun:
 - EVCC support,
 
 12.2024 Turbo für die 3B+ mit Stretch. 
-Ich hatte bemerkt das der MQTT Server unter Debian-Buster deutlich schneller ist als der von Debian-Stetch. Also habe ich mir den Quellcoder der 1.5'er Version die beim Debian-Buster zum einsatz kommt besort, die nötien DEV-Packet nachinstalliert und dann das ganze auf dem Original-openWB-Raspi übersetzt. Ich habe nur das 1.4'er Server-Binary mit dem Binary der 1.5'er ersetzt. Jetzt flupt das wieder :-)
-Das Color's Theme desses Fortschritsbalken beim ersten Laden der Seite schon mal 4,6,8,10 Sekunden brauchte rauscht nun wieder durch bis 100%
+Ich hatte bemerkt das der MQTT Server unter Debian-Buster deutlich schneller ist als der von Debian-Stetch. Also habe ich mir den Quellcode der 1.5'er Version, die beim Debian-Buster zum einsatz kommt, besorgt, die nötien DEV-Packet nachinstalliert und dann das ganze auf dem Original-openWB-Raspi übersetzt. Ich habe nur das 1.4'er Server-Binary mit dem Binary der 1.5'er ersetzt. Jetzt flupt das wieder :-)
+Das Color's Themea, desses Fortschritsbalken beim ersten Laden der Seite schon mal 4,6,8,10 Sekunden brauchte, rauscht nun wieder durch bis 100% :-)
 
 
 
