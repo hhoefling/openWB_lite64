@@ -84,6 +84,10 @@ Entfernen werde ich nun:
 - das alte Smarthome2 wurde entfernt. Nur noch Smarthomemq ist vorhanden. Dies liegt als einzigestes auch im "packages" Zweig. Der Smarthome-Zweig in "modules" und "runs" wurde entfernt. 
 
 12.2024 Turbo für die 3B+ mit Stretch. <br />
-Ich hatte bemerkt das der MQTT Server unter Debian-Buster deutlich schneller ist als der von Debian-Stetch. Also habe ich mir den Quellcode der 1.5'er Version, die beim Debian-Buster zum einsatz kommt, besorgt, die nötien DEV-Packet nachinstalliert und dann das ganze auf dem Original-openWB-Raspi übersetzt. Ich habe nur das 1.4'er Server-Binary mit dem Binary der 1.5'er ersetzt. Jetzt flupt das wieder :-)<br />
-Das Color's Themea, desses Fortschritsbalken beim ersten Laden der Seite schon mal 4,6,8-Sekunden brauchte, rauscht nun wieder durch bis 100% :-)
+Ich hatte bemerkt das der MQTT Server unter Debian-Buster deutlich schneller ist als der von Debian-Stetch. Also habe ich mir den Quellcode vom 1.5'er Mosquitto, der beim Debian-Buster zum einsatz kommt, besorgt, die nötien DEV-Packet nachinstalliert und dann das ganze auf dem Original-openWB-Raspi übersetzt. Ich habe nur das 1.4'er Server-Binary mit dem Binary der 1.5'er ersetzt. Jetzt flupt das wieder :-)<br />
+Das Color's Themea, desses Fortschritsbalken beim ersten Laden der Seite schon mal 4,6,8-Sekunden brauchte, rauscht nun wieder durch bis 100% :-)  
+
+12.2025 MQTT und Cloud  
+Nun klappt auch meine eigene Cloud. Der 1'4 hatte beim starten nicht den kompletten Datenbaum hochgespiegelt, sondern nur die Topics die sich danach geänder haben. Der 1.5'er von Buster machte dies richtig. Mit dem mosquitto 1.5er habe Ich nun lesenden Zugriff auf das Color's Thema meiner heimischen openWB. 
+
 
