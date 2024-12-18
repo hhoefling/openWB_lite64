@@ -2,7 +2,6 @@
 
 Einige Steps der Entwicklung
 
-
 12.2021 
 - Das Nachladen, auch von 4-Uhr bis 7-Uhr Nachts, mit einhaltung der 80%=80% klappt einwandfrei.
 
@@ -67,25 +66,24 @@ Um auch Firefox (99.0 64B Windows) verwenden zu können muss man in about:config
 
 ( Screenshot von einem Galaxy Tab3 10" und Firefox68 auf KitKat 4.4.1 ) 
 
-9.1.2023 Letzte Aktualisierung des Colour-Themas. Runde Ecken soweie Eingenverbrauch und Autarkiegrad übernommen. Die Visuelen Ändergnen wurden nicht übernommen da sie auf meinen Geräten zu einer schlechteren Lesebarkeit führen würde. Die weitere Entwicklung auf Snaptec geht nun in Richtung openWB 2.0 (mit VUE).
+9.1.2023 Letzte Aktualisierung des Colour-Themas.  
+Runde Ecken soweie Eingenverbrauch und Autarkiegrad übernommen. Die Visuelen Ändergnen wurden nicht übernommen da sie auf meinen Geräten zu einer schlechteren Lesebarkeit führen würde. Die weitere Entwicklung auf Snaptec geht nun in Richtung openWB 2.0 (mit VUE).
 
-14.1.2023 Der Wallbox kann nun ein Name vergeben werden. Dieser wird oben links statt "openWB" angezeigt um die Box zu indentifizieren. Das braucht man nur wenn man mehrer hat (oder auf Virtellen Geräten testst)
+14.1.2023 Der Wallbox kann nun ein Name vergeben werden.  
+Dieser wird oben links statt "openWB" angezeigt um die Box zu indentifizieren. Das braucht man nur wenn man mehrere hat (oder auf virtellen Geräten testet)
 
-12.2.2023 Beim Wechsel vom/zum "Nur Ladepunkt" Mode werden die Dienste angepasst. Smarthome/tasker/modbusserver werden beim issss Mode gestoppt.
+12.2.2023 Beim Wechsel vom/zum "Nur Ladepunkt" Mode werden die Dienste angepasst.  
+Smarthome/tasker/modbusserver werden beim issss Mode gestoppt.
 
 1.3.2023 Wer diese Version verwendet braucht keinen Remote-Support da sowieso der Root-Zugriff vorhanden ist. Daher wurde das senden einen Fehlerberichtes an openwb.de sowie der Supportzugang für openWB.de entfernt.
 
-11.2024 Das große aufraümen hat begonnen.
+11.2024 Das große aufraümen hat begonnen.  
 Entfernen werde ich nun:
 - Cloudbasierte Soc_mode, Die haben meist nur eine Halbwertszeit von 3-6 Monaten. Danach klappen sie nicht nehr da sich das Webinterface des Anieters geändert hat. Wer ein solchen Spiel mitmachen will soll sich mit den SoC selbst besorgen und über http/mqtt weitergeben an die Wallbox.
-- EVCC support,
+- EVCC support.
+- das alte Smarthome2 wurde entfernt. Nur noch Smarthomemq ist vorhanden. Dies liegt als einzigestes auch im "packages" Zweig. Der Smarthome-Zweig in "modules" und "runs" wurde entfernt. 
 
-12.2024 Turbo für die 3B+ mit Stretch. 
-Ich hatte bemerkt das der MQTT Server unter Debian-Buster deutlich schneller ist als der von Debian-Stetch. Also habe ich mir den Quellcode der 1.5'er Version, die beim Debian-Buster zum einsatz kommt, besorgt, die nötien DEV-Packet nachinstalliert und dann das ganze auf dem Original-openWB-Raspi übersetzt. Ich habe nur das 1.4'er Server-Binary mit dem Binary der 1.5'er ersetzt. Jetzt flupt das wieder :-)
-Das Color's Themea, desses Fortschritsbalken beim ersten Laden der Seite schon mal 4,6,8,10 Sekunden brauchte, rauscht nun wieder durch bis 100% :-)
+12.2024 Turbo für die 3B+ mit Stretch. <br />
+Ich hatte bemerkt das der MQTT Server unter Debian-Buster deutlich schneller ist als der von Debian-Stetch. Also habe ich mir den Quellcode der 1.5'er Version, die beim Debian-Buster zum einsatz kommt, besorgt, die nötien DEV-Packet nachinstalliert und dann das ganze auf dem Original-openWB-Raspi übersetzt. Ich habe nur das 1.4'er Server-Binary mit dem Binary der 1.5'er ersetzt. Jetzt flupt das wieder :-)<br />
+Das Color's Themea, desses Fortschritsbalken beim ersten Laden der Seite schon mal 4,6,8-Sekunden brauchte, rauscht nun wieder durch bis 100% :-)
 
-
-
-
-- 
-- 
