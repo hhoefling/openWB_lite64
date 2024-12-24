@@ -140,9 +140,9 @@ sudo chmod    +x *.sh
 
 
 # die schreiben in ihr verzeichniss
-sudo chmod -R 777 modules/soc_i3
-sudo chmod -R 777 modules/soc_eq
-sudo chmod -R 777 modules/soc_tesla
+# sudo chmod -R 777 modules/soc_i3
+# sudo chmod -R 777 modules/soc_eq
+# sudo chmod -R 777 modules/soc_tesla
 
 
 mkdir -p web/logging/data/daily
@@ -388,7 +388,7 @@ fi
 # source /var/www/html/openWB/loadconfig.sh
 
 # update old ladelog
-./runs/transferladelog.sh
+# ./runs/transferladelog.sh
 
 # check for led handler
 if (( ledsakt == 1 )); then
@@ -414,7 +414,7 @@ if [ ! -f /etc/mosquitto/mosquitto.conf ]; then
 	sudo apt-get -qq install -y mosquitto mosquitto-clients
 	sudo service mosquitto start
 fi
-i
+
 
 # nun auch v 1.5,7 aus /opt unter streatch 
 if mosquitto -h | grep version  | grep 1.4.10 >/dev/null 2>&1; then
@@ -507,6 +507,7 @@ sudo -u pi echo "update=${releasetrain}${uuid}vers${owbv}" >/home/pi/curldata
 
 # all done, remove warning in display
 openwbDebugLog "MAIN" 2  "clear warning..."
+echo " " > /var/www/html/openWB/ramdisk/lastregelungaktiv
 echo " " > ramdisk/lastregelungaktiv
 chmod 777 ramdisk/lastregelungaktiv
 # echo "" > ramdisk/mqttv/lastregelungaktiv wird automatisch erzeugt
