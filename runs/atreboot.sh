@@ -140,9 +140,9 @@ sudo chmod    +x *.sh
 
 
 # die schreiben in ihr verzeichniss
-sudo chmod -R 777 modules/soc_i3
-sudo chmod -R 777 modules/soc_eq
-sudo chmod -R 777 modules/soc_tesla
+# sudo chmod -R 777 modules/soc_i3
+# sudo chmod -R 777 modules/soc_eq
+# sudo chmod -R 777 modules/soc_tesla
 
 
 mkdir -p web/logging/data/daily
@@ -414,7 +414,7 @@ if [ ! -f /etc/mosquitto/mosquitto.conf ]; then
 	sudo apt-get -qq install -y mosquitto mosquitto-clients
 	sudo service mosquitto start
 fi
-i
+
 
 # nun auch v 1.5,7 aus /opt unter streatch 
 if mosquitto -h | grep version  | grep 1.4.10 >/dev/null 2>&1; then
@@ -664,6 +664,6 @@ runs/pubmqtt.sh  2>&1
 
 
 # all done, remove boot and update status
-openwbDebugLog "MAIN" 2 "boot done :-)"
+openwbDebugLog "MAIN" 2 "boot done "
 # cleanup macht rest
 
