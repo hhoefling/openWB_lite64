@@ -664,11 +664,11 @@ sudo /usr/sbin/apachectl -k graceful
 runs/pubmqtt.sh  2>&1
 
 # all done, remove boot and update status
-openwbDebugLog "MAIN" 2 "boot done "
+openwbDebugLog "MAIN" 2 "boot done :-) "
 
 cp $LOGFILE $LOGFILE.atreboot
 cp $ERRFILE $ERRFILE.atreboot
-openwbDebugLog "MAIN" 2 "log copied "
+openwbDebugLog "MAIN" 2 "log copied :-) "
 
 # cleanup macht rest
 
