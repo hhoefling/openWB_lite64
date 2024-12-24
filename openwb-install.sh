@@ -169,7 +169,7 @@ if [ ! -d /var/www/html/openWB/web ]; then
 else
 	echo "...ok"
 fi
-
+cd /var/www/html/openWB
 
 if ! grep -Fq "bootmodus=" /var/www/html/openWB/openwb.conf
 then
