@@ -305,7 +305,7 @@ def processSmartHomeDevice(topic, payload):
             writetoSHconfig('smarthomedevices', 'device_name_' + ds, payload)
             publish0rd("config/get/SmartHome/Devices/%d/device_name", di, payload)
         else:
-            dolog("Illegal Name  [%s]" % (msg.payload))
+            dolog("Illegal Name  [%s]" % (payload))
     elif ("device_type" in topic):
         validDeviceTypes = ['none', 'shelly', 'tasmota', 'acthor', 'elwa', 'idm', 'vampair', 'stiebel', 'http', 'avm', 'mystrom', 'viessmann', 'mqtt']
         if (len(str(payload)) > 2):
