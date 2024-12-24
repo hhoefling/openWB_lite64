@@ -178,6 +178,7 @@ ramdisk/
 .ftp*
 none.*
 schnapper.txt
+runs/files/*.atreboot
 modules/unsuported/
 web/ladelog
 web/logging/data/
